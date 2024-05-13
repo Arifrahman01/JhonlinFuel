@@ -7,15 +7,29 @@
                         Management User
                     </h2>
                 </div>
+
             </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="col-12">
+
         </div>
     </div>
 
     <div class="page-body">
         <div class="container-xl">
+            @if (session()->has('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if (session()->has('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
             <div class="row row-cards">
                 <div class="col-md-12">
                     <div class="card">
+
                         <div class="card-header">
                             <h3 class="card-title">Filter</h3>
                         </div>
@@ -34,8 +48,9 @@
                                         <label for="role">Role</label>
                                         <select wire:model="role" class="form-control">
                                             <option value="">- All Role -</option>
-                                            <option value="admin">Admin</option>
-                                            <option value="guest">Guest</option>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->id }}">{{ $role->description }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -46,7 +61,7 @@
                                         </div>
                                     </div>
                                 </div>
-                        
+
                             </form>
                         </div>
                     </div>
@@ -58,6 +73,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 5%">#</th>
+                                        <th class="text-center" style="width: 5%">Action</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Role</th>
@@ -71,9 +87,18 @@
                                         @foreach ($data as $idx => $user)
                                             <tr>
                                                 <td>{{ $idx + 1 }}</td>
+                                                <td>
+                                                    <!-- Tambahkan spinner saat tombol diklik -->
+                                                    <a wire:click="reset_password({{ $user->id }})">
+                                                        <i class="fa fa-lock" wire:loading.remove wire:target="reset_password({{ $user->id }})"></i>
+                                                        <i class="fa fa-spinner fa-spin" wire:loading wire:target="reset_password({{ $user->id }})"></i>
+                                                    </a>
+                                                </td>
+
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
-                                                <td>{{ $user->role_id == 1 ? 'Administrator' : 'Guest' }}</td>
+
+                                                <td>{{ $user->role->description }}</td>
                                             </tr>
                                         @endforeach
                                     @endif

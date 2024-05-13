@@ -7,6 +7,7 @@
 * Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
 -->
 <html lang="en">
+
 <head>
     @include('layouts._meta')
 </head>
@@ -27,10 +28,12 @@
             @include('layouts._footer')
         </footer>
     </div>
-    
+
     <script src="./dist/js/tabler.min.js"></script>
     <script src="./dist/js/demo.min.js"></script>
-    @yield('js_page')
+    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+    @stack('scripts')
+  
 </body>
 
 </html>

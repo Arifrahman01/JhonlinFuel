@@ -20,10 +20,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::controller(UsersController::class)->group(function () {
-        Route::get('/users', 'index')->name('users.index');
-    });
-    Route::get('/users1', UserList::class);
+    // Route::controller(UsersController::class)->group(function () {
+    //     Route::get('/users', 'index')->name('users.index');
+    // });
+    
+    Route::get('/users', UserList::class)->name('users.index');
  
 
 });

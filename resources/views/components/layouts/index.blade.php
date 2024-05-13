@@ -11,6 +11,7 @@
 <head>
     @include('layouts._meta')
 </head>
+
 <body>
     <script src="./dist/js/demo-theme.min.js"></script>
     <div class="page">
@@ -23,16 +24,23 @@
         </header>
         <div class="page-wrapper">
             <!-- Page body -->
-                @yield('content')
-            </div>
-            <footer class="footer footer-transparent d-print-none">
-                @include('layouts._footer')
-            </footer>
+            @yield('content')
+        </div>
+        <footer class="footer footer-transparent d-print-none">
+            @include('layouts._footer')
+        </footer>
     </div>
     <!-- Libs JS -->
     <!-- Tabler Core -->
     <script src="./dist/js/tabler.min.js"></script>
     <script src="./dist/js/demo.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11aaaaaaa"></script>
+    <script src="./dist/js/alert.js"></script>
+
+    <script>
+    
+    </script>
+
     @yield('js_page')
 </body>
 

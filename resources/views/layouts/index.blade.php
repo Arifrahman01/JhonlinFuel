@@ -6,6 +6,7 @@
 * Copyright 2018-2023 codecalm.net Paweł Kuna
 * Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
 -->
+{{-- file ini digunakan untuk blade diluar blade --}}
 <html lang="en">
 
 <head>
