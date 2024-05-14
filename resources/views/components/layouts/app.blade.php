@@ -11,7 +11,17 @@
 <head>
     @include('layouts._meta')
 </head>
+<style>
+    .footer {
+        margin-top: auto;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+</style>
 @livewireStyles
+
 <body>
     <script src="./dist/js/demo-theme.min.js"></script>
     <div class="page">
@@ -33,7 +43,8 @@
     <script src="./dist/js/tabler.min.js"></script>
     <script src="./dist/js/demo.min.js"></script>
     <script src="./dist/js/button.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./dist/js/livewireCustom.js"></script>
     @stack('scripts')
 </body>
 

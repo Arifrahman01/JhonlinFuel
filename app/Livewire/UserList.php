@@ -13,9 +13,6 @@ class UserList extends Component
     public $email;
     public $role;
 
-    /* Class Animation */
-    public $loadingUserId = null;
-
     public function mount()
     {
         $this->data = User::with('role')->get();
@@ -47,24 +44,21 @@ class UserList extends Component
         try {
             $user = User::findOrFail($id);
             $user->delete();
-            $this->data = User::with('role')->get(); 
+            $this->data = User::with('role')->get();
             $this->dispatch('success', ['message' => 'Data has been deleted']);
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
         }
     }
-
-    public function reset_password($userId)
+    public function reset_password($id)
     {
-        $this->loadingUserId = $userId;
-        $user = User::find($userId);
-        if ($user) {
+        try {
+            $user = User::find($id);
             $user->password = bcrypt('Jhonlin@123');
             $user->save();
-            session()->flash('success', 'Password has been reset successfully!');
-        } else {
-            session()->flash('error', 'User not found!');
+            $this->dispatch('success', ['message' => 'Reset password success']);
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
         }
-        $this->loadingUserId = null;
     }
 }

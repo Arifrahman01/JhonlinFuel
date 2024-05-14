@@ -10,9 +10,6 @@
             </div>
         </div>
     </div>
-    <div class="card">
-        <div class="col-12"></div>
-    </div>
 
     <div class="page-body">
         <div class="container-xl">
@@ -84,11 +81,14 @@
                                         @foreach ($data as $idx => $user)
                                             <tr>
                                                 <td>{{ $idx + 1 }}</td>
-                                                <td>
+                                                <td class="text-nowrap">
                                                     <!-- Tambahkan spinner saat tombol diklik -->
-                                                    <a wire:click="reset_password({{ $user->id }})">
+                                                    {{-- <a wire:click="reset_password({{ $user->id }})">
                                                         <i class="fa fa-lock" wire:loading.remove wire:target="reset_password({{ $user->id }})"></i>
                                                         <i class="fa fa-spinner fa-spin" wire:loading wire:target="reset_password({{ $user->id }})"></i>
+                                                    </a> --}}
+                                                    <a id="btn-reset{{ $user->id }}" onclick="resetPassword({{ $user->id }})">
+                                                        <i class="fa fa-lock"></i>
                                                     </a>
                                                     <a id="btn-delete{{ $user->id }}" onclick="deleteItem({{ $user->id }})">
                                                         <i class="fas fa-trash-alt"></i>
@@ -111,20 +111,19 @@
     @push('scripts')
         <script>
             async function deleteItem(id) {
-                const isConfirmed = await sweetDeleted();
+                const isConfirmed = await sweetDeleted({ id:id });
                 if (isConfirmed) {
-                    const btnDelete = document.getElementById('btn-delete' + id);
-                    btnDelete.innerHTML = "<i class='fa fa-spinner fa-spin'></i>";
-                    btnDelete.disabled = true;
                     @this.call('delete', id);
                 }
             }
-            Livewire.on('success', (message) => {
-                Swal.fire('Success', message.message, 'success');
-            });
-            Livewire.on('error', (message) => {
-                Swal.fire('Error', message, 'error');
-            });
+            
+            async function resetPassword(id) {
+                const isConfirmed = await sweetReset({ id:id });
+                if (isConfirmed) {
+                    @this.call('reset_password', id);
+                }
+            }
+
         </script>
     @endpush
 </div>
