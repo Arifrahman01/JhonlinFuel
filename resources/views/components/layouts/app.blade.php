@@ -11,6 +11,7 @@
 <head>
     @include('layouts._meta')
 </head>
+@livewireStyles
 <body>
     <script src="./dist/js/demo-theme.min.js"></script>
     <div class="page">
@@ -28,12 +29,12 @@
             @include('layouts._footer')
         </footer>
     </div>
-
+    @livewireScripts
     <script src="./dist/js/tabler.min.js"></script>
     <script src="./dist/js/demo.min.js"></script>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
+    <script src="./dist/js/button.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
     @stack('scripts')
-  
 </body>
 
 </html>

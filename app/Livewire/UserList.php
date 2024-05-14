@@ -20,10 +20,11 @@ class UserList extends Component
     {
         $this->data = User::with('role')->get();
     }
+
     public function render()
     {
         $roles = Role::all();
-        return view('livewire.user.user-list',compact('roles'));
+        return view('livewire.user.user-list', compact('roles'));
     }
 
     public function searching()
@@ -40,6 +41,19 @@ class UserList extends Component
         }
         $this->data = $query->get();
     }
+
+    public function delete($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            $user->delete();
+            $this->data = User::with('role')->get(); 
+            $this->dispatch('success', ['message' => 'Data has been deleted']);
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
+        }
+    }
+
     public function reset_password($userId)
     {
         $this->loadingUserId = $userId;
@@ -51,7 +65,6 @@ class UserList extends Component
         } else {
             session()->flash('error', 'User not found!');
         }
-        $this->loadingUserId = null; // Reset loadingUserId back to null
+        $this->loadingUserId = null;
     }
-    
 }

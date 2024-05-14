@@ -7,14 +7,11 @@
                         Management User
                     </h2>
                 </div>
-
             </div>
         </div>
     </div>
     <div class="card">
-        <div class="col-12">
-
-        </div>
+        <div class="col-12"></div>
     </div>
 
     <div class="page-body">
@@ -26,10 +23,10 @@
             @if (session()->has('error'))
                 <div class="alert alert-danger">{{ session('error') }}</div>
             @endif
+
             <div class="row row-cards">
                 <div class="col-md-12">
                     <div class="card">
-
                         <div class="card-header">
                             <h3 class="card-title">Filter</h3>
                         </div>
@@ -61,11 +58,11 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </form>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-12">
                     <div class="card">
                         <div class="table-responsive">
@@ -93,16 +90,16 @@
                                                         <i class="fa fa-lock" wire:loading.remove wire:target="reset_password({{ $user->id }})"></i>
                                                         <i class="fa fa-spinner fa-spin" wire:loading wire:target="reset_password({{ $user->id }})"></i>
                                                     </a>
+                                                    <a id="btn-delete{{ $user->id }}" onclick="deleteItem({{ $user->id }})">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>
                                                 </td>
-
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
-
                                                 <td>{{ $user->role->description }}</td>
                                             </tr>
                                         @endforeach
                                     @endif
-
                                 </tbody>
                             </table>
                         </div>
@@ -111,3 +108,23 @@
             </div>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            async function deleteItem(id) {
+                const isConfirmed = await sweetDeleted();
+                if (isConfirmed) {
+                    const btnDelete = document.getElementById('btn-delete' + id);
+                    btnDelete.innerHTML = "<i class='fa fa-spinner fa-spin'></i>";
+                    btnDelete.disabled = true;
+                    @this.call('delete', id);
+                }
+            }
+            Livewire.on('success', (message) => {
+                Swal.fire('Success', message.message, 'success');
+            });
+            Livewire.on('error', (message) => {
+                Swal.fire('Error', message, 'error');
+            });
+        </script>
+    @endpush
+</div>

@@ -25,6 +25,10 @@ Route::middleware('auth')->group(function () {
     // });
     
     Route::get('/users', UserList::class)->name('users.index');
+
+    Route::controller(UsersController::class)->group(function () {
+        Route::delete('/users/{id}', 'destroy')->name('users.destroy');
+    });
  
 
 });

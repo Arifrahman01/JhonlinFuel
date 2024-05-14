@@ -36,12 +36,6 @@
     <script src="./dist/js/demo.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11aaaaaaa"></script>
     <script src="./dist/js/alert.js"></script>
-
-    <script>
-    
-    </script>
-
-    @yield('js_page')
 </body>
 
 </html>
