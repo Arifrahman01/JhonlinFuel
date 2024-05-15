@@ -13,6 +13,8 @@ class UserList extends Component
     public $email;
     public $role;
 
+    protected $listeners = ['refreshPage'];
+
     public function mount()
     {
         $this->data = User::with('role')->get();
@@ -62,5 +64,10 @@ class UserList extends Component
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
         }
+    }
+
+    public function refreshPage()
+    {
+        $this->users = User::all();
     }
 }

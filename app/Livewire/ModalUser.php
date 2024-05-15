@@ -72,6 +72,7 @@ class ModalUser extends Component
             $this->dispatch('success','Data has been updated');
             $this->closeModal();
             $this->dispatch('closeModal');
+            $this->dispatch('refreshPage');
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
         }
