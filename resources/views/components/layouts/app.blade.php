@@ -9,7 +9,7 @@
 <html lang="en">
 
 <head>
-    @include('layouts._meta')
+    @include('components.layouts._meta')
 </head>
 <style>
     .footer {
@@ -26,17 +26,18 @@
     <script src="./dist/js/demo-theme.min.js"></script>
     <div class="page">
         <header class="navbar navbar-expand-md d-print-none">
-            @include('layouts._header')
+            @include('components.layouts._header')
         </header>
         <header class="navbar-expand-md">
-            @include('layouts._navbar')
+            @include('components.layouts._navbar')
         </header>
         <div class="page-wrapper">
             {{-- ini isi content --}}
             {{ $slot }}
         </div>
+        @include('components.layouts._modal')
         <footer class="footer footer-transparent d-print-none">
-            @include('layouts._footer')
+            @include('components.layouts._footer')
         </footer>
     </div>
     @livewireScripts

@@ -8,7 +8,8 @@
         "php": "^8.2",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.4"
+        "livewire/livewire": "^3.4",
+        "wire-elements/modal": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -27,8 +28,7 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/CustomHelpers.php",
-            "app/Helpers/ApiRespon.php"
+            "app/Helpers/CustomHelpers.php"
         ]
     },
     "autoload-dev": {

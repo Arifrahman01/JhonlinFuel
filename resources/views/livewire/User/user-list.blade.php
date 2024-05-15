@@ -82,17 +82,20 @@
                                             <tr>
                                                 <td>{{ $idx + 1 }}</td>
                                                 <td class="text-nowrap">
-                                                    <!-- Tambahkan spinner saat tombol diklik -->
-                                                    {{-- <a wire:click="reset_password({{ $user->id }})">
-                                                        <i class="fa fa-lock" wire:loading.remove wire:target="reset_password({{ $user->id }})"></i>
-                                                        <i class="fa fa-spinner fa-spin" wire:loading wire:target="reset_password({{ $user->id }})"></i>
-                                                    </a> --}}
-                                                    <a id="btn-reset{{ $user->id }}" onclick="resetPassword({{ $user->id }})">
+                                                    <a id="btn-reset{{ $user->id }}" title="Reset Password" onclick="resetPassword({{ $user->id }})">
                                                         <i class="fa fa-lock"></i>
-                                                    </a>
-                                                    <a id="btn-delete{{ $user->id }}" onclick="deleteItem({{ $user->id }})">
+                                                    </a> &nbsp; 
+
+                                                    <a id="btn-delete{{ $user->id }}" title="Deleted Data" onclick="deleteItem({{ $user->id }})">
                                                         <i class="fas fa-trash-alt"></i>
+                                                    </a> &nbsp; 
+
+                                                    <a wire:click="$dispatch('openModal', [{{ $user->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                        <i class="fas fa-edit"></i>
                                                     </a>
+                                                    
+                                                    
+                                                    
                                                 </td>
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
@@ -108,6 +111,7 @@
             </div>
         </div>
     </div>
+    @livewire('modal-user')
     @push('scripts')
         <script>
             async function deleteItem(id) {
@@ -116,7 +120,6 @@
                     @this.call('delete', id);
                 }
             }
-            
             async function resetPassword(id) {
                 const isConfirmed = await sweetReset({ id:id });
                 if (isConfirmed) {

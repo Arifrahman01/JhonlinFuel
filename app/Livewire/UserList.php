@@ -45,18 +45,20 @@ class UserList extends Component
             $user = User::findOrFail($id);
             $user->delete();
             $this->data = User::with('role')->get();
-            $this->dispatch('success', ['message' => 'Data has been deleted']);
+            $this->dispatch('success', 'Data has been deleted');
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
         }
     }
+
+ 
     public function reset_password($id)
     {
         try {
             $user = User::find($id);
             $user->password = bcrypt('Jhonlin@123');
             $user->save();
-            $this->dispatch('success', ['message' => 'Reset password success']);
+            $this->dispatch('success',' Reset password success');
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
         }
