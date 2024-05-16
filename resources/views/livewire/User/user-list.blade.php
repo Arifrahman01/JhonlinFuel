@@ -3,8 +3,14 @@
         <div class="container-xl">
             <div class="row g-2 align-items-center">
                 <div class="col">
-                    <h2 class="page-title">
-                        Management User
+                    <h2 class="page-title col-12">
+                        <div class="col-6">
+                            Management User
+                        </div>
+                        <div class="col-6 d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                class="fa fa-plus-circle"></i>&nbsp; Create</button>
+                        </div>
                     </h2>
                 </div>
             </div>
@@ -13,21 +19,12 @@
 
     <div class="page-body">
         <div class="container-xl">
-            @if (session()->has('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-
-            @if (session()->has('error'))
-                <div class="alert alert-danger">{{ session('error') }}</div>
-            @endif
-
             <div class="row row-cards">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Filter</h3>
-                            <button type="button" class="btn btn-sm btn-pill btn-primary" wire:click="$dispatch('openModal')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp; Create</button>
+                           
                         </div>
                         <div class="card-body">
                             <form wire:submit.prevent="search">
@@ -53,7 +50,7 @@
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <div class="d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-sm btn-pill btn-primary"><i class="fa fa-search"></i> &nbsp; Filter</button>
+                                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> &nbsp; Filter</button>
                                         </div>
                                     </div>
                                 </div>
@@ -105,7 +102,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="card-footer d-flex align-items-right">
+                        <div class="card-footer justify-content-between align-items-center">
                             {{ $users->links() }}
                         </div>
                     </div>
