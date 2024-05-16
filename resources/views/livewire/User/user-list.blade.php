@@ -109,7 +109,7 @@
             </div>
         </div>
     </div>
-    @livewire('modal-user')
+    @livewire('user.modal-user')
     @push('scripts')
         <script>
             async function deleteItem(id) {

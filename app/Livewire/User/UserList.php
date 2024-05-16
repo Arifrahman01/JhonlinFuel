@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\User;
+
 
 use App\Models\Role;
 use App\Models\User;
@@ -9,6 +10,7 @@ use Livewire\WithPagination;
 
 class UserList extends Component
 {
+
     public $data;
     public $name;
     public $email;
