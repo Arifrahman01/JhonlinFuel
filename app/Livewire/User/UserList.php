@@ -33,7 +33,7 @@ class UserList extends Component
             'role' => $this->role,
         ])->paginate(10);
 
-        return view('livewire.user.user-list', compact('roles', 'users'));
+        return view('livewire.User.user-list', compact('roles', 'users'));
     }
     public function search()
     {
