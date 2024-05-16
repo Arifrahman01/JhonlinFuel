@@ -26,7 +26,8 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Filter</h3>
-                            <button type="button" class="btn btn-sm btn-pill btn-primary" wire:click="$dispatch('openModal')"  data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus-circle"></i>&nbsp; Create</button>
+                            <button type="button" class="btn btn-sm btn-pill btn-primary" wire:click="$dispatch('openModal')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                    class="fa fa-plus-circle"></i>&nbsp; Create</button>
                         </div>
                         <div class="card-body">
                             <form wire:submit.prevent="search">
@@ -83,20 +84,17 @@
                                             <tr>
                                                 <td>{{ $idx + 1 }}</td>
                                                 <td class="text-nowrap">
-                                                    <a id="btn-reset{{ $user->id }}" title="Reset Password" onclick="resetPassword({{ $user->id }})">
+                                                    <a id="btn-reset{{ $user->id }}" title="Reset Password User" onclick="resetPassword({{ $user->id }})">
                                                         <i class="fa fa-lock"></i>
-                                                    </a> &nbsp; 
+                                                    </a> &nbsp;
 
-                                                    <a id="btn-delete{{ $user->id }}" title="Deleted Data" onclick="deleteItem({{ $user->id }})">
+                                                    <a id="btn-delete{{ $user->id }}" title="Deleted User" onclick="deleteItem({{ $user->id }})">
                                                         <i class="fas fa-trash-alt"></i>
-                                                    </a> &nbsp; 
+                                                    </a> &nbsp;
 
-                                                    <a wire:click="$dispatch('openModal', [{{ $user->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                    <a title="Edit User" wire:click="$dispatch('openModal', [{{ $user->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    
-                                                    
-                                                    
                                                 </td>
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
@@ -119,18 +117,21 @@
     @push('scripts')
         <script>
             async function deleteItem(id) {
-                const isConfirmed = await sweetDeleted({ id:id });
+                const isConfirmed = await sweetDeleted({
+                    id: id
+                });
                 if (isConfirmed) {
                     @this.call('delete', id);
                 }
             }
             async function resetPassword(id) {
-                const isConfirmed = await sweetReset({ id:id });
+                const isConfirmed = await sweetReset({
+                    id: id
+                });
                 if (isConfirmed) {
                     @this.call('reset_password', id);
                 }
             }
-
         </script>
     @endpush
 </div>
