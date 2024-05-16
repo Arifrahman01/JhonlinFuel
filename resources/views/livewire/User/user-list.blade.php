@@ -29,7 +29,7 @@
                             <button type="button" class="btn btn-sm btn-pill btn-primary" wire:click="$dispatch('openModal')"  data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus-circle"></i>&nbsp; Create</button>
                         </div>
                         <div class="card-body">
-                            <form wire:submit.prevent="searching">
+                            <form wire:submit.prevent="search">
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="name">Name</label>
@@ -76,10 +76,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($data->isEmpty())
+                                    @if ($users->isEmpty())
                                         {!! dataNotFond(8) !!}
                                     @else
-                                        @foreach ($data as $idx => $user)
+                                        @foreach ($users as $idx => $user)
                                             <tr>
                                                 <td>{{ $idx + 1 }}</td>
                                                 <td class="text-nowrap">
@@ -106,6 +106,9 @@
                                     @endif
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="card-footer d-flex align-items-right">
+                            {{ $users->links() }}
                         </div>
                     </div>
                 </div>

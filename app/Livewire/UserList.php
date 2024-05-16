@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Role;
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class UserList extends Component
 {
@@ -12,33 +13,33 @@ class UserList extends Component
     public $name;
     public $email;
     public $role;
-
+    
+    protected $paginationTheme = 'bootstrap';
     protected $listeners = ['refreshPage'];
-
-    public function mount()
-    {
-        $this->data = User::with('role')->get();
-    }
-
+    
+    use WithPagination;
+  
     public function render()
     {
         $roles = Role::all();
-        return view('livewire.user.user-list', compact('roles'));
-    }
+        $users = User::with('role')
+            ->when($this->name, function ($query) {
+                $query->where('name', 'like', '%' . $this->name . '%');
+            })
+            ->when($this->email, function ($query) {
+                $query->where('email', 'like', '%' . $this->email . '%');
+            })
+            ->when($this->role, function ($query) {
+                $query->where('role_id', $this->role);
+            })
+            ->paginate(10);
 
-    public function searching()
+        return view('livewire.user.user-list', compact('roles', 'users'));
+     
+    }
+    public function search()
     {
-        $query = User::query();
-        if ($this->name) {
-            $query->where('name', 'like', '%' . $this->name . '%');
-        }
-        if ($this->email) {
-            $query->where('email', 'like', '%' . $this->email . '%');
-        }
-        if ($this->role) {
-            $query->where('role_id', $this->role);
-        }
-        $this->data = $query->get();
+        $this->resetPage();
     }
 
     public function delete($id)
@@ -46,7 +47,6 @@ class UserList extends Component
         try {
             $user = User::findOrFail($id);
             $user->delete();
-            $this->data = User::with('role')->get();
             $this->dispatch('success', 'Data has been deleted');
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
@@ -63,10 +63,4 @@ class UserList extends Component
             $this->dispatch('error', $th->getMessage());
         }
     }
-    
-    public function refreshPage()
-    {
-        $this->data = User::with('role')->get();
-    }
-
 }
