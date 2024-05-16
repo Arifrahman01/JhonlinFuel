@@ -15,4 +15,8 @@ class RequestDetail extends Model
     protected $guarded = [
         'id',
     ];
+    public function uom() 
+    {
+        return $this->belongsTo(Uom::class, 'uom_id', 'id');
+    }
 }

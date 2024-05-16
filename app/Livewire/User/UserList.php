@@ -26,17 +26,14 @@ class UserList extends Component
     {
         $roles = Role::all();
         $users = User::with('role')
-            ->when($this->name, function ($query) {
-                $query->where('name', 'like', '%' . $this->name . '%');
-            })->when($this->email, function ($query) {
-                $query->where('email', 'like', '%' . $this->email . '%');
-            })->when($this->username, function ($query) {
-                $query->where('username', 'like', '%' . $this->username . '%');
-            })->when($this->role, function ($query) {
-                $query->where('role_id', $this->role);
-            })->paginate(10);
+        ->search([
+            'name' => $this->name,
+            'email' => $this->email,
+            'username' => $this->username,
+            'role' => $this->role,
+        ])->paginate(10);
 
-        return view('livewire.user.user-list', compact('roles', 'users'));
+        return view('livewire.User.user-list', compact('roles', 'users'));
     }
     public function search()
     {

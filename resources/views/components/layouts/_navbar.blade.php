@@ -38,7 +38,7 @@
                     <div class="dropdown-menu">
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
-                                <a class="dropdown-item" href="./accordion.html">
+                                <a class="dropdown-item" href="{{ route('qouta.index') }}">
                                     Quota Request
                                 </a>
                                 <a class="dropdown-item active" href="./blank.html">
