@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('plants', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->smallInteger('company_id');
-            $table->string('plant_code', 5);
+            $table->string('plant_code', 20);
             $table->string('plant_name', 100);
             $table->longText('notes')->nullable();
             $table->integer('created_id')->nullable();
