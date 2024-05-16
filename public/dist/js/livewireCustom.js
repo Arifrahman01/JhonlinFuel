@@ -17,9 +17,9 @@ Livewire.on('error', (messages) => {
 });
 
 
-    Livewire.on('closeModal', () => {
-        var modalElement = document.querySelector('#modal-large');
-        console.log(modalElement);
-        var modal = bootstrap.Modal.getInstance(modalElement);
-        modal.hide();
-    });
+Livewire.on('closeModal', () => {
+    var modalElement = document.querySelector('#modal-large');
+    console.log(modalElement);
+    var modal = bootstrap.Modal.getInstance(modalElement);
+    modal.hide();
+});

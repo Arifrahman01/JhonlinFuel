@@ -24,23 +24,24 @@
             <div class="row row-cards">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Filter</h3>
+                            <button type="button" class="btn btn-sm btn-pill btn-primary" wire:click="$dispatch('openModal')"  data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus-circle"></i>&nbsp; Create</button>
                         </div>
                         <div class="card-body">
                             <form wire:submit.prevent="searching">
                                 <div class="row">
-                                    <div class="col-md-4 mb-2">
+                                    <div class="col-4">
                                         <label for="name">Name</label>
-                                        <input wire:model="name" type="text" class="form-control">
+                                        <input wire:model="name" type="text" class="form-control ">
                                     </div>
-                                    <div class="col-md-4 mb-2">
+                                    <div class="col-4">
                                         <label for="email">Email</label>
-                                        <input wire:model="email" type="text" class="form-control">
+                                        <input wire:model="email" type="text" class="form-control ">
                                     </div>
-                                    <div class="col-md-4 mb-2">
+                                    <div class="col-4">
                                         <label for="role">Role</label>
-                                        <select wire:model="role" class="form-control">
+                                        <select wire:model="role" class="form-control ">
                                             <option value="">- All Role -</option>
                                             @foreach ($roles as $role)
                                                 <option value="{{ $role->id }}">{{ $role->description }}</option>
@@ -51,7 +52,7 @@
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <div class="d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Filter</button>
+                                            <button type="submit" class="btn btn-sm btn-pill btn-primary"><i class="fa fa-search"></i> &nbsp; Filter</button>
                                         </div>
                                     </div>
                                 </div>

@@ -32,7 +32,7 @@ const sweetDeleted = async ({ head = 'Are you sure?', title = 'Deleted this data
 };
 
 
-const sweetReset = async ({ head = 'Are you sure?', title = 'Reset this password !', buttonText = 'Yes, delete it!', id }) => {
+const sweetReset = async ({ head = 'Are you sure?', title = 'Reset this password !', buttonText = 'Yes, Reset it!', id }) => {
     try {
         const result = await Swal.fire({
             title: head,

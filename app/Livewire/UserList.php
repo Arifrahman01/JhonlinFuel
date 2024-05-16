@@ -52,22 +52,21 @@ class UserList extends Component
             $this->dispatch('error', $th->getMessage());
         }
     }
-
- 
     public function reset_password($id)
     {
         try {
             $user = User::find($id);
             $user->password = bcrypt('Jhonlin@123');
             $user->save();
-            $this->dispatch('success',' Reset password success');
+            $this->dispatch('success', ' Reset password success');
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
         }
     }
-
+    
     public function refreshPage()
     {
-        $this->users = User::all();
+        $this->data = User::with('role')->get();
     }
+
 }

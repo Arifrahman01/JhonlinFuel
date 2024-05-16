@@ -18,12 +18,10 @@
                     <button type="button" class="btn me-auto" data-bs-dismiss="modal" wire:click="closeModal">Close</button>
                 </div>
             @else
-                <form wire:submit.prevent="updateUser({{ $user->id ?? '' }})">
+                <form wire:submit.prevent="storeUser({{ $user->id ?? '' }})">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modal-largeLabel">{{ $user ? 'Edit ' . $user->name ?? '' : 'Tambah User' }} </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal" id="closeModalID// Get the button element
-var closeModalButton = document.getElementById('closeModalID');
-"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal" id="closeModalID"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row row-cards">
@@ -34,7 +32,7 @@ var closeModalButton = document.getElementById('closeModalID');
                             <div class="col-6">
                                 <div class="mb-3">
                                     <label class="form-label">Email</label>
-                                    <input type="email" wire:model="email" class="form-control" placeholder="Username" value="{{ $user->email }}" required>
+                                    <input type="email" wire:model="email" class="form-control" placeholder="Username" value="{{ $user->email ?? ''}}" required>
                                 </div>
                             </div>
                             <div class="col-6">

@@ -12,9 +12,7 @@ class ModalUser extends Component
     public $userId;
     public $loading = false;
 
-    public $name;
-    public $email;
-    public $role;
+    public $name, $email, $role;
 
     protected $listeners = ['openModal'];
 
@@ -23,22 +21,32 @@ class ModalUser extends Component
         $this->loading = true;
         if ($this->userId) {
             $this->user = User::find($this->userId);
-            // dd($this->user);
             $this->name = $this->user['name'];
             $this->email = $this->user['email'];
             $this->role = $this->user['role_id'];
         } else {
+            $this->user = null;
+            $this->userId = null;
+            $this->name = null;
+            $this->email = null;
+            $this->role = null;
         }
     }
-    public function openModal($userId)
+    public function openModal($userId = null)
     {
         $this->loading = true;
-        $this->user = User::find($userId);
-
-        $this->name = $this->user['name'];
-        $this->email = $this->user['email'];
-        $this->role = $this->user['role_id'];
-
+        if ($userId) {
+            $this->user = User::find($userId);
+            $this->name = $this->user['name'];
+            $this->email = $this->user['email'];
+            $this->role = $this->user['role_id'];
+        } else {
+            $this->user = null;
+            $this->userId = null;
+            $this->name = null;
+            $this->email = null;
+            $this->role = null;
+        }
         $this->loading = false;
     }
 
@@ -55,7 +63,7 @@ class ModalUser extends Component
         return view('livewire.user.modal-user', compact('rolesModal'));
     }
 
-    public function updateUser($userId)
+    public function storeUser($userId=null)
     {
         try {
             $this->validate([
@@ -63,13 +71,25 @@ class ModalUser extends Component
                 'email' => 'required|email',
                 'role' => 'required|exists:roles,id',
             ]);
-            $user = User::find($userId);
-            $user->update([
-                'name' => $this->name,
-                'email' => $this->email,
-                'role_id' => $this->role,
-            ]);
-            $this->dispatch('success','Data has been updated');
+            if ($userId) {
+                
+                $user = User::find($userId);
+                $user->update([
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'role_id' => $this->role,
+                ]);
+                $this->dispatch('success', 'Data has been updated');
+            } else {
+                $user = User::create([  
+                    'name' => $this->name,
+                    'email' => $this->email,
+                    'role_id' => $this->role,
+                    'password' => bcrypt('Jhonlin@123'),
+                ]);
+                $this->dispatch('success', 'Data has been created');
+            }
+
             $this->closeModal();
             $this->dispatch('closeModal');
             $this->dispatch('refreshPage');
