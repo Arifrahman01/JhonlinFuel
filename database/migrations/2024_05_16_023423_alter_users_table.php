@@ -28,12 +28,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('username');
-            $table->dropColumn('company_id');
-            $table->dropColumn('created_id');
-            $table->dropColumn('updated_id');
-            $table->dropColumn('deleted_id');
-            $table->dropColumn('deleted_at');
+            // $table->dropColumn('username');
+            // $table->dropColumn('company_id');
+            // $table->dropColumn('created_id');
+            // $table->dropColumn('updated_id');
+            // $table->dropColumn('deleted_id');
+            // $table->dropColumn('deleted_at');
         });
     }
 };

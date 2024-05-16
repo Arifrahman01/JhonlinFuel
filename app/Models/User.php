@@ -54,7 +54,7 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function getActivitylogOptions()
+    public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logAll()

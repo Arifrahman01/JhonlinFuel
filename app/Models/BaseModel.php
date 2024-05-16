@@ -16,7 +16,7 @@ class BaseModel extends Model
         'id',
     ];
 
-    public function getActivitylogOptions()
+    public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logAll()
