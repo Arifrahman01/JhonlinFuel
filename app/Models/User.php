@@ -58,14 +58,21 @@ class User extends Authenticatable
         return $query->when($filters['name'], function ($query, $name) {
             $query->where('name', 'like', '%' . $name . '%');
         })
-        ->when($filters['email'], function ($query, $email) {
-            $query->where('email', 'like', '%' . $email . '%');
-        })
-        ->when($filters['username'], function ($query, $username) {
-            $query->where('username', 'like', '%' . $username . '%');
-        })
-        ->when($filters['role'], function ($query, $role) {
-            $query->where('role_id', $role);
-        });
+            ->when($filters['email'], function ($query, $email) {
+                $query->where('email', 'like', '%' . $email . '%');
+            })
+            ->when($filters['username'], function ($query, $username) {
+                $query->where('username', 'like', '%' . $username . '%');
+            })
+            ->when($filters['role'], function ($query, $role) {
+                $query->where('role_id', $role);
+            });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logAll()
+            ->logOnlyDirty();
     }
 }
