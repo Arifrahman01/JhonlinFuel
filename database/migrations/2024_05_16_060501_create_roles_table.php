@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
-            $table->tinyIncrements('id');
-            $table->string('company_code', 20);
-            $table->string('company_name', 100);
+        Schema::create('roles', function (Blueprint $table) {
+            $table->smallIncrements('id');
+            $table->smallInteger('company_id');
+            $table->string('code', 20);
+            $table->string('description', 100);
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('roles');
     }
 };
