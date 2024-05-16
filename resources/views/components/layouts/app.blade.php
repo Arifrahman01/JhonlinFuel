@@ -35,7 +35,6 @@
             {{-- ini isi content --}}
             {{ $slot }}
         </div>
-        @include('components.layouts._modal')
         <footer class="footer footer-transparent d-print-none">
             @include('components.layouts._footer')
         </footer>

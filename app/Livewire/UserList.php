@@ -12,30 +12,29 @@ class UserList extends Component
     public $data;
     public $name;
     public $email;
+    public $username;
     public $role;
-    
+
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['refreshPage'];
-    
+
     use WithPagination;
-  
+
     public function render()
     {
         $roles = Role::all();
         $users = User::with('role')
             ->when($this->name, function ($query) {
                 $query->where('name', 'like', '%' . $this->name . '%');
-            })
-            ->when($this->email, function ($query) {
+            })->when($this->email, function ($query) {
                 $query->where('email', 'like', '%' . $this->email . '%');
-            })
-            ->when($this->role, function ($query) {
+            })->when($this->username, function ($query) {
+                $query->where('username', 'like', '%' . $this->username . '%');
+            })->when($this->role, function ($query) {
                 $query->where('role_id', $this->role);
-            })
-            ->paginate(10);
+            })->paginate(10);
 
         return view('livewire.user.user-list', compact('roles', 'users'));
-     
     }
     public function search()
     {

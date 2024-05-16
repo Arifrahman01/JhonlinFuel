@@ -31,6 +31,12 @@
                             </div>
                             <div class="col-6">
                                 <div class="mb-3">
+                                    <label class="form-label">Username</label>
+                                    <input type="username" wire:model="username" class="form-control" placeholder="Username" value="{{ $user->username ?? ''}}" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mb-3">
                                     <label class="form-label">Email</label>
                                     <input type="email" wire:model="email" class="form-control" placeholder="Username" value="{{ $user->email ?? ''}}" required>
                                 </div>

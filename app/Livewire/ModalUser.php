@@ -12,7 +12,7 @@ class ModalUser extends Component
     public $userId;
     public $loading = false;
 
-    public $name, $email, $role;
+    public $name, $email, $role, $username;
 
     protected $listeners = ['openModal'];
 
@@ -23,12 +23,14 @@ class ModalUser extends Component
             $this->user = User::find($this->userId);
             $this->name = $this->user['name'];
             $this->email = $this->user['email'];
+            $this->username = $this->user['username'];
             $this->role = $this->user['role_id'];
         } else {
             $this->user = null;
             $this->userId = null;
             $this->name = null;
             $this->email = null;
+            $this->username = null;
             $this->role = null;
         }
     }
@@ -39,12 +41,14 @@ class ModalUser extends Component
             $this->user = User::find($userId);
             $this->name = $this->user['name'];
             $this->email = $this->user['email'];
+            $this->username = $this->user['username'];
             $this->role = $this->user['role_id'];
         } else {
             $this->user = null;
             $this->userId = null;
             $this->name = null;
             $this->email = null;
+            $this->username = null;
             $this->role = null;
         }
         $this->loading = false;
@@ -72,18 +76,22 @@ class ModalUser extends Component
                 'role' => 'required|exists:roles,id',
             ]);
             if ($userId) {
-                
                 $user = User::find($userId);
                 $user->update([
                     'name' => $this->name,
                     'email' => $this->email,
+                    'username' => $this->username,
                     'role_id' => $this->role,
                 ]);
                 $this->dispatch('success', 'Data has been updated');
             } else {
+                $this->validate([
+                    'username' => 'required|string|unique:users',
+                ]);
                 $user = User::create([  
                     'name' => $this->name,
                     'email' => $this->email,
+                    'username' => $this->username,
                     'role_id' => $this->role,
                     'password' => bcrypt('Jhonlin@123'),
                 ]);

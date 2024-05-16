@@ -23,8 +23,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h3 class="card-title">Filter</h3>
-                           
+                            <h3 class="card-title">Filter</h3>                         
                         </div>
                         <div class="card-body">
                             <form wire:submit.prevent="search">
@@ -95,7 +94,7 @@
                                                 </td>
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
-                                                <td>{{ $user->role->description }}</td>
+                                                <td>{{ $user->role->description ?? ''}}</td>
                                             </tr>
                                         @endforeach
                                     @endif
