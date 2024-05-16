@@ -71,8 +71,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Equipment::create([
+            'company_id' => $company->id,
             'equipment_no' => 'E1',
-            'equipment_name' => 'Equipment 1',
+            'equipment_description' => 'Equipment 1',
         ]);
     }
 }

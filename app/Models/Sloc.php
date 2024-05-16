@@ -2,17 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class Sloc extends Model
+class Sloc extends BaseModel
 {
-    use HasFactory, SoftDeletes;
-
     protected $table = 'storage_locations';
-
-    protected $guarded = [
-        'id',
-    ];
 }

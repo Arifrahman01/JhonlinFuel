@@ -15,6 +15,10 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->tinyInteger('company_id')->nullable();
             $table->string('email')->nullable()->change();
+            $table->integer('created_id')->nullable();
+            $table->integer('updated_id')->nullable();
+            $table->integer('deleted_id')->nullable();
+            $table->softDeletes();
         });
     }
 
@@ -26,7 +30,10 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('username');
             $table->dropColumn('company_id');
-            $table->string('email')->nullable(false)->change();
+            $table->dropColumn('created_id');
+            $table->dropColumn('updated_id');
+            $table->dropColumn('deleted_id');
+            $table->dropColumn('deleted_at');
         });
     }
 };
