@@ -10,7 +10,7 @@ class QuotaList extends Component
     public function render()
     {
         $quotas = RequestHeader::with(['company','period','details.uom'])->paginate(10);
-        return view('livewire.Quota.quota-list',compact('quotas'));
+        return view('livewire.quota.quota-list',compact('quotas'));
     }
 
     public function delete($id)
