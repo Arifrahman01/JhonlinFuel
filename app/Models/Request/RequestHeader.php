@@ -3,6 +3,8 @@
 namespace App\Models\Request;
 
 use App\Models\BaseModel;
+use App\Models\Company;
+use App\Models\Period;
 
 class RequestHeader extends BaseModel
 {

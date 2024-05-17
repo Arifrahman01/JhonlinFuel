@@ -3,6 +3,7 @@
 namespace App\Models\Request;
 
 use App\Models\BaseModel;
+use App\Models\Uom;
 
 class RequestDetail extends BaseModel
 {
