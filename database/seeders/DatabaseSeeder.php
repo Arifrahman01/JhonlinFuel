@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use App\Models\Activity;
 use App\Models\Company;
 use App\Models\Equipment;
-use App\Models\Material;
+use App\Models\Issue\IssueDetail;
+use App\Models\Issue\IssueHeader;
+use App\Models\Material\Material;
 use App\Models\Period;
 use App\Models\Plant;
 use App\Models\Sloc;
@@ -51,7 +53,7 @@ class DatabaseSeeder extends Seeder
             'uom_name' => 'Liter',
         ]);
 
-        Material::create([
+        $material = Material::create([
             'material_code' => '36000001',
             'part_no' => 'SOLAR',
             'material_mnemonic' => 'PERTAMINA',
@@ -64,16 +66,38 @@ class DatabaseSeeder extends Seeder
             'period_end' => '2024-05-31',
         ]);
 
-        Activity::create([
+        $activity = Activity::create([
             'company_id' => $company->id,
             'activity_code' => 'A1',
             'activity_name' => 'Aktivitas 1',
         ]);
 
-        Equipment::create([
+        $equipment = Equipment::create([
             'company_id' => $company->id,
             'equipment_no' => 'E1',
             'equipment_description' => 'Equipment 1',
+        ]);
+
+        $issueHeader = IssueHeader::create([
+            'company_id' => $company->id,
+            'issue_no' => 'issue001',
+            'department' => 'Department 1',
+            'activity_id' => $activity->id,
+            'fuelman' => 'BARONG',
+            'equipment_id' => $equipment->id,
+            'equipment_driver' => 'JUKI',
+        ]);
+
+        IssueDetail::create([
+            'header_id' => $issueHeader->id,
+            'company_id' => $company->id,
+            'material_id' => $material->id,
+            'material_code' => $material->material_code,
+            'part_no' => $material->part_no,
+            'material_mnemonic' => $material->material_mnemonic,
+            'material_description' => $material->material_description,
+            'uom_id' => $uom->id,
+            'qty' => '40',
         ]);
     }
 }

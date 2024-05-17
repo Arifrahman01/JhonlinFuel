@@ -39,6 +39,7 @@ return new class extends Migration
             $table->string('part_no', 100)->nullable();
             $table->string('material_mnemonic', 255)->nullable();
             $table->string('material_description', 255);
+            $table->smallInteger('uom_id');
             $table->decimal('qty');
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
@@ -77,6 +78,7 @@ return new class extends Migration
             $table->string('part_no', 100)->nullable();
             $table->string('material_mnemonic', 255)->nullable();
             $table->string('material_description', 255);
+            $table->smallInteger('uom_id');
             $table->decimal('qty');
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();

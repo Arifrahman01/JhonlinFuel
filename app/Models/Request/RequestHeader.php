@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Request;
+
+use App\Models\BaseModel;
 
 class RequestHeader extends BaseModel
 {

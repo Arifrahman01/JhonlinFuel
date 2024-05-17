@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Quota\QuotaList;
+use App\Livewire\Issue\IssueList;
 use App\Livewire\User\UserList;
 
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/qouta', QuotaList::class)->name('qouta.index'); 
 
 
+    Route::get('/issue', IssueList::class)->name('issue.index');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

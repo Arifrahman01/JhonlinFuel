@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Receipt;
+
+use App\Models\BaseModel;
 
 class ReceiptHeader extends BaseModel
 {

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->enum('movement_type', ['receipt', 'transfer', 'receipt-transfer', 'issue', 'adjust'])->default('receipt');
             $table->smallInteger('plant_id');
             $table->smallInteger('sloc_id');
+            $table->smallInteger('uom_id');
             $table->decimal('qty');
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
