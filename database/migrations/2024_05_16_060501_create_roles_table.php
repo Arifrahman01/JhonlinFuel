@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plants', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->smallInteger('company_id');
-            $table->string('plant_code', 20);
-            $table->string('plant_name', 100);
-            $table->longText('notes')->nullable();
+            $table->string('code', 20);
+            $table->string('description', 100);
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('plants');
+        Schema::dropIfExists('roles');
     }
 };

@@ -23,7 +23,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', UserList::class)->name('users.index'); 
     Route::get('/qouta', QuotaList::class)->name('qouta.index'); 
 
-
 });
 
 require __DIR__.'/auth.php';

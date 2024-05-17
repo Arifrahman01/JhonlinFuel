@@ -2,17 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class IssueDetail extends Model
+class IssueDetail extends BaseModel
 {
-    use HasFactory, SoftDeletes;
-
     protected $table = 'issue_details';
-
-    protected $guarded = [
-        'id',
-    ];
 }

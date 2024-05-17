@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class AdjustmentHeader extends Model
+class AdjustmentHeader extends BaseModel
 {
-    use HasFactory;
+    protected $table = 'adjustment_headers';
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->tinyIncrements('id');
-            $table->string('company_code', 5);
+            $table->string('company_code', 20);
             $table->string('company_name', 100);
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();

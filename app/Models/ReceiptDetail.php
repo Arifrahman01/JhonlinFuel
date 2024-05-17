@@ -2,17 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class ReceiptDetail extends Model
+class ReceiptDetail extends BaseModel
 {
-    use HasFactory, SoftDeletes;
-
     protected $table = 'receipt_details';
-
-    protected $guarded = [
-        'id',
-    ];
 }
