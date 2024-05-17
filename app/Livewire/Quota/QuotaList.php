@@ -7,6 +7,8 @@ use Livewire\Component;
 
 class QuotaList extends Component
 {
+    protected $listeners = ['refreshPage'];
+    
     public function render()
     {
         $quotas = RequestHeader::with(['company','period','details.uom'])->paginate(10);
