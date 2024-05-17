@@ -30,15 +30,15 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="name">Name</label>
-                                        <input wire:model="name" type="text" class="form-control ">
+                                        <input type="text" class="form-control ">
                                     </div>
                                     <div class="col-4">
                                         <label for="email">Email</label>
-                                        <input wire:model="email" type="text" class="form-control ">
+                                        <input  type="text" class="form-control ">
                                     </div>
                                     <div class="col-4">
                                         <label for="role">Role</label>
-                                        <select wire:model="role" class="form-control ">
+                                        <select  class="form-control ">
                                             <option value="">- All Role -</option>
                                         </select>
                                     </div>
@@ -64,17 +64,17 @@
                                         <th class="text-center" style="width: 5%">#</th>
                                         <th class="text-center" style="width: 5%">Action</th>
                                         <th>company</th>
-                                        <th class="text-nowrap">Request Number</th>
-                                        <th>Periode</th>
-                                        <th class="text-nowrap">Material Code</th>
-                                        <th class="text-nowrap">Part No</th>
+                                        <th class="text-nowrap text-center">Request Number</th>
+                                        <th class="text-center">Periode</th>
+                                        <th class="text-nowrap text-center">Material Code</th>
+                                        <th class="text-nowrap text-center">Part No</th>
                                         <th class="text-nowrap">Material Description</th>
                                         <th class="text-nowrap">UOM</th>
                                         <th class="text-nowrap">Quantity</th>
                                         <th class="">Note</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="text-nowrap">
                                     @if ($quotas->isEmpty())
                                         {!! dataNotFond(8) !!}
                                     @else
@@ -95,8 +95,8 @@
                                                 <td>{{ $val->details[0]->material_code }}</td>
                                                 <td>{{ $val->details[0]->part_no }}</td>
                                                 <td>{{ $val->details[0]->material_description }}</td>
-                                                <td>{{ $val->details[0]->qty }}</td>
                                                 <td>{{ $val->details[0]->uom->uom_name }}</td>
+                                                <td>{{ number_format($val->details[0]->qty, 2, ',', '.') }}</td>
                                                 <td>{{ $val->notes}}</td>
                                             </tr>
                                         @endforeach
@@ -112,6 +112,7 @@
             </div>
         </div>
     </div>
+    @livewire('quota.modal-quota')
     @push('scripts')
         <script>
             async function deleteItem(id) {
@@ -120,14 +121,6 @@
                 });
                 if (isConfirmed) {
                     @this.call('delete', id);
-                }
-            }
-            async function resetPassword(id) {
-                const isConfirmed = await sweetReset({
-                    id: id
-                });
-                if (isConfirmed) {
-                    @this.call('reset_password', id);
                 }
             }
         </script>
