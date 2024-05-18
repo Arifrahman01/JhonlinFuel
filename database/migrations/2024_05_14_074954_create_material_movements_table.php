@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('material_mnemonic', 255)->nullable();
             $table->string('material_description', 255);
             $table->date('movement_date');
-            $table->enum('movement_type', ['receipt', 'transfer', 'receipt-transfer', 'issue', 'adjust'])->default('receipt');
+            $table->string('movement_type', 10);
             $table->smallInteger('plant_id');
             $table->smallInteger('sloc_id');
             $table->smallInteger('uom_id');

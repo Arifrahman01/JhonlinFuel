@@ -15,8 +15,6 @@ return new class extends Migration
             $table->increments('id');
             $table->smallInteger('company_id');
             $table->string('adjustment_no', 100);
-            $table->integer('plant_id');
-            $table->integer('sloc_id');
             $table->longText('notes')->nullable();
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
@@ -29,6 +27,8 @@ return new class extends Migration
             $table->increments('id');
             $table->integer('header_id');
             $table->smallInteger('company_id');
+            $table->integer('plant_id');
+            $table->integer('sloc_id');
             $table->integer('material_id');
             $table->string('material_code', 100);
             $table->string('part_no', 100)->nullable();
