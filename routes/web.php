@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Quota\QuotaList;
+use App\Livewire\Transaction\TransactionList;
 use App\Livewire\User\UserList;
 
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/users', UserList::class)->name('users.index'); 
     Route::get('/qouta', QuotaList::class)->name('qouta.index'); 
+    Route::get('/transaction', TransactionList::class)->name('transaction.index'); 
 
 });
 

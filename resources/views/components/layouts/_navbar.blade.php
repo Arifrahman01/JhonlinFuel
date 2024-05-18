@@ -38,7 +38,13 @@
                     <div class="dropdown-menu">
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
-                                <a class="dropdown-item" href="{{ route('qouta.index') }}">
+                                <a class="dropdown-item" href="{{ route('transaction.index') }}">
+                                    Transaction
+                                </a>
+                                <a class="dropdown-item" href="">
+                                    Adjusment
+                                </a>
+                                {{-- <a class="dropdown-item" href="{{ route('qouta.index') }}">
                                     Quota Request
                                 </a>
                                 <a class="dropdown-item active" href="./blank.html">
@@ -57,12 +63,12 @@
                                 <a class="dropdown-item" href="./datagrid.html">
                                     Adjusment
                                     <span class="badge badge-sm bg-green-lt text-uppercase ms-auto">New</span>
-                                </a>
+                                </a> --}}
                             </div>
                         </div>
                     </div>
                 </li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" style="display: none">
                     <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
                         <span class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/star -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"

@@ -59,6 +59,7 @@ class User extends Authenticatable
         return LogOptions::defaults()
             ->logAll()
             ->logOnlyDirty();
+    }
 
     public function scopeSearch($query, $filters)
     {
