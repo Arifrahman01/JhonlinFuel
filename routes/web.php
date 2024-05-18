@@ -1,6 +1,7 @@
 
 <?php
 
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Issue\IssueList;
@@ -23,15 +24,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    Route::get('/users', UserList::class)->name('users.index'); 
-    Route::get('/qouta', QuotaList::class)->name('qouta.index'); 
 
-    Route::get('/transaction', TransactionList::class)->name('transaction.index'); 
+    Route::get('/users', UserList::class)->name('users.index');
+    Route::get('/qouta', QuotaList::class)->name('qouta.index');
+
+    Route::get('/transaction', TransactionList::class)->name('transaction.index');
 
 
 
     Route::get('/issue', IssueList::class)->name('issue.index');
+
+    Route::get('/soh-overview', [MaterialController::class, 'sohOverview'])->name('issue.index');
 });
 
 require __DIR__ . '/auth.php';

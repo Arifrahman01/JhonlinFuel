@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('material_description', 255);
             $table->smallInteger('uom_id');
             $table->decimal('qty');
-            $table->enum('status', ['on hand', 'intransit'])->default('on hand');
+            $table->enum('status', ['on-hand', 'intransit'])->default('on-hand');
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();
