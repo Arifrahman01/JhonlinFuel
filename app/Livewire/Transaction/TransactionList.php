@@ -2,12 +2,17 @@
 
 namespace App\Livewire\Transaction;
 
+use App\Models\User;
 use Livewire\Component;
 
 class TransactionList extends Component
 {
+
     public function render()
     {
-        return view('livewire.transaction.transaction-list');
+        $transaction = User::with('role')->paginate(10);
+        return view('livewire.transaction.transaction-list',compact('transaction'));
     }
+
+
 }
