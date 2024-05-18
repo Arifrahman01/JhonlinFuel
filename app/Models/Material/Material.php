@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Material;
+
+use App\Models\BaseModel;
 
 class Material extends BaseModel
 {

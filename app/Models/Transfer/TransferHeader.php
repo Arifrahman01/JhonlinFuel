@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Transfer;
+
+use App\Models\BaseModel;
 
 class TransferHeader extends BaseModel
 {

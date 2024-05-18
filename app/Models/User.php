@@ -53,6 +53,21 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+    public function scopeSearch($query, $filters)
+    {
+        return $query->when($filters['name'], function ($query, $name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        })
+            ->when($filters['email'], function ($query, $email) {
+                $query->where('email', 'like', '%' . $email . '%');
+            })
+            ->when($filters['username'], function ($query, $username) {
+                $query->where('username', 'like', '%' . $username . '%');
+            })
+            ->when($filters['role'], function ($query, $role) {
+                $query->where('role_id', $role);
+            });
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
@@ -61,19 +76,4 @@ class User extends Authenticatable
             ->logOnlyDirty();
     }
 
-    public function scopeSearch($query, $filters)
-    {
-        return $query->when($filters['name'], function ($query, $name) {
-            $query->where('name', 'like', '%' . $name . '%');
-        })
-        ->when($filters['email'], function ($query, $email) {
-            $query->where('email', 'like', '%' . $email . '%');
-        })
-        ->when($filters['username'], function ($query, $username) {
-            $query->where('username', 'like', '%' . $username . '%');
-        })
-        ->when($filters['role'], function ($query, $role) {
-            $query->where('role_id', $role);
-        });
-    }
 }

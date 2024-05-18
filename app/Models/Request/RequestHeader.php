@@ -1,6 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Request;
+
+use App\Models\BaseModel;
+use App\Models\Company;
+use App\Models\Period;
 
 class RequestHeader extends BaseModel
 {
@@ -9,13 +13,6 @@ class RequestHeader extends BaseModel
     protected $guarded = [
         'id',
     ];
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($model) {
-            $model->created_id = auth()->id();
-        });
-    }
 
     public function details()
     {

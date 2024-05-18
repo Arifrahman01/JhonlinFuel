@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Adjustment;
+
+use App\Models\BaseModel;
 
 class AdjustmentDetail extends BaseModel
 {
