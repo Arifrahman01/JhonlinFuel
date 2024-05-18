@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('material_transactions_tmp', function (Blueprint $table) {
             $table->id();
             $table->string('company_code', 10);
-            $table->enum('trans_type', ['ISS', 'RCV', 'TRF']);
+            $table->string('trans_type');
             $table->date('trans_date');
             $table->string('fuelman', 100);
             $table->string('equipment_no', 100);
