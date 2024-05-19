@@ -20,3 +20,13 @@ if (!function_exists('dataNotFond')) {
                 </tr>";
     }
 }
+if (!function_exists('toNumber')) {
+    function toNumber($string)
+    {
+        if (is_numeric($string)) {
+            return intval($string);
+        } else {
+            return 0;
+        }
+    }
+}

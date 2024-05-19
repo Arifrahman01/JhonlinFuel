@@ -15,7 +15,6 @@ return new class extends Migration
             $table->increments('id');
             $table->smallInteger('company_id');
             $table->string('adjustment_no', 100);
-            $table->longText('notes')->nullable();
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();
@@ -37,6 +36,7 @@ return new class extends Migration
             $table->smallInteger('uom_id');
             $table->decimal('origin_qty');
             $table->decimal('adjust_qty');
+            $table->longText('notes')->nullable();
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();

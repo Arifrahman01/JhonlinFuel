@@ -21,7 +21,7 @@
                         wire:click="closeModal">Close</button>
                 </div>
             @else
-                <form>
+                <form wire:submit.prevent="storeAdjustment">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modal-largeLabel">
                             {{ $adjustment ? 'Edit ' . $adjustment->adjustment_no ?? '' : 'Tambah Adjustment' }} </h5>
@@ -67,10 +67,10 @@
                                 </div>
                             </div>
                             <div class="col-3">
-                                <div class="mb-0">
+                                <div class="mb-3">
                                     <label class="form-label required">Adjust Qty</label>
-                                    <input type="number" wire:model="sohAdjustment" class="form-control"
-                                        value="{{ $adjust->adjustment_qty ?? '' }}" required>
+                                    <input type="number" wire:model.live="sohAdjustment" class="form-control" required
+                                        @if ($sohAdjustmentReadOnly) readonly @endif>
                                 </div>
                             </div>
                             <div class="col-3">
@@ -79,38 +79,54 @@
                             <div class="col-3">
                                 <div class="mb-3">
                                     <label class="form-label">Original Qty</label>
-                                    <div>{{ $soh }}</div>
-                                    {{-- <label
-                                        class="form-label">{{ $soh != '-' ? number_format($soh, 0, ',', '.') : $soh }}</label> --}}
+                                    <div>{{ $soh != '-' ? number_format($soh, 0, ',', '.') : $soh }}</div>
                                 </div>
                             </div>
-                            {{-- <div class="col-3">
+                            <div class="col-3">
                                 <div class="mb-3">
                                     <label class="form-label">Qty After</label>
-                                    <label
-                                        class="form-label">{{ $sohAfter != '-' ? number_format($sohAfter, 0, ',', '.') : $sohAfter }}</label>
+                                    <div>{{ $sohAfter != '-' ? number_format($sohAfter, 0, ',', '.') : $sohAfter }}
+                                    </div>
                                 </div>
-                            </div> --}}
+                            </div>
+
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" data-bs-toggle="autosize" placeholder="Notes" wire:model="notes"></textarea>
+                            </div>
 
                             <div class="col-12">
-                                <button type="button" id="btn-add" class="btn btn-primary w-100">Add</button>
+                                <button type="button" class="btn btn-primary w-100" wire:click="addData">Add</button>
                             </div>
 
                         </div>
                         <div class="card">
                             <div class="table-responsive">
-                                <table class="table table-vcenter card-table">
+                                <table class="table table-vcenter card-table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>Plant</th>
                                             <th>Sloc</th>
-                                            <th>Original Qty</th>
-                                            <th>Adjustment Qty</th>
+                                            <th>Origin Qty</th>
+                                            <th>Adjust Qty</th>
                                             <th>Qty After</th>
-                                            <th class="w-1"></th>
+                                            <th>Notes</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($datas as $data)
+                                            <tr>
+                                                <td>{{ $data->plant }}</td>
+                                                <td>{{ $data->sloc }}</td>
+                                                <td style="text-align: end">
+                                                    {{ number_format($data->soh_before, 0, ',', '.') }}</td>
+                                                <td style="text-align: end">
+                                                    {{ number_format($data->soh_adjust, 0, ',', '.') }}</td>
+                                                <td style="text-align: end">
+                                                    {{ number_format($data->soh_after, 0, ',', '.') }}</td>
+                                                <td>{{ $data->notes }}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>

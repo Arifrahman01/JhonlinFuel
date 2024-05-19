@@ -9,7 +9,8 @@ class AdjustmentList extends Component
 {
     public function render()
     {
-        $adjusts = AdjustmentHeader::paginate(10);
+        $adjusts = AdjustmentHeader::with('company')
+            ->paginate(10);
         return view('livewire.adjustment.adjustment-list', compact('adjusts'));
     }
 }

@@ -136,10 +136,6 @@
                                         {{-- <th class="text-center" style="width: 5%">Action</th> --}}
                                         <th>Company</th>
                                         <th>Adjustment No</th>
-                                        <th>Department</th>
-                                        <th>Fuelman</th>
-                                        <th>Equipment</th>
-                                        <th>Qty</th>
                                         {{-- <th class="w-1"></th> --}}
                                     </tr>
                                 </thead>
@@ -167,12 +163,8 @@
                                                             <i class="fas fa-edit"></i>
                                                         </a>
                                                     </td> --}}
-                                                <td>{{ $adjust->company_id }}</td>
-                                                <td>{{ $adjust->adjust_no }}</td>
-                                                <td>{{ $adjust->department }}</td>
-                                                <td>{{ $adjust->fuelman }}</td>
-                                                <td>{{ $adjust->equipment }}</td>
-                                                <td>{{ $adjust->details[0]->qty . ' ' . $adjust->details[0]->uom_id }}
+                                                <td>{{ data_get($adjust, 'company.company_name') }}</td>
+                                                <td>{{ $adjust->adjustment_no }}</td>
                                                 </td>
                                             </tr>
                                         @endforeach

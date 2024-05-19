@@ -2,9 +2,16 @@
 
 namespace App\Livewire\Adjustment;
 
+use App\Models\Adjustment\AdjustmentDetail;
+use App\Models\Adjustment\AdjustmentHeader;
+use App\Models\Company;
+use App\Models\Material\Material;
+use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
 use App\Models\Plant;
 use App\Models\Sloc;
+use App\Models\Uom;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class AdjustmentCreate extends Component
@@ -14,9 +21,15 @@ class AdjustmentCreate extends Component
     public $selectedPlant;
     public $slocs = [];
     public $selectedSloc;
-    public $soh = '-';
+    public $soh = 0;
+    public $sohAdjustmentReadOnly = true;
     public $sohAdjustment;
-    // public $sohAfter = '-';
+    public $sohAfter = 0;
+
+    public $notes = '';
+
+    public $datas = [];
+
     public $isLoadingSloc = false;
     public $loading = false;
 
@@ -30,8 +43,6 @@ class AdjustmentCreate extends Component
 
     public function render()
     {
-        // $userCompany = 1; // auth()->user()->company_id;
-        // $plants = Plant::where('company_id', $userCompany)->get();
         return view('livewire.adjustment.adjustment-create');
     }
 
@@ -57,71 +68,130 @@ class AdjustmentCreate extends Component
 
     public function updatedSelectedPlant($value)
     {
-        $this->dispatch('logData', 'panggil fungsi updatedSelectedPlant');
         $this->dispatch('logData', 'Selected Plant: ' . $value);
         $this->slocs = Sloc::where('plant_id', $value)->get();
+        $this->sohAdjustmentReadOnly = true;
+        $this->updateSohAfter();
     }
 
     public function updatedSelectedSloc($value)
     {
-        $this->dispatch('logData', 'panggil fungsi updatedSelectedSloc');
         $this->dispatch('logData', 'Selected Sloc: ' . $value);
 
         if (empty($value)) {
-            $this->soh = '-';
+            $this->soh = 0;
+            $this->sohAdjustmentReadOnly = true;
         } else {
             $materialStock = MaterialStock::where('sloc_id', $value)
                 ->where('status', 'on-hand')
                 ->first();
             $this->soh = $materialStock->qty;
+            $this->sohAdjustmentReadOnly = false;
         }
+        $this->updateSohAfter();
         // $this->soh = 2000;
     }
 
-    public function getSloc($value)
+    public function updatedSohAdjustment($value)
     {
-        $this->dispatch('logData', 'panggil fungsi getSloc');
-        // dd('updatedSelectA called with value: ' . $value);
-        // Logika untuk memperbarui selectB berdasarkan nilai selectA
-        // if ($value == 'option1') {
-        //     $this->selectB = [
-        //         'option1_1' => 'Option 1.1',
-        //         'option1_2' => 'Option 1.2',
-        //     ];
-        // } elseif ($value == 'option2') {
-        //     $this->selectB = [
-        //         'option2_1' => 'Option 2.1',
-        //         'option2_2' => 'Option 2.2',
-        //     ];
-        // } else {
-        //     $this->selectB = [];
-        // }
-        // dd($value);
-        $this->isLoadingSloc = true;
-        $this->slocs = Sloc::where('plant_id', $value)->get();
-        $this->selectedSloc = '';
-        $this->isLoadingSloc = false;
+        $this->dispatch('logData', 'Soh Adjustment: ' . $value);
+        $this->sohAfter = $this->soh + (empty($value) ? 0 : $value);
     }
 
-    public function getSOH()
+    private function updateSohAfter()
     {
-        $this->dispatch('logData', 'panggil fungsi getSOH');
-        $this->dispatch('logData', 'Selected Sloc: ' . $this->selectedSloc);
-        // logger('Selected Sloc: ' . $this->selectedSloc);
-        // if ($this->selectedSloc == '') {
-        //     $this->soh = '-';
-        // } else {
-        //     $materialStock = MaterialStock::where('sloc_id', $this->selectedSloc)
-        //         ->where('status', 'on-hand')
-        //         ->first();
-        //     $this->soh = $materialStock->qty;
-        // }
-        // $this->soh = 2000;
+        $this->sohAfter = toNumber($this->soh) + toNumber($this->sohAdjustment);
     }
 
-    public function adjustSOH()
+    public function addData()
     {
-        // $this->sohAfter = $this->soh + $this->sohAdjustment;
+        $plant = Plant::find($this->selectedPlant);
+        $sloc = Sloc::find($this->selectedSloc);
+        $data_ = (object) [
+            'plant_id' => $this->selectedPlant,
+            'plant' => $plant->plant_name,
+            'sloc_id' => $this->selectedSloc,
+            'sloc' => $sloc->sloc_name,
+            'soh_before' => toNumber($this->soh),
+            'soh_adjust' => toNumber($this->sohAdjustment),
+            'soh_after' => toNumber($this->sohAfter),
+            'notes' => $this->notes,
+        ];
+        array_push($this->datas, $data_);
+        $this->dispatch('logData', $this->datas);
+        // $this->datas[] = $data_;
+    }
+
+    public function storeAdjustment()
+    {
+        $this->dispatch('logData', $this->datas);
+        DB::beginTransaction();
+        try {
+            $currentDate = date('Y-m-d');
+            $plant = Plant::find($this->datas[0]->plant_id);
+            $this->dispatch('logData', $plant);
+            $adjusmentNo = '001';
+            $header = AdjustmentHeader::create([
+                'company_id' => $plant->company_id,
+                'adjustment_no' => $adjusmentNo,
+            ]);
+
+            $material = Material::find(1);
+
+            foreach ($this->datas as $data) {
+                $detail = AdjustmentDetail::create([
+                    'header_id' => $header->id,
+                    'company_id' => $plant->company_id,
+                    'plant_id' => $data->plant_id,
+                    'sloc_id' => $data->sloc_id,
+                    'material_id' => 1,
+                    'material_code' => $material->material_code,
+                    'part_no' => $material->part_no,
+                    'material_mnemonic' => $material->material_mnemonic,
+                    'material_description' => $material->material_description,
+                    'uom_id' => 1,
+                    'origin_qty' => $data->soh_before,
+                    'adjust_qty' => $data->soh_adjust,
+                    'notes' => $data->notes,
+                ]);
+
+                MaterialMovement::create([
+                    'company_id' => $plant->company_id,
+                    'doc_header_id' => $header->id,
+                    'doc_no' => $adjusmentNo,
+                    'doc_detail_id' => $detail->id,
+                    'material_id' => 1,
+                    'material_code' => $material->material_code,
+                    'part_no' => $material->part_no,
+                    'material_mnemonic' => $material->material_mnemonic,
+                    'material_description' => $material->material_description,
+                    'movement_date' => $currentDate,
+                    'movement_type' => 'adj',
+                    'plant_id' => $data->plant_id,
+                    'sloc_id' => $data->sloc_id,
+                    'uom_id' => 1,
+                    'qty' => $data->soh_adjust,
+                ]);
+
+                $qtyUpdate = toNumber($data->soh_before) + toNumber($data->soh_adjust);
+
+                MaterialStock::where('company_id', $plant->company_id)
+                    ->where('plant_id', $data->plant_id)
+                    ->where('sloc_id', $data->sloc_id)
+                    ->where('status', 'on-hand')
+                    ->update([
+                        'qty' => $qtyUpdate,
+                    ]);
+            }
+            DB::commit();
+            $this->closeModal();
+            // $this->refreshPage();
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $this->dispatch('logData', 'error : ' . $th->getMessage());
+
+            //throw $th;
+        }
     }
 
     public function closeModal()
