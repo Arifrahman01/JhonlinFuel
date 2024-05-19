@@ -21,7 +21,7 @@ class TransactionImport implements ToCollection
                 $transaction->company_code = $row[0];
                 $transaction->fuel_warehouse = $row[1];
                 $transaction->trans_type = $row[2];
-                $transaction->trans_date =  Carbon::createFromFormat('Y-m-d', '1900-01-01')->addDays($row[3] - 1)->format('Y-m-d');
+                $transaction->trans_date =  Carbon::createFromFormat('Y-m-d', '1900-01-01')->addDays($row[3] - 2)->format('Y-m-d');
                 $transaction->fuelman = $row[4];
                 $transaction->equipment_no = $row[5];
                 $transaction->location = $row[6];
