@@ -71,7 +71,7 @@ class DatabaseSeeder extends Seeder
         $tanjungPlant = Plant::create([
             'company_id' => $jgh->id,
             'plant_code' => 'tanjung',
-            'plant_name' => 'Tunjang',
+            'plant_name' => 'Tanjung',
         ]);
 
         $jgBtlPlant = Plant::create([
@@ -145,28 +145,28 @@ class DatabaseSeeder extends Seeder
             'company_id' => $jgh->id,
             'plant_id' => $seiDuaPlant->id,
             'sloc_code' => 'tanki-1',
-            'sloc_name' => 'Tanki 1',
+            'sloc_name' => 'Tanki 1 Sei Dua',
         ]);
 
         $tanki2sloc = Sloc::create([
             'company_id' => $jgh->id,
             'plant_id' => $seiDuaPlant->id,
             'sloc_code' => 'tanki-2',
-            'sloc_name' => 'Tanki 2',
+            'sloc_name' => 'Tanki 2 Sei Dua',
         ]);
 
         $tanki1Bntsloc = Sloc::create([
             'company_id' => $jgh->id,
             'plant_id' => $bunatiPlant->id,
             'sloc_code' => 'tanki-1-bnt',
-            'sloc_name' => 'Tanki 1',
+            'sloc_name' => 'Tanki 1 Bunati',
         ]);
 
         $tanki1Tjgsloc = Sloc::create([
             'company_id' => $jgh->id,
             'plant_id' => $tanjungPlant->id,
             'sloc_code' => 'tanki-1-tjg',
-            'sloc_name' => 'Tanki 1',
+            'sloc_name' => 'Tanki 1 Tanjung',
         ]);
 
         $tankiPal1Sloc = Sloc::create([
@@ -414,6 +414,20 @@ class DatabaseSeeder extends Seeder
             'uom_id' => $uom->id,
             'qty' => 17000,
             'status' => 'on-hand',
+        ]);
+
+        MaterialStock::create([
+            'company_id' => $jg->id,
+            'plant_id' => $jgBtlPlant->id,
+            'sloc_id' => $tankiPal1Sloc->id,
+            'material_id' => $material->id,
+            'material_code' => $material->material_code,
+            'part_no' => $material->part_no,
+            'material_mnemonic' => $material->material_mnemonic,
+            'material_description' => $material->material_description,
+            'uom_id' => $uom->id,
+            'qty' => 5000,
+            'status' => 'intransit',
         ]);
 
         MaterialStock::create([

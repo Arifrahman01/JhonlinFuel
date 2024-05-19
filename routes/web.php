@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\Adjustment\AdjustmentList;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Issue\IssueList;
 
@@ -34,7 +35,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/issue', IssueList::class)->name('issue.index');
 
-    Route::get('/soh-overview', [MaterialController::class, 'sohOverview'])->name('issue.index');
+    Route::get('/soh-overview', [MaterialController::class, 'sohOverview'])->name('soh.index');
+    Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');
 });
 
 require __DIR__ . '/auth.php';
