@@ -74,7 +74,10 @@ class TransactionList extends Component
     public function storeData($data)
     {
         DB::beginTransaction();
-        $postingNumber = str_pad(($maxPostingNo = Transaction::max('posting_no')) ? $maxPostingNo + 1 : 1, 6, '0', STR_PAD_LEFT);
+        $lastPosting = Transaction::max('posting_no');
+        $parts = explode('-', $lastPosting);
+        $lastPostingNumber = end($parts);
+        $newPostingNumber = str_pad($lastPostingNumber ? $lastPostingNumber + 1 : 1, 6, '0', STR_PAD_LEFT);
         try {
             foreach ($data as $tmp) {
                 $company = Company::where('company_code',$tmp->company_code)->first();
@@ -85,7 +88,7 @@ class TransactionList extends Component
                 $fuelType = Material::find($tmp->fuel_type)->first();
                 Transaction::create([
                     'company_id'    => $company->id,
-                    'posting_no'    => 'POS-'.$postingNumber,
+                    'posting_no'    => 'POS-'.$newPostingNumber,
                     'trans_type'    => $tmp->trans_type,
                     'trans_date'    => $tmp->trans_date,
                     'fuelman_id'    => 1, /* ambil dari master $fuelman->id*/
@@ -102,8 +105,8 @@ class TransactionList extends Component
                     'statistic_type'    => $tmp->statistic_type,
                     'meter_'        => $tmp->meter_value,
                 ]);
+                TmpTransaction::destroy($tmp->id);
             }
-            
             DB::commit();
         $this->dispatch('success', 'Data has been posting');
         } catch (\Exception $e) {
