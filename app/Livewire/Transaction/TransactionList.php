@@ -21,9 +21,7 @@ class TransactionList extends Component
 
     public function render()
     {
-        // $transactions = TmpTransaction::sumQty($this->filter_date)->paginate(10);
         $transactions = TmpTransaction::sumQty2($this->filter_date);
-        // dd($transactions);
         return view('livewire.transaction.transaction-list', ['transactions' => $transactions]);
     }
 
