@@ -86,25 +86,66 @@ class TransactionList extends Component
                 $location = '';
                 $activity = '';
                 $fuelType = Material::find($tmp->fuel_type)->first();
-                Transaction::create([
-                    'company_id'    => $company->id,
-                    'posting_no'    => 'POS-'.$newPostingNumber,
-                    'trans_type'    => $tmp->trans_type,
-                    'trans_date'    => $tmp->trans_date,
-                    'fuelman_id'    => 1, /* ambil dari master $fuelman->id*/
-                    'fuelman_name'  => 'fuelman', /* ambil dari master $fuelman->name*/
-                    'equipment_id'  => 1,
-                    'equipment_no'   => 'equipment',
-                    'location_id'   => 1,
-                    'location_name' => 'location',
-                    'department'    => $tmp->department, // tidak ada master ?
-                    'activity_id'   => 1,
-                    'activity_name' => 'activity',
-                    'fuel_type'     => $fuelType->material_description ?? 'SOLAR',
-                    'qty'           => $tmp->qty,
-                    'statistic_type'    => $tmp->statistic_type,
-                    'meter_'        => $tmp->meter_value,
-                ]);
+                if ($tmp->trans_type == 'TRF') {
+                    Transaction::create([
+                        'company_id'    => $company->id,
+                        'posting_no'    => 'POS-'.$newPostingNumber,
+                        'trans_type'    => 'TR1',
+                        'trans_date'    => $tmp->trans_date,
+                        'fuelman_id'    => 1, /* ambil dari master $fuelman->id*/
+                        'fuelman_name'  => 'fuelman', /* ambil dari master $fuelman->name*/
+                        'equipment_id'  => 1,
+                        'equipment_no'   => 'equipment',
+                        'location_id'   => 1,
+                        'location_name' => 'location',
+                        'department'    => $tmp->department, // tidak ada master ?
+                        'activity_id'   => 1,
+                        'activity_name' => 'activity',
+                        'fuel_type'     => $fuelType->material_description ?? 'SOLAR',
+                        'qty'           => $tmp->qty,
+                        'statistic_type'=> $tmp->statistic_type,
+                        'meter_value'   => $tmp->meter_value,
+                    ]);
+                    Transaction::create([
+                        'company_id'    => $company->id,
+                        'posting_no'    => 'POS-'.$newPostingNumber,
+                        'trans_type'    => 'TR2',
+                        'trans_date'    => $tmp->trans_date,
+                        'fuelman_id'    => 1, /* ambil dari master $fuelman->id*/
+                        'fuelman_name'  => 'fuelman', /* ambil dari master $fuelman->name*/
+                        'equipment_id'  => 1,
+                        'equipment_no'  => 'equipment',
+                        'location_id'   => 1,
+                        'location_name' => 'location',
+                        'department'    => $tmp->department, // tidak ada master ?
+                        'activity_id'   => 1,
+                        'activity_name' => 'activity',
+                        'fuel_type'     => $fuelType->material_description ?? 'SOLAR',
+                        'qty'           => $tmp->qty,
+                        'statistic_type'=> $tmp->statistic_type,
+                        'meter_value'   => $tmp->meter_value,
+                    ]);
+                }else {
+                    Transaction::create([
+                        'company_id'    => $company->id,
+                        'posting_no'    => 'POS-'.$newPostingNumber,
+                        'trans_type'    => $tmp->trans_type,
+                        'trans_date'    => $tmp->trans_date,
+                        'fuelman_id'    => 1, /* ambil dari master $fuelman->id*/
+                        'fuelman_name'  => 'fuelman', /* ambil dari master $fuelman->name*/
+                        'equipment_id'  => 1,
+                        'equipment_no'   => 'equipment',
+                        'location_id'   => 1,
+                        'location_name' => 'location',
+                        'department'    => $tmp->department, // tidak ada master ?
+                        'activity_id'   => 1,
+                        'activity_name' => 'activity',
+                        'fuel_type'     => $fuelType->material_description ?? 'SOLAR',
+                        'qty'           => $tmp->qty,
+                        'statistic_type'=> $tmp->statistic_type,
+                        'meter_value'   => $tmp->meter_value,
+                    ]);
+                }
                 TmpTransaction::destroy($tmp->id);
             }
             DB::commit();
