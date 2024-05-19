@@ -65,7 +65,7 @@ const sweetReset = async ({ head = 'Are you sure?', title = 'Reset this password
     }
 };
 
-const sweetPosting = async ({ head = 'Are you sure?', title = 'Posting this transaction !', buttonText = 'Yes, do it!', id }) => {
+const sweetPosting = async ({ head = 'Are you sure?', title = 'Posting this transaction !', buttonText = 'Yes, do it!', id }) => { 
     try {
         const result = await Swal.fire({
             title: head,
