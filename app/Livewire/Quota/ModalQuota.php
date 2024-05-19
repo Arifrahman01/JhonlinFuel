@@ -4,7 +4,10 @@ namespace App\Livewire\Quota;
 
 use App\Models\Company;
 use App\Models\Material;
+use App\Models\Material\Material as MaterialMaterial;
+use App\Models\Material\MaterialStock;
 use App\Models\Period;
+use App\Models\Request\RequestHeader as RequestRequestHeader;
 use App\Models\RequestHeader;
 use Livewire\Component;
 
@@ -39,7 +42,7 @@ class ModalQuota extends Component
 
     public function render()
     {
-        $materialModal = Material::all();
+        $materialModal = MaterialMaterial::all();
         $companyModal = Company::all();
         $periodeModal = Period::all();
         return view('livewire.quota.modal-quota',compact('materialModal','companyModal','periodeModal'));
@@ -50,13 +53,13 @@ class ModalQuota extends Component
             if ($id) {
                 $this->dispatch('success', $id);
             }else{
-                $header = RequestHeader::create([
+                $header = RequestRequestHeader::create([
                     'company_id' => $this->company_id,
                     'request_no' => $this->request_no,
                     'period_id' => $this->period_id,
                     'notes' => $this->notes,
                 ]);
-                $materialByID = Material::find($this->material_id);
+                $materialByID = MaterialMaterial::find($this->material_id);
                 $header->details()->create([
                     'header_id' => $header->id,
                     'company_id'    => $this->company_id,
