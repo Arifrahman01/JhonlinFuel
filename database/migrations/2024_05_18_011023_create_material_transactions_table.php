@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('material_transactions_tmp', function (Blueprint $table) {
             $table->id();
             $table->string('company_code', 10);
+            $table->string('fuel_warehouse', 100);
             $table->string('trans_type');
             $table->date('trans_date');
             $table->string('fuelman', 100);
@@ -25,9 +26,10 @@ return new class extends Migration
             $table->decimal('qty');
             $table->string('statistic_type', 100)->nullable();
             $table->decimal('meter_value')->nullable();
-            $table->integer('created_id');
-            $table->integer('updated_id');
-            $table->integer('deleted_id');
+            $table->string('status_error', 100);
+            $table->integer('created_id')->nullable();
+            $table->integer('updated_id')->nullable();
+            $table->integer('deleted_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -51,9 +53,9 @@ return new class extends Migration
             $table->decimal('qty');
             $table->string('statistic_type', 100)->nullable();
             $table->decimal('meter_value')->nullable();
-            $table->integer('created_id');
-            $table->integer('updated_id');
-            $table->integer('deleted_id');
+            $table->integer('created_id')->nullable();
+            $table->integer('updated_id')->nullable();
+            $table->integer('deleted_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

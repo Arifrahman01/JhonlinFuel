@@ -10,7 +10,8 @@
                         <div class="col-6 d-flex justify-content-end">
                             <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
                                 data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp; Create</button>
+                                    class="fa fa-plus-circle"></i>&nbsp;
+                                Create</button>
                         </div>
                     </h2>
                 </div>
@@ -64,7 +65,8 @@
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             <input type="text" class="form-control form-control-sm"
-                                                aria-label="Adjustment No" placeholder="Adjustment No">
+                                                aria-label="Adjustment No" placeholder="Adjustment No"
+                                                wire:model="adjNo">
                                         </div>
                                     </div>
 
@@ -127,46 +129,49 @@
                                 </div> --}}
                             </form>
                         </div>
-                        {{-- <div class="card-body"> --}}
                         <div class="table-responsive">
-                            <table class="table table-vcenter card-table table-striped">
+                            <table id="treegrid" class="table table-vcenter card-table table-striped table-bordered">
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 5%">#</th>
                                         {{-- <th class="text-center" style="width: 5%">Action</th> --}}
-                                        <th>Company</th>
-                                        <th>Adjustment No</th>
+                                        <th class="text-center">Company / Plant</th>
+                                        <th class="text-center">Adjustment No / Sloc</th>
+                                        <th class="text-center">Origin Qty</th>
+                                        <th class="text-center">Adjust Qty</th>
+                                        <th class="text-center">Qty After</th>
+                                        <th class="text-center">Notes</th>
                                         {{-- <th class="w-1"></th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @if ($adjusts->isEmpty())
-                                        {!! dataNotFond(8) !!}
+                                        {!! dataNotFond(6) !!}
                                     @else
                                         @foreach ($adjusts as $adjust)
-                                            <tr>
-                                                <td>{{ $loop->index + 1 }}</td>
-                                                {{-- <td class="text-nowrap">
-                                                        <a id="btn-reset{{ $user->id }}" title="Reset Password User"
-                                                            onclick="resetPassword({{ $user->id }})">
-                                                            <i class="fa fa-lock"></i>
-                                                        </a> &nbsp;
-    
-                                                        <a id="btn-delete{{ $user->id }}" title="Deleted User"
-                                                            onclick="deleteItem({{ $user->id }})">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp;
-    
-                                                        <a title="Edit User"
-                                                            wire:click="$dispatch('openModal', [{{ $user->id }}])"
-                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                    </td> --}}
-                                                <td>{{ data_get($adjust, 'company.company_name') }}</td>
-                                                <td>{{ $adjust->adjustment_no }}</td>
+                                            <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1"
+                                                aria-expanded="false">
+                                                <td>{{ ($adjusts->currentPage() - 1) * $adjusts->perPage() + $loop->index + 1 }}
                                                 </td>
+                                                <td>{{ data_get($adjust, 'company.company_name') }}</td>
+                                                <td colspan="5">{{ $adjust->adjustment_no }}</td>
                                             </tr>
+                                            @foreach ($adjust->details as $detail)
+                                                <tr role="row" aria-level="2" aria-posinset="2" aria-setsize="3"
+                                                    class="hidden">
+                                                    <td></td>
+                                                    <td>{{ $detail->plant->plant_name }}</td>
+                                                    <td>{{ $detail->sloc->sloc_name }}</td>
+                                                    <td style="text-align: right">
+                                                        {{ number_format($detail->origin_qty, 0, ',', '.') }}</td>
+                                                    <td style="text-align: right">
+                                                        {{ number_format($detail->adjust_qty, 0, ',', '.') }}</td>
+                                                    <td style="text-align: right">
+                                                        {{ number_format(toNumber($detail->origin_qty) + toNumber($detail->adjust_qty), 0, ',', '.') }}
+                                                    </td>
+                                                    <td>{{ $detail->notes }}</td>
+                                                </tr>
+                                            @endforeach
                                         @endforeach
                                     @endif
                                 </tbody>
@@ -184,6 +189,7 @@
     </div>
     @livewire('adjustment.adjustment-create')
     @push('scripts')
+        <script src="./dist/js/custom.js"></script>
         <script>
             document.addEventListener('livewire:init', function() {
                 Livewire.on('logData', data => {
