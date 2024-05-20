@@ -35,9 +35,9 @@
             {{-- ini isi content --}}
             {{ $slot }}
         </div>
-        <footer class="footer footer-transparent d-print-none">
+        {{-- <footer class="footer footer-transparent d-print-none">
             @include('components.layouts._footer')
-        </footer>
+        </footer> --}}
     </div>
     @livewireScripts
     <script src="./dist/js/tabler.min.js"></script>

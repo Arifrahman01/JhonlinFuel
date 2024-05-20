@@ -38,13 +38,21 @@
                     <div class="dropdown-menu">
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
+                                <div class="dropend">
+                                    <a class="dropdown-item dropdown-toggle" href="#sidebar-cards" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false" >
+                                      Loader
+                                      <span class="badge badge-sm bg-green-lt text-uppercase ms-auto">New</span>
+                                    </a>
+                                    <div class="dropdown-menu">
+                                      <a href="{{ route('transaction.index') }}" class="dropdown-item">
+                                        Belum Posting
+                                      </a>
+                                      <a href="{{ route('posting.index') }}" class="dropdown-item">
+                                        Sudah Posting
+                                      </a>
+                                    </div>
+                                  </div>
 
-                                <a class="dropdown-item" href="{{ route('transaction.index') }}">
-                                    Transaction
-                                </a>
-                                <a class="dropdown-item" href="">
-                                    Adjusment
-                                </a>
                                 {{-- <a class="dropdown-item" href="{{ route('qouta.index') }}">
 
                                     Quota Request
