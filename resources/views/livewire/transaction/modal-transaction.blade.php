@@ -30,7 +30,8 @@
                                 <div class="row-cards">
                                     <div class="mb-3">
                                         <label for="fileLoader" class="form-label">File Loader</label>
-                                        <input wire:model="fileLoader" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" id="fileLoader" name="fileLoader"  onchange="loadFile()" type="file" required>
+                                        <input wire:model="fileLoader" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                            id="fileLoader" name="fileLoader" onchange="loadFile()" type="file" required>
                                     </div>
                                 </div>
                             </div>
@@ -48,25 +49,43 @@
                         </div>
                         <div class="modal-body">
                             <div class="row row-cards">
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="form-label">Company</label>
-                                    <select name="" id="" wire:model="company_code" class="form-control" required>
+                                    <select wire:model.live="selectedCompany" class="form-control" required>
                                         <option value="">-Select Company-</option>
-                                        {{-- @dd($dataTmp); --}}
                                         @foreach ($companiesModal as $comp)
                                             <option value="{{ $comp->company_code }}" {{ selected($comp->company_code, $dataTmp ? $dataTmp->company_code : '') }}>{{ $comp->company_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-3">
-                                    <label for="" class="form-label">Fuel Warehouse</label>
+                                <div class="col-4">
+                                    <label for="" class="form-label">Location/Plant
+                                        <div wire:loading wire:target="selectedCompany">
+                                            <i class="fa fa-spinner fa-spin"></i>
+                                        </div>
+                                    </label>
+                                    <select name="" id="" class="form-control" wire:model.live="selectedlocation" required>
+                                        <option value="">-Select Location-</option>
+                                        @foreach ($plants as $plant)
+                                            <option value="{{ $plant->id }}"  {{ selected($plant->id, $dataTmp ? $dataTmp->selectedlocation : '') }}>
+                                                {{ $plant->id . ' - ' . $plant->plant_name.'-'.$dataTmp->selectedlocation }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <label for="" class="form-label">Fuel Warehouse
+                                        <div wire:loading wire:target="selectedlocation">
+                                            <i class="fa fa-spinner fa-spin"></i>
+                                        </div>
+                                    </label>
                                     <select name="" id="" class="form-control" wire:model="fuel_warehouse" required>
                                         <option value="">-Select Warehouse-</option>
                                         @foreach ($slocs as $sloc)
-                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code , $dataTmp ? $dataTmp->fuel_warehouse : '') }}>{{ $sloc->sloc_code.' - '. $sloc->sloc_name }}</option>
+                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code, $dataTmp ? $dataTmp->fuel_warehouse : '') }}>
+                                                {{ $sloc->sloc_code . ' - ' . $sloc->sloc_name }}</option>
                                         @endforeach
                                     </select>
-                                
                                 </div>
                                 <div class="col-3">
                                     <label for="" class="form-label">Trans Type</label>
@@ -79,7 +98,7 @@
                                 </div>
                                 <div class="col-3">
                                     <label for="" class="form-label">Issue Date</label>
-                                    <input type="date" class="form-control" wire:model='trans_date'  value="{{ $dataTmp ? $dataTmp->trans_date : '' }}" required>
+                                    <input type="date" class="form-control" wire:model='trans_date' value="{{ $dataTmp ? $dataTmp->trans_date : '' }}" required>
                                 </div>
                                 <div class="col-3">
                                     <label for="" class="form-label">Fuelman</label>
@@ -93,19 +112,12 @@
                                     <select name="" id="" class="form-control" wire:model="equipment_no" required>
                                         <option value="">-Equipment Number-</option>
                                         @foreach ($equipments as $equip)
-                                         <option value="{{ $equip->equipment_no }}" {{ selected($equip->equipment_no , $dataTmp ? $dataTmp->equipment_no : '') }}> {{ $equip->equipment_no.' - '.$equip->equipment_description }}</option>
+                                            <option value="{{ $equip->equipment_no }}" {{ selected($equip->equipment_no, $dataTmp ? $dataTmp->equipment_no : '') }}>
+                                                {{ $equip->equipment_no . ' - ' . $equip->equipment_description }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-3">
-                                    <label for="" class="form-label">Location</label>
-                                    <select name="" id="" class="form-control" wire:model="location" required>
-                                        <option value="">-Select Location-</option>
-                                        @foreach ($plants as $plant)
-                                            <option value="{{ $plant->id }}">{{ $plant->id.' - '.$plant->plant_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+
                                 <div class="col-3">
                                     <label for="" class="form-label">Department</label>
                                     <select name="" id="" class="form-control" wire:model="department" required>
@@ -118,7 +130,7 @@
                                     <select name="" id="" class="form-control" wire:model="activity" required>
                                         <option value="">-Select Activity-</option>
                                         @foreach ($activitys as $activity)
-                                            <option value="{{ $activity->id }}">{{ $activity->id.' - '.$activity->activity_name }}</option>
+                                            <option value="{{ $activity->id }}">{{ $activity->id . ' - ' . $activity->activity_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -127,7 +139,7 @@
                                     <select name="" id="" class="form-control" wire:model="fuel_type" required>
                                         <option value="">-Select Fuel Type-</option>
                                         @foreach ($material as $mat)
-                                            <option value="{{ $mat->id }}" {{ selected($mat->id, $dataTmp ? $dataTmp->fuel_type : '') }} >{{ $mat->material_description }}</option>
+                                            <option value="{{ $mat->id }}" {{ selected($mat->id, $dataTmp ? $dataTmp->fuel_type : '') }}>{{ $mat->material_description }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -139,8 +151,8 @@
                                     <label for="" class="form-label">Statistic Type</label>
                                     <select name="" id="" class="form-control" wire:model="statistic_type" required>
                                         <option value="">-Select Type-</option>
-                                        <option value="HM" {{ selected('HM' , $dataTmp ? $dataTmp->statistic_type : '') }}>HM</option>
-                                        <option value="KM" {{ selected('KM' , $dataTmp ? $dataTmp->statistic_type : '') }}>KM</option>
+                                        <option value="HM" {{ selected('HM', $dataTmp ? $dataTmp->statistic_type : '') }}>HM</option>
+                                        <option value="KM" {{ selected('KM', $dataTmp ? $dataTmp->statistic_type : '') }}>KM</option>
                                     </select>
                                 </div>
                                 <div class="col-3">
@@ -163,10 +175,9 @@
     </div>
 </div>
 <script>
-  function loadFile()
-  {
-    const btnUpload = document.getElementById('btn-submit-upload');
-    btnUpload.innerHTML = "Loading...<i class='fa fa-spinner fa-spin'></i>";
-    btnUpload.disabled = true;
-  }
+    function loadFile() {
+        const btnUpload = document.getElementById('btn-submit-upload');
+        btnUpload.innerHTML = "Loading...<i class='fa fa-spinner fa-spin'></i>";
+        btnUpload.disabled = true;
+    }
 </script>
