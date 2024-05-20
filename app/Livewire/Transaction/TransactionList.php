@@ -149,7 +149,7 @@ class TransactionList extends Component
                 TmpTransaction::destroy($tmp->id);
             }
             DB::commit();
-        $this->dispatch('success', 'Data has been posting');
+        $this->dispatch('success', 'Data has been posting : POS-'.$newPostingNumber);
         } catch (\Exception $e) {
             DB::rollBack();
             $this->dispatch('error', $e->getMessage());
