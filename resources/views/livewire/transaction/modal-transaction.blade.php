@@ -68,7 +68,7 @@
                                         <option value="">-Select Location-</option>
                                         @foreach ($plants as $plant)
                                             <option value="{{ $plant->id }}"  {{ selected($plant->id, $dataTmp ? $dataTmp->selectedlocation : '') }}>
-                                                {{ $plant->id . ' - ' . $plant->plant_name.'-'.$dataTmp->selectedlocation }}
+                                                {{ $plant->id . ' - ' . $plant->plant_name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -92,8 +92,8 @@
                                     <select name="" id="" class="form-control" wire:model="trans_type" required>
                                         <option value="">-Trans Type-</option>
                                         <option value="ISS" {{ selected('ISS', $dataTmp ? $dataTmp->trans_type : '') }}>ISS</option>
-                                        <option value="RCV" {{ selected('RCV', $dataTmp ? $dataTmp->trans_type : '') }}>RCV</option>
                                         <option value="TRF" {{ selected('TRF', $dataTmp ? $dataTmp->trans_type : '') }}>TRF</option>
+                                        <option value="IRS" {{ selected('IRS', $dataTmp ? $dataTmp->trans_type : '') }}>IRS</option>
                                     </select>
                                 </div>
                                 <div class="col-3">
