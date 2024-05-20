@@ -54,7 +54,7 @@
                                         @foreach ($sohPerPlant as $sohPlant)
                                             @if ($sohPlant->company_id == $sohCompany->company_id)
                                                 <tr role="row" aria-level="3" aria-posinset="1" aria-setsize="1"
-                                                    aria-expanded="false">
+                                                    aria-expanded="false" class="hidden">
                                                     <td role="gridcell">{{ $sohPlant->plant_name }}</td>
                                                     <td role="gridcell" style="text-align: right;">
                                                         {{ number_format($sohPlant->oh_qty, 0, ',', '.') }}

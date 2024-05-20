@@ -79,9 +79,8 @@ class AdjustmentCreate extends Component
             $this->sohAdjustmentReadOnly = true;
         } else {
             $materialStock = MaterialStock::where('sloc_id', $value)
-                ->where('status', 'on-hand')
                 ->first();
-            $this->soh = $materialStock->qty;
+            $this->soh = $materialStock->qty_soh;
             $this->sohAdjustmentReadOnly = false;
         }
         $this->updateSohAfter();
@@ -144,25 +143,8 @@ class AdjustmentCreate extends Component
     public function deleteItem($index)
     {
         $this->dispatch('logData', 'Delete Item ' . $index);
-        // $index = array_search($item_yang_dihapus, $buah);
-
-        // if ($index !== false) {
-        //     // Menghapus item dari array
-        //     unset($buah[$index]);
-
-        //     // Mengatur ulang indeks array (opsional)
-        //     $buah = array_values($buah);
-        // }
         unset($this->datas[$index]);
         $this->datas = array_values($this->datas);
-        // $index = 0;
-        // foreach ($this->datas as $data) {
-        //     if ($data->sloc_id = $slocId) {
-        //         exit for;
-        //     }
-        //     $index++;
-        // };
-        // unset($this->datas[$index]);
     }
 
     public function storeAdjustment()
@@ -176,7 +158,7 @@ class AdjustmentCreate extends Component
             $this->dispatch('logData', $plant);
             $company = Company::find($plant->company_id);
             $runningNumber = AdjustmentHeader::select(
-                DB::raw('IFNULL(MAX(CAST(SUBSTR(adjustment_no, 1, 4) AS UNSIGNED)), 1) AS running_number')
+                DB::raw('IFNULL(MAX(CAST(SUBSTR(adjustment_no, 1, 4) AS UNSIGNED)), 0) + 1 AS running_number')
             )->value('running_number');
             $adjustmentNo = str_pad($runningNumber, 4, '0', STR_PAD_LEFT) . '/ADJ/' . $company->company_code . '/' . $currentYear;
             $header = AdjustmentHeader::create([
@@ -226,21 +208,18 @@ class AdjustmentCreate extends Component
                 MaterialStock::where('company_id', $plant->company_id)
                     ->where('plant_id', $data->plant_id)
                     ->where('sloc_id', $data->sloc_id)
-                    ->where('status', 'on-hand')
                     ->update([
-                        'qty' => $qtyUpdate,
+                        'qty_soh' => $qtyUpdate,
                     ]);
             }
             DB::commit();
+            $this->dispatch('success', 'Data has been created');
             $this->closeModal();
             $this->dispatch('closeModal');
             $this->dispatch('refreshPage');
-            // $this->refreshPage();
         } catch (\Throwable $th) {
             DB::rollBack();
-            $this->dispatch('logData', 'error : ' . $th->getMessage());
-
-            //throw $th;
+            $this->dispatch('error', $th->getMessage());
         }
     }
 
