@@ -42,7 +42,6 @@
                     </form>
                 @else
                     <form wire:submit.prevent="storeData({{ $dataTmp->id ?? '' }})">
-                        <label for="">{{ $dataTmp->id }}</label>
                         <div class="modal-header">
                             <h5 class="modal-title" id="modal-largeLabel">Edit Data</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal" id="closeModalID"></button>
@@ -63,7 +62,9 @@
                                     <label for="" class="form-label">Fuel Warehouse</label>
                                     <select name="" id="" class="form-control" wire:model="fuel_warehouse" required>
                                         <option value="">-Select Warehouse-</option>
-                                        <option value="1">Warehouse 1</option>
+                                        @foreach ($slocs as $sloc)
+                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code , $dataTmp ? $dataTmp->fuel_warehouse : '') }}>{{ $sloc->sloc_code.' - '. $sloc->sloc_name }}</option>
+                                        @endforeach
                                     </select>
                                 
                                 </div>
@@ -91,14 +92,18 @@
                                     <label for="" class="form-label">Equipment Number</label>
                                     <select name="" id="" class="form-control" wire:model="equipment_no" required>
                                         <option value="">-Equipment Number-</option>
-                                        <option value="123">Contoh Equipment</option>
+                                        @foreach ($equipments as $equip)
+                                         <option value="{{ $equip->equipment_no }}" {{ selected($equip->equipment_no , $dataTmp ? $dataTmp->equipment_no : '') }}> {{ $equip->equipment_no.' - '.$equip->equipment_description }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-3">
                                     <label for="" class="form-label">Location</label>
                                     <select name="" id="" class="form-control" wire:model="location" required>
                                         <option value="">-Select Location-</option>
-                                        <option value="12">Location 1</option>
+                                        @foreach ($plants as $plant)
+                                            <option value="{{ $plant->id }}">{{ $plant->id.' - '.$plant->plant_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-3">
@@ -112,7 +117,9 @@
                                     <label for="" class="form-label">Activity</label>
                                     <select name="" id="" class="form-control" wire:model="activity" required>
                                         <option value="">-Select Activity-</option>
-                                        <option value="11">Activity Contoh</option>
+                                        @foreach ($activitys as $activity)
+                                            <option value="{{ $activity->id }}">{{ $activity->id.' - '.$activity->activity_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-3">
@@ -132,7 +139,8 @@
                                     <label for="" class="form-label">Statistic Type</label>
                                     <select name="" id="" class="form-control" wire:model="statistic_type" required>
                                         <option value="">-Select Type-</option>
-                                        <option value="1">Type Contoh</option>
+                                        <option value="HM" {{ selected('HM' , $dataTmp ? $dataTmp->statistic_type : '') }}>HM</option>
+                                        <option value="KM" {{ selected('KM' , $dataTmp ? $dataTmp->statistic_type : '') }}>KM</option>
                                     </select>
                                 </div>
                                 <div class="col-3">

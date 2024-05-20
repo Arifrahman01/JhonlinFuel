@@ -3,9 +3,14 @@
 namespace App\Livewire\Transaction;
 
 use App\Imports\TransactionImport;
+use App\Models\Activity;
 use App\Models\Company;
+use App\Models\Equipment;
 use App\Models\Material\Material;
+use App\Models\Plant;
+use App\Models\Sloc;
 use App\Models\Transaction\TmpTransaction;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -18,20 +23,31 @@ class ModalTransaction extends Component
     public $statusModal = 'uplaod';
     public $fileLoader;
 
+    public $id;
     public $dataTmp;
     public $companiesModal;
     public $material;
-    public $id;
+    public $slocs;
+    public $equipments;
+    public $plants;
+    public $activitys;
 
     public $company_code , $fuel_warehouse , $trans_date , $fuelman , $equipment_no , $location , $department , $activity ,$trans_type , $fuel_type , $qty , $statistic_type , $meter_value;
     protected $listeners = ['openUpload','openEdit'];
 
+    
     public function mount()
     {
         $this->loading = true;
         $this->fileLoader = null;
         $this->companiesModal = Company::all();
         $this->material = Material::all();
+        $this->slocs = Sloc::all();
+        $this->equipments = Equipment::all();
+        $this->plants = Plant::all();
+        $this->activitys = Activity::all();
+        // dd($this->equipments);
+
         if ($this->id) {
             $this->dataTmp =  TmpTransaction::find($this->id)->first();
             $this->company_code = $this->dataTmp['company_code'];
