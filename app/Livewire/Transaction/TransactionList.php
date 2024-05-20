@@ -134,7 +134,7 @@ class TransactionList extends Component
                         'fuelman_id'    => 1, /* ambil dari master $fuelman->id*/
                         'fuelman_name'  => 'fuelman', /* ambil dari master $fuelman->name*/
                         'equipment_id'  => 1,
-                        'equipment_no'   => 'equipment',
+                        'equipment_no'  => 'equipment',
                         'location_id'   => 1,
                         'location_name' => 'location',
                         'department'    => $tmp->department, // tidak ada master ?

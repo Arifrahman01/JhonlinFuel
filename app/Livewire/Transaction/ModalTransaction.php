@@ -27,12 +27,15 @@ class ModalTransaction extends Component
     public $dataTmp;
     public $companiesModal;
     public $material;
-    public $slocs;
+    public $slocs = [];
+    public $plants = [];
     public $equipments;
-    public $plants;
     public $activitys;
 
-    public $company_code , $fuel_warehouse , $trans_date , $fuelman , $equipment_no , $location , $department , $activity ,$trans_type , $fuel_type , $qty , $statistic_type , $meter_value;
+    public $selectedCompany;
+    public $selectedlocation;
+
+    public $fuel_warehouse , $trans_date , $fuelman , $equipment_no , $department , $activity ,$trans_type , $fuel_type , $qty , $statistic_type , $meter_value;
     protected $listeners = ['openUpload','openEdit'];
 
     
@@ -42,15 +45,14 @@ class ModalTransaction extends Component
         $this->fileLoader = null;
         $this->companiesModal = Company::all();
         $this->material = Material::all();
-        $this->slocs = Sloc::all();
+        // $this->slocs = Sloc::all();
         $this->equipments = Equipment::all();
-        $this->plants = Plant::all();
+        // $this->plants = Plant::all();
         $this->activitys = Activity::all();
-        // dd($this->equipments);
 
         if ($this->id) {
             $this->dataTmp =  TmpTransaction::find($this->id)->first();
-            $this->company_code = $this->dataTmp['company_code'];
+            $this->selectedCompany = $this->dataTmp['company_code'];
             $this->trans_type = $this->dataTmp['trans_type'];
             $this->fuel_type = $this->dataTmp['fuel_type'];
             $this->qty = $this->dataTmp['qty'];
@@ -59,13 +61,14 @@ class ModalTransaction extends Component
             $this->trans_date = $this->dataTmp['trans_date'];
             $this->fuelman = $this->dataTmp['fuelman'];
             $this->equipment_no = $this->dataTmp['equipment_no'];
-            $this->location = $this->dataTmp['location'];
+            $this->selectedlocation = $this->dataTmp['location'];
             $this->department = $this->dataTmp['department'];
             $this->activity = $this->dataTmp['activity'];
             $this->statistic_type = $this->dataTmp['statistic_type'];
+
         }else{
             $this->dataTmp = null;
-            $this->company_code = null;
+            $this->selectedCompany = null;
             $this->trans_type = null;
             $this->fuel_type = null;
             $this->qty = null;
@@ -74,7 +77,7 @@ class ModalTransaction extends Component
             $this->trans_date = null;
             $this->fuelman = null;
             $this->equipment_no = null;
-            $this->location = null;
+            $this->selectedlocation = null;
             $this->department = null;
             $this->activity = null;
             $this->statistic_type = null;
@@ -90,7 +93,7 @@ class ModalTransaction extends Component
         $this->loading = true;
         if ($id) {
             $this->dataTmp =  TmpTransaction::find($id);
-            $this->company_code = $this->dataTmp['company_code'];
+            $this->selectedCompany = $this->dataTmp['company_code'];
             $this->trans_type = $this->dataTmp['trans_type'];
             $this->fuel_type = $this->dataTmp['fuel_type'];
             $this->qty = $this->dataTmp['qty'];
@@ -99,13 +102,16 @@ class ModalTransaction extends Component
             $this->trans_date = $this->dataTmp['trans_date'];
             $this->fuelman = $this->dataTmp['fuelman'];
             $this->equipment_no = $this->dataTmp['equipment_no'];
-            $this->location = $this->dataTmp['location'];
+            $this->selectedlocation = $this->dataTmp['location'];
             $this->department = $this->dataTmp['department'];
             $this->activity = $this->dataTmp['activity'];
             $this->statistic_type = $this->dataTmp['statistic_type'];
+            $this->plants = Plant::where('company_id', Company::where('company_code',  $this->dataTmp['company_code'])->value('id'))->get();
+            $this->slocs = Sloc::where('plant_id', $this->dataTmp['location'])->get();
+
         }else{
             $this->dataTmp = null;
-            $this->company_code = null;
+            $this->selectedCompany = null;
             $this->trans_type = null;
             $this->fuel_type = null;
             $this->qty = null;
@@ -114,7 +120,7 @@ class ModalTransaction extends Component
             $this->trans_date = null;
             $this->fuelman = null;
             $this->equipment_no = null;
-            $this->location = null;
+            $this->selectedlocation = null;
             $this->department = null;
             $this->activity = null;
             $this->statistic_type = null;
@@ -122,6 +128,16 @@ class ModalTransaction extends Component
         $this->statusModal = 'edit';
         $this->loading = false;
     }
+    public function updatedSelectedCompany($value)
+    {
+        $this->plants = Plant::where('company_id', Company::where('company_code', $value)->value('id'))->get();
+
+    }
+    public function updatedSelectedlocation($value)
+    {
+        $this->slocs = Sloc::where('plant_id', $value)->get();
+    }
+
     public function render()
     {
         return view('livewire.transaction.modal-transaction');
@@ -156,13 +172,13 @@ class ModalTransaction extends Component
     {
         try {
             $this->validate([
-                'company_code' => 'required',
+                'selectedCompany' => 'required',
                 'fuel_warehouse' => 'required',
                 'trans_type'    => 'required',
                 'trans_date'    => 'required',
                 'fuelman'       => 'required',
                 'equipment_no'  => 'required',
-                'location'      => 'required',
+                'selectedlocation'=> 'required',
                 'department'    => 'required',
                 'activity'      => 'required',
                 'fuel_type'     => 'required',
@@ -173,13 +189,13 @@ class ModalTransaction extends Component
             if ($id) {
                 $tmpTrans = TmpTransaction::find($id);
                 $tmpTrans->update([
-                    'company_code'  => $this->company_code,
+                    'company_code'  => $this->selectedCompany,
                     'fuel_warehouse'=> $this->fuel_warehouse,
                     'trans_type'    => $this->trans_type,
                     'trans_date'    => $this->trans_date,
                     'fuelman'       => $this->fuelman,
                     'equipment_no'  => $this->equipment_no,
-                    'location'      => $this->location,
+                    'location'      => $this->selectedlocation,
                     'department'    => $this->department,
                     'activity'      => $this->activity,
                     'fuel_type'     => $this->fuel_type,
@@ -191,13 +207,13 @@ class ModalTransaction extends Component
                 $this->dispatch('success', 'Data has been updated');
             } else {
                 TmpTransaction::create([
-                    'company_code'  => $this->company_code,
+                    'company_code'  => $this->selectedCompany,
                     'fuel_warehouse'=> $this->fuel_warehouse,
                     'trans_type'    => $this->trans_type,
                     'trans_date'    => $this->trans_date,
                     'fuelman'       => $this->fuelman,
                     'equipment_no'  => $this->equipment_no,
-                    'location'      => $this->location,
+                    'location'      => $this->selectedlocation,
                     'department'    => $this->department,
                     'activity'      => $this->activity,
                     'fuel_type'     => $this->fuel_type,

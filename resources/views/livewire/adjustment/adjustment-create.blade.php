@@ -32,7 +32,7 @@
                         <div class="row row-cards mb-3">
                             <div class="col-4 mb-3">
                                 <label class="form-label required">Plant</label>
-                                <select wire:model.live="selectedPlant" class="form-select" required>
+                                <select wire:model.live="selectedPlant" class="form-select" required >
                                     <option value="">-Select Plant-</option>
                                     @foreach ($plants as $plant)
                                         <option value="{{ $plant->id }}">
