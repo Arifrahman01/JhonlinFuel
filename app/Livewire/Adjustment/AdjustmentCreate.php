@@ -16,8 +16,8 @@ use Livewire\Component;
 
 class AdjustmentCreate extends Component
 {
-    public $plants;
-    public $adjustment;
+    public $plants = [];
+    // public $adjustment;
     public $selectedPlant;
     public $slocs = [];
     public $selectedSloc;
@@ -35,20 +35,16 @@ class AdjustmentCreate extends Component
 
     protected $listeners = ['openModal'];
 
-    public function mount()
+    public function render()
     {
         $userCompany = 1;
         $this->plants = Plant::where('company_id', $userCompany)->get();
-    }
-
-    public function render()
-    {
         return view('livewire.adjustment.adjustment-create');
     }
 
     public function openModal()
     {
-        $this->loading = true;
+        // $this->loading = true;
         // if ($userId) {
         //     $this->user = User::find($userId);
         //     $this->name = $this->user['name'];
@@ -63,7 +59,7 @@ class AdjustmentCreate extends Component
         //     $this->username = null;
         //     $this->role = null;
         // }
-        $this->loading = false;
+        // $this->loading = false;
     }
 
     public function updatedSelectedPlant($value)
@@ -105,6 +101,9 @@ class AdjustmentCreate extends Component
 
     public function addData()
     {
+        if ($this->itemExists()) {
+            return;
+        }
         $plant = Plant::find($this->selectedPlant);
         $sloc = Sloc::find($this->selectedSloc);
         $data_ = (object) [
@@ -118,8 +117,52 @@ class AdjustmentCreate extends Component
             'notes' => $this->notes,
         ];
         array_push($this->datas, $data_);
-        $this->dispatch('logData', $this->datas);
-        // $this->datas[] = $data_;
+        $this->resetForm();
+        // $this->dispatch('logData', $this->datas);
+    }
+
+    private function itemExists(): bool
+    {
+        foreach ($this->datas as $data) {
+            if ($data->sloc_id == $this->selectedSloc) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function resetForm()
+    {
+        $this->selectedPlant = null;
+        $this->selectedSloc = null;
+        $this->soh = 0;
+        $this->sohAdjustment = 0;
+        $this->sohAfter = 0;
+        $this->notes = '';
+    }
+
+    public function deleteItem($index)
+    {
+        $this->dispatch('logData', 'Delete Item ' . $index);
+        // $index = array_search($item_yang_dihapus, $buah);
+
+        // if ($index !== false) {
+        //     // Menghapus item dari array
+        //     unset($buah[$index]);
+
+        //     // Mengatur ulang indeks array (opsional)
+        //     $buah = array_values($buah);
+        // }
+        unset($this->datas[$index]);
+        $this->datas = array_values($this->datas);
+        // $index = 0;
+        // foreach ($this->datas as $data) {
+        //     if ($data->sloc_id = $slocId) {
+        //         exit for;
+        //     }
+        //     $index++;
+        // };
+        // unset($this->datas[$index]);
     }
 
     public function storeAdjustment()
@@ -128,12 +171,17 @@ class AdjustmentCreate extends Component
         DB::beginTransaction();
         try {
             $currentDate = date('Y-m-d');
+            $currentYear = date('Y');
             $plant = Plant::find($this->datas[0]->plant_id);
             $this->dispatch('logData', $plant);
-            $adjusmentNo = '001';
+            $company = Company::find($plant->company_id);
+            $runningNumber = AdjustmentHeader::select(
+                DB::raw('IFNULL(MAX(CAST(SUBSTR(adjustment_no, 1, 4) AS UNSIGNED)), 1) AS running_number')
+            )->value('running_number');
+            $adjustmentNo = str_pad($runningNumber, 4, '0', STR_PAD_LEFT) . '/ADJ/' . $company->company_code . '/' . $currentYear;
             $header = AdjustmentHeader::create([
                 'company_id' => $plant->company_id,
-                'adjustment_no' => $adjusmentNo,
+                'adjustment_no' => $adjustmentNo,
             ]);
 
             $material = Material::find(1);
@@ -158,7 +206,7 @@ class AdjustmentCreate extends Component
                 MaterialMovement::create([
                     'company_id' => $plant->company_id,
                     'doc_header_id' => $header->id,
-                    'doc_no' => $adjusmentNo,
+                    'doc_no' => $adjustmentNo,
                     'doc_detail_id' => $detail->id,
                     'material_id' => 1,
                     'material_code' => $material->material_code,
@@ -185,6 +233,8 @@ class AdjustmentCreate extends Component
             }
             DB::commit();
             $this->closeModal();
+            $this->dispatch('closeModal');
+            $this->dispatch('refreshPage');
             // $this->refreshPage();
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -196,10 +246,17 @@ class AdjustmentCreate extends Component
 
     public function closeModal()
     {
-        $this->adjustment = null;
-        // $this->userId = null;
+        $this->plants = [];
         $this->selectedPlant = null;
         $this->slocs = [];
-        $this->loading = true;
+        $this->selectedSloc = null;
+        $this->soh = 0;
+        $this->sohAdjustmentReadOnly = true;
+        $this->sohAdjustment = 0;
+        $this->sohAfter = 0;
+        $this->notes = '';
+        $this->datas = [];
+        $this->isLoadingSloc = false;
+        $this->loading = false;
     }
 }
