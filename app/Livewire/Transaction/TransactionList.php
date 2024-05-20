@@ -2,9 +2,13 @@
 
 namespace App\Livewire\Transaction;
 
+use App\Models\Activity;
 use App\Models\Company;
+use App\Models\Equipment;
 use App\Models\Material\Material;
+use App\Models\Material\MaterialMovement;
 use App\Models\Plant;
+use App\Models\Sloc;
 use App\Models\Transaction\TmpTransaction;
 use App\Models\Transaction\Transaction;
 use Illuminate\Support\Facades\DB;
@@ -82,69 +86,61 @@ class TransactionList extends Component
             foreach ($data as $tmp) {
                 $company = Company::where('company_code',$tmp->company_code)->first();
                 $fuelman = '';/* master fuelman belum */
-                $equipment = ''; /* master equipment belum */
-                $location = '';
-                $activity = '';
+                $equipment = Equipment::where('equipment_no', $tmp->equipment_no)->first();
+                $location = Plant::where('id', $tmp->location)->first();
+                $activity = Activity::where('id',$tmp->activity)->first();
                 $fuelType = Material::find($tmp->fuel_type)->first();
-                if ($tmp->trans_type == 'TRF') {
-                    Transaction::create([
-                        'company_id'    => $company->id,
-                        'posting_no'    => 'POS-'.$newPostingNumber,
-                        'trans_type'    => 'TR1',
-                        'trans_date'    => $tmp->trans_date,
-                        'fuelman_id'    => 1, /* ambil dari master $fuelman->id*/
-                        'fuelman_name'  => 'fuelman', /* ambil dari master $fuelman->name*/
-                        'equipment_id'  => 1,
-                        'equipment_no'   => 'equipment',
-                        'location_id'   => 1,
-                        'location_name' => 'location',
-                        'department'    => $tmp->department, // tidak ada master ?
-                        'activity_id'   => 1,
-                        'activity_name' => 'activity',
-                        'fuel_type'     => $fuelType->material_description ?? 'SOLAR',
-                        'qty'           => $tmp->qty,
-                        'statistic_type'=> $tmp->statistic_type,
-                        'meter_value'   => $tmp->meter_value,
-                    ]);
-                    Transaction::create([
-                        'company_id'    => $company->id,
-                        'posting_no'    => 'POS-'.$newPostingNumber,
-                        'trans_type'    => 'TR2',
-                        'trans_date'    => $tmp->trans_date,
-                        'fuelman_id'    => 1, /* ambil dari master $fuelman->id*/
-                        'fuelman_name'  => 'fuelman', /* ambil dari master $fuelman->name*/
-                        'equipment_id'  => 1,
-                        'equipment_no'  => 'equipment',
-                        'location_id'   => 1,
-                        'location_name' => 'location',
-                        'department'    => $tmp->department, // tidak ada master ?
-                        'activity_id'   => 1,
-                        'activity_name' => 'activity',
-                        'fuel_type'     => $fuelType->material_description ?? 'SOLAR',
-                        'qty'           => $tmp->qty,
-                        'statistic_type'=> $tmp->statistic_type,
-                        'meter_value'   => $tmp->meter_value,
-                    ]);
-                }else {
-                    Transaction::create([
-                        'company_id'    => $company->id,
-                        'posting_no'    => 'POS-'.$newPostingNumber,
-                        'trans_type'    => $tmp->trans_type,
-                        'trans_date'    => $tmp->trans_date,
-                        'fuelman_id'    => 1, /* ambil dari master $fuelman->id*/
-                        'fuelman_name'  => 'fuelman', /* ambil dari master $fuelman->name*/
-                        'equipment_id'  => 1,
-                        'equipment_no'  => 'equipment',
-                        'location_id'   => 1,
-                        'location_name' => 'location',
-                        'department'    => $tmp->department, // tidak ada master ?
-                        'activity_id'   => 1,
-                        'activity_name' => 'activity',
-                        'fuel_type'     => $fuelType->material_description ?? 'SOLAR',
-                        'qty'           => $tmp->qty,
-                        'statistic_type'=> $tmp->statistic_type,
-                        'meter_value'   => $tmp->meter_value,
-                    ]);
+                $saveTransaction = Transaction::create([
+                    'company_id'    => $company->id,
+                    'posting_no'    => 'POS-'.$newPostingNumber,
+                    'trans_type'    => $tmp->trans_type,
+                    'trans_date'    => $tmp->trans_date,
+                    'fuelman_id'    => 1, /* ambil dari master $fuelman->id*/
+                    'fuelman_name'  => 'fuelman', /* ambil dari master $fuelman->name*/
+                    'equipment_id'  => $equipment->id,
+                    'equipment_no'  => $equipment->equipment_no,
+                    'location_id'   => $location->id,
+                    'location_name' => $location->plant_name,
+                    'department'    => $tmp->department, // tidak ada master ?
+                    'activity_id'   => $activity->id,
+                    'activity_name' => $activity->activity_name,
+                    'fuel_type'     => $fuelType->material_description,
+                    'qty'           => $tmp->qty,
+                    'statistic_type'=> $tmp->statistic_type,
+                    'meter_value'   => $tmp->meter_value,
+                ]);
+                $paramMovement = [
+                    'company_id'    => $company->id,
+                    'doc_header_id' => $saveTransaction->id,
+                    'doc_no'        => 'POS-'.$newPostingNumber,
+                    'doc_detail_id' => $saveTransaction->id,
+                    'material_id'   => $fuelType->id,
+                    'material_code' => $fuelType->material_code,
+                    'part_no'       => $fuelType->part_no,
+                    'material_mnemonic' => $fuelType->material_mnemonic,
+                    'material_description' => $fuelType->material_description,
+                    'movement_date' => date('Y-m-d'),
+                    'plant_id'  => $tmp->location,
+                    'sloc_id'   =>  Sloc::where('sloc_code',  $tmp->fuel_warehouse)->value('id'),
+                    'uom_id'    => $fuelType->uom_id,
+                    'qty'       => $tmp->qty,
+                ];
+                if ($tmp->trans_type == 'ISS') {
+                    $paramMovement['movement_type'] = 'ISS';
+                    MaterialMovement::create($paramMovement);
+
+                    // material stock pengurangan qty di sloc asal
+                }else if ($tmp->trans_type == 'TRF') {
+                    $paramMovement['movement_type'] = 'TRF';
+                    MaterialMovement::create($paramMovement);
+
+                    // material stock pengurangan qty (on-hand) di sloc asal
+                    // material stock penambahan qty (intransit) di sloc tujuan
+                }else if ($tmp->trans_type == 'IRS') {
+                    $paramMovement['movement_type'] = 'IRS';
+                    MaterialMovement::create($paramMovement);
+                    // material stock penambahan qty (on-hand) di sloc tujuan
+                    // material stock pengurangan qty (intransit) di sloc tujuan
                 }
                 TmpTransaction::destroy($tmp->id);
             }

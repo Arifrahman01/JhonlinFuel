@@ -4,8 +4,11 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title col-12">
-                        <div class="col-6">
-                            Issue
+                        <div class="col-6 d-flex justify-content-start">
+                            <h1>Transaction</h1>  
+                            &nbsp;
+                            <h3 class="mt-2">   Belum posting</h3>
+                             
                         </div>
                         <div class="col-6 d-flex justify-content-end">
                             <button type="button" class="btn btn-primary me-2" wire:click="$dispatch('openEdit')" data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus"></i>&nbsp;

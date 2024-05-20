@@ -45,9 +45,7 @@ class ModalTransaction extends Component
         $this->fileLoader = null;
         $this->companiesModal = Company::all();
         $this->material = Material::all();
-        // $this->slocs = Sloc::all();
         $this->equipments = Equipment::all();
-        // $this->plants = Plant::all();
         $this->activitys = Activity::all();
 
         if ($this->id) {
@@ -65,7 +63,6 @@ class ModalTransaction extends Component
             $this->department = $this->dataTmp['department'];
             $this->activity = $this->dataTmp['activity'];
             $this->statistic_type = $this->dataTmp['statistic_type'];
-
         }else{
             $this->dataTmp = null;
             $this->selectedCompany = null;
@@ -108,7 +105,6 @@ class ModalTransaction extends Component
             $this->statistic_type = $this->dataTmp['statistic_type'];
             $this->plants = Plant::where('company_id', Company::where('company_code',  $this->dataTmp['company_code'])->value('id'))->get();
             $this->slocs = Sloc::where('plant_id', $this->dataTmp['location'])->get();
-
         }else{
             $this->dataTmp = null;
             $this->selectedCompany = null;
