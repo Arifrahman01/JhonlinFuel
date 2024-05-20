@@ -23,7 +23,8 @@ class AdjustmentList extends Component
             'company',
         ])
             ->search(['adjNo' => $this->adjNo])
-            ->paginate(2);
+            ->latest()
+            ->paginate(10);
         return view('livewire.adjustment.adjustment-list', compact('adjusts'));
     }
 
