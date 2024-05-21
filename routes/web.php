@@ -34,10 +34,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/issue', PostingList::class)->name('issue.index');
     Route::get('/loader/issue', TransactionList::class)->name('issue.loader');
 
-
-
-    Route::get('/issue', IssueList::class)->name('issue.index');
-
     Route::get('/soh-overview', SOHOverview::class)->name('soh.index');
     Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');
 
