@@ -24,24 +24,24 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="start_date" wire:model="filter_date" aria-label="Start Date" placeholder="Start Date"
-                                                value="{{ date('Y-m-d') }}">
+                                            <input type="date" class="form-control form-control-sm" id="start_date" onchange="setEndDateMax()" wire:model="start_date" aria-label="Start Date" placeholder="Start Date"
+                                                value="{{ $start_date }}">
                                         </div>
                                     </div>
-                                    {{-- <div class="ms-auto text-muted">
+                                    <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             s/d
                                         </div>
-                                    </div> --}}
+                                    </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            {{-- <input type="date" class="form-control form-control-sm" id="end_date" aria-label="End Date" placeholder="End Date" value="{{ date('Y-m-d') }}"> --}}
+                                            <input type="date" class="form-control form-control-sm" id="end_date"  wire:model="end_date" aria-label="End Date" placeholder="End Date" value="{{ $end_date }}">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             <button type="submit" class="btn btn-primary btn-sm">
-                                                &nbsp; Cari &nbsp;
+                                                <i class="fa fa-search"></i> &nbsp; Cari &nbsp;
                                             </button>
                                         </div>
                                     </div>
@@ -49,59 +49,59 @@
                             </form>
                         </div>
                         <div class="table-responsive">
-                            <table id="treegrid" role="treegrid" class="table table-sm table-striped" <colgroup>
-                                <col id="treegrid-col1">
-                                <col id="treegrid-col2">
-                                </colgroup>
-                                <thead>
-                                    <tr>
-                                        <th class="text-center" style="width: 1%">Warehouse/Company</th>
-                                        <th class="text-center" style="width: 10%">Date/Type Trans</th>
-                                        <th class="text-center" style="width: 10%">Fuelman</th>
-                                        <th class="text-center" style="width: 10%">Equipment No</th>
-                                        <th class="text-center" style="width: 5%">Location</th>
-                                        <th class="text-center" style="width: 5%">Department</th>
-                                        <th class="text-center" style="width: 5%">Activity</th>
-                                        <th class="text-center" style="width: 5%">Fuel & Oil Type</th>
-                                        <th class="text-center" style="width: 10%">Litre Issued</th>
-                                        <th class="text-center" style="width: 5%">Statistic Type</th>
-                                        <th class="text-center" style="width: 10%">Meter Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @if ($transactions->isEmpty())
-                                    <td colspan="11" class="text-left">&nbsp;<i class="fa fa-info-circle"> &nbsp;&nbsp;</i> Data not found</td>
-                                    @else
-                                        @foreach ($transactions as $idx => $trans)
-                                            <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="2" aria-expanded="false">
-                                                <td role="gridcell">
-                                                    {{ $trans['summary']->posting_no.' - '.$trans['summary']->location_name }}
-                                                </td>
-                                                <td colspan="6" class="text-nowrap" role="gridcell">{{ $trans['summary']->trans_date }}</td>
-                                                <td colspan="2" style="text-align: right">{{ number_format($trans['summary']->total_qty, 2, '.', ',') }}</td>
-                                                <td colspan="2"></td>
-                                            </tr>
-                                            @foreach ($trans['details'] as $indx => $detail)
-                                                <tr role="row" aria-level="2" aria-posinset="1" aria-setsize="15" class="hidden text-nowrap">
-                                                    <td role="gridcell">
-                                                        {{ $detail->company_code }}
-                                                    </td>
-                                                    <td role="gridcell">{{ $detail->trans_type }}</td>
-                                                    <td role="gridcell">{{ $detail->fuelman }}</td>
-                                                    <td role="gridcell">{{ $detail->equipment_no }}</td>
-                                                    <td role="gridcell">{{ $detail->location }}</td>
-                                                    <td role="gridcell">{{ $detail->department }}</td>
-                                                    <td role="gridcell">{{ $detail->activity }}</td>
-                                                    <td role="gridcell"  style="white-space: nowrap;">{{ $detail->fuel_type }}</td>
-                                                    <td role="gridcell" style="text-align: right">{{ number_format($detail->qty, 2, '.', ',') }}</td>
-                                                    <td role="gridcell">{{ $detail->statistic_type }}</td>
-                                                    <td role="gridcell" style="text-align: right">{{ number_format($detail->meter_value, 2, '.', ',') }}</td>
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="table-responsive">
+                                        <table class="table table-vcenter card-table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center" style="width: 5%">#</th>
+                                                    <th>Company</th>
+                                                    <th class="text-nowrap">Posting No</th>
+                                                    <th>Type</th>
+                                                    <th class="text-center">Date</th>
+                                                    <th>Fuelman</th>
+                                                    <th>Equipment</th>
+                                                    <th>Location</th>
+                                                    <th>Department</th>
+                                                    <th>Activity</th>
+                                                    <th class="text-center">Fuel Type</th>
+                                                    <th class="text-center">Quantity</th>
+                                                    <th>Satistic</th>
+                                                    <th class="text-center">Meter Value</th>
                                                 </tr>
-                                            @endforeach
-                                        @endforeach
-                                    @endif
-                                </tbody>
-                            </table>
+                                            </thead>
+                                            <tbody class="text-nowrap">
+                                                @if ($transactions->isEmpty())
+                                                    {!! dataNotFond(8) !!}
+                                                @else
+                                                    @foreach ($transactions as $idx => $trans)
+                                                        <tr>
+                                                            <td>{{ $idx + 1 }}</td>
+                                                            <td>{{ $trans->company->company_name }}</td>
+                                                            <td>{{ $trans->posting_no }}</td>
+                                                            <td>{{ $trans->trans_type }}</td>
+                                                            <td class="text-center">{{ $trans->trans_date }}</td>
+                                                            <td>{{ $trans->fuelman_name }}</td>
+                                                            <td>{{ $trans->equipment_no }}</td>
+                                                            <td>{{ $trans->location_name }}</td>
+                                                            <td>{{ $trans->department }}</td>
+                                                            <td>{{ $trans->activity_name }}</td>
+                                                            <td class="text-center">{{ $trans->fuel_type }}</td>
+                                                            <td class="text-end">{{ number_format($trans->qty) }}</td>
+                                                            <td>{{ $trans->statistic_type }}</td>
+                                                            <td class="text-end">{{ number_format($trans->meter_value) }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="card-footer justify-content-between align-items-center">
+                                        {{ $transactions->links() }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-footer justify-content-between align-items-center">
                             {{-- {{ $transactions->links() }} --}}

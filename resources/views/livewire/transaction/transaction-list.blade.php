@@ -46,7 +46,7 @@
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             <button type="submit" class="btn btn-primary btn-sm">
-                                                &nbsp; Cari &nbsp;
+                                               <i class="fa fa-search"></i>  &nbsp; Cari &nbsp;
                                             </button>
                                         </div>
                                     </div>
@@ -92,7 +92,7 @@
                                                     {{ $trans['summary']->fuel_warehouse }}
                                                 </td>
                                                 <td colspan="6" class="text-nowrap" role="gridcell">{{ $trans['summary']->trans_date }}</td>
-                                                <td colspan="2" style="text-align: right">{{ number_format($trans['summary']->total_qty, 2, '.', ',') }}</td>
+                                                <td colspan="2" style="text-align: right">{{ number_format($trans['summary']->total_qty) }}</td>
                                                 <td colspan="2"></td>
                                             </tr>
                                             @foreach ($trans['details'] as $indx => $detail)
@@ -123,9 +123,9 @@
                                                     <td role="gridcell">{{ $detail->department }}</td>
                                                     <td role="gridcell">{{ $detail->activity }}</td>
                                                     <td role="gridcell">{{ $detail->fuel_type }}</td>
-                                                    <td role="gridcell" style="text-align: right">{{ number_format($detail->qty, 2, '.', ',') }}</td>
+                                                    <td role="gridcell" style="text-align: right">{{ number_format($detail->qty) }}</td>
                                                     <td role="gridcell">{{ $detail->statistic_type }}</td>
-                                                    <td role="gridcell" style="text-align: right">{{ number_format($detail->meter_value, 2, '.', ',') }}</td>
+                                                    <td role="gridcell" style="text-align: right">{{ number_format($detail->meter_value) }}</td>
                                                 </tr>
                                             @endforeach
                                         @endforeach
