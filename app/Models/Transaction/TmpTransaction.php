@@ -26,12 +26,6 @@ class TmpTransaction extends BaseModel
             ->groupBy('fuel_warehouse', 'trans_date')
             ->where('trans_date', $date)
             ->paginate($perPage);
-
-        $summary->getCollection()->transform(function ($item) {
-            $item->total_qty = number_format((float) $item->total_qty, 2, '.', '');
-            return $item;
-        });
-
         $details = self::where('trans_date', $date)
             ->get()
             ->groupBy('fuel_warehouse');

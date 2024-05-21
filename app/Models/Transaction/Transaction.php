@@ -3,6 +3,7 @@
 namespace App\Models\Transaction;
 
 use App\Models\BaseModel;
+use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 
 class Transaction extends BaseModel
@@ -12,6 +13,10 @@ class Transaction extends BaseModel
     protected $guarded = [
         'id',
     ];
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 
     public static function sumQty($date, $perPage = 10)
     {

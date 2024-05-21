@@ -9,16 +9,18 @@ use Livewire\WithPagination;
 class PostingList extends Component
 {
     use WithPagination;
-    public $filter_date;
+    public $start_date;
+    public $end_date;
 
     public function mount()
     {
-        $this->filter_date = $this->filter_date ?? date('Y-m-d');
+        $this->start_date = $this->start_date ?? date('Y-m-d', strtotime("-30 days"));
+        $this->end_date = $this->end_date ?? date('Y-m-d');
     }
 
     public function render()
     {
-        $transactions = Transaction::sumQty($this->filter_date);
+        $transactions = Transaction::whereBetween('trans_date', [$this->start_date, $this->end_date])->orderBy('id','desc')->paginate(10);
         return view('livewire.transaction.posting-list', ['transactions' => $transactions]);
     }
     public function search()
