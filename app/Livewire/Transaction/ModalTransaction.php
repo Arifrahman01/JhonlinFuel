@@ -6,6 +6,7 @@ use App\Imports\TransactionImport;
 use App\Models\Activity;
 use App\Models\Company;
 use App\Models\Equipment;
+use App\Models\Fuelman;
 use App\Models\Material\Material;
 use App\Models\Plant;
 use App\Models\Sloc;
@@ -31,6 +32,7 @@ class ModalTransaction extends Component
     public $plants = [];
     public $equipments;
     public $activitys;
+    public $fuelmans;
 
     public $selectedCompany;
     public $selectedlocation;
@@ -47,6 +49,7 @@ class ModalTransaction extends Component
         $this->material = Material::all();
         $this->equipments = Equipment::all();
         $this->activitys = Activity::all();
+        $this->fuelmans = Fuelman::all();
 
         if ($this->id) {
             $this->dataTmp =  TmpTransaction::find($this->id)->first();

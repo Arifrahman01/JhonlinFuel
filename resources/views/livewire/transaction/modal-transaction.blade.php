@@ -104,6 +104,9 @@
                                     <label for="" class="form-label">Fuelman</label>
                                     <select name="" id="" class="form-control" wire:model="fuelman" required>
                                         <option value="">-Fuelman-</option>
+                                        @foreach ($fuelmans as $fuelMan)
+                                        <option value="{{ $fuelMan->nik }}">{{ $fuelMan->nik.' - '.$fuelMan->name }}</option>
+                                        @endforeach
                                         <option value="123">Contoh Fuelman</option>
                                     </select>
                                 </div>

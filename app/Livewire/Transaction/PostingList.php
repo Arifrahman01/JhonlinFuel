@@ -19,7 +19,6 @@ class PostingList extends Component
     public function render()
     {
         $transactions = Transaction::sumQty($this->filter_date);
-        // dd($transactions);
         return view('livewire.transaction.posting-list', ['transactions' => $transactions]);
     }
     public function search()
