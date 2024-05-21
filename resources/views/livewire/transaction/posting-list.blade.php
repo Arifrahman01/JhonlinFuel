@@ -70,7 +70,7 @@
                                 </thead>
                                 <tbody>
                                     @if ($transactions->isEmpty())
-                                        {!! dataNotFond(10) !!}
+                                    <td colspan="11" class="text-left">&nbsp;<i class="fa fa-info-circle"> &nbsp;&nbsp;</i> Data not found</td>
                                     @else
                                         @foreach ($transactions as $idx => $trans)
                                             <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="2" aria-expanded="false">

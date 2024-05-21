@@ -5,10 +5,7 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6 d-flex justify-content-start">
-                            <h1>Transaction</h1>  
-                            &nbsp;
-                            <h3 class="mt-2">   Belum posting</h3>
-                             
+                            <h1>Loader Issued</h1>  
                         </div>
                         <div class="col-6 d-flex justify-content-end">
                             <button type="button" class="btn btn-primary me-2" wire:click="$dispatch('openEdit')" data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus"></i>&nbsp;
@@ -78,7 +75,9 @@
                                 </thead>
                                 <tbody>
                                     @if ($transactions->isEmpty())
-                                        {!! dataNotFond(10) !!}
+                                    <tr>
+                                        <td colspan="11" class="text-left">&nbsp;<i class="fa fa-info-circle"> &nbsp;&nbsp;</i> Data not found</td>
+                                    </tr>
                                     @else
                                         @foreach ($transactions as $idx => $trans)
                                             <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="2" aria-expanded="false">
