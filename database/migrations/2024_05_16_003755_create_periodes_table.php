@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('periods', function (Blueprint $table) {
-            $table->tinyIncrements('id');
-            $table->date('period_start');
-            $table->date('period_end');
-            $table->longText('notes')->nullable();
-            $table->integer('created_id')->nullable();
-            $table->integer('updated_id')->nullable();
-            $table->integer('deleted_id')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-        });
+        // Schema::create('periods', function (Blueprint $table) {
+        //     $table->tinyIncrements('id');
+        //     $table->date('period_start');
+        //     $table->date('period_end');
+        //     $table->longText('notes')->nullable();
+        //     $table->integer('created_id')->nullable();
+        //     $table->integer('updated_id')->nullable();
+        //     $table->integer('deleted_id')->nullable();
+        //     $table->timestamps();
+        //     $table->softDeletes();
+        // });
     }
 
     /**
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('periods');
+        // Schema::dropIfExists('periods');
     }
 };

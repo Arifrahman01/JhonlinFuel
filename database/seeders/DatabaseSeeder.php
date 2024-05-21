@@ -329,10 +329,10 @@ class DatabaseSeeder extends Seeder
             'uom_id' => $uom->id,
         ]);
 
-        Period::create([
-            'period_start' => '2024-05-01',
-            'period_end' => '2024-05-31',
-        ]);
+        // Period::create([
+        //     'period_start' => '2024-05-01',
+        //     'period_end' => '2024-05-31',
+        // ]);
 
         $activity = Activity::create([
             'company_id' => $jg->id,
@@ -356,8 +356,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 10000,
-            'status' => 'on-hand',
+            'qty_soh' => 10000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -370,8 +370,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 8000,
-            'status' => 'on-hand',
+            'qty_soh' => 8000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -384,8 +384,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 15000,
-            'status' => 'on-hand',
+            'qty_soh' => 15000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -398,8 +398,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 15000,
-            'status' => 'on-hand',
+            'qty_soh' => 15000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -412,8 +412,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 17000,
-            'status' => 'on-hand',
+            'qty_soh' => 17000,
+            'qty_intransit' => 1000,
         ]);
 
         MaterialStock::create([
@@ -426,8 +426,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 5000,
-            'status' => 'intransit',
+            'qty_soh' => 5000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -440,8 +440,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 13000,
-            'status' => 'on-hand',
+            'qty_soh' => 13000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -454,8 +454,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 3000,
-            'status' => 'on-hand',
+            'qty_soh' => 3000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -468,8 +468,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 4000,
-            'status' => 'on-hand',
+            'qty_soh' => 4000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -482,8 +482,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 12000,
-            'status' => 'on-hand',
+            'qty_soh' => 12000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -496,8 +496,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 5000,
-            'status' => 'on-hand',
+            'qty_soh' => 5000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -510,8 +510,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 3500,
-            'status' => 'on-hand',
+            'qty_soh' => 3500,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -524,8 +524,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 50000,
-            'status' => 'on-hand',
+            'qty_soh' => 50000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -538,8 +538,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 10000,
-            'status' => 'on-hand',
+            'qty_soh' => 10000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -552,8 +552,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 5000,
-            'status' => 'on-hand',
+            'qty_soh' => 5000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -566,8 +566,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 10000,
-            'status' => 'on-hand',
+            'qty_soh' => 10000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -580,8 +580,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 7000,
-            'status' => 'on-hand',
+            'qty_soh' => 7000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -594,8 +594,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 7000,
-            'status' => 'on-hand',
+            'qty_soh' => 7000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -608,8 +608,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 5000,
-            'status' => 'on-hand',
+            'qty_soh' => 5000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -622,8 +622,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 9000,
-            'status' => 'on-hand',
+            'qty_soh' => 9000,
+            'qty_intransit' => 9000,
         ]);
 
         MaterialStock::create([
@@ -636,8 +636,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 25000,
-            'status' => 'on-hand',
+            'qty_soh' => 25000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -650,8 +650,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 25000,
-            'status' => 'on-hand',
+            'qty_soh' => 25000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -664,8 +664,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 25000,
-            'status' => 'on-hand',
+            'qty_soh' => 25000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -678,8 +678,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 25000,
-            'status' => 'on-hand',
+            'qty_soh' => 25000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -692,8 +692,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 25000,
-            'status' => 'on-hand',
+            'qty_soh' => 25000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -706,8 +706,8 @@ class DatabaseSeeder extends Seeder
             'material_mnemonic' => $material->material_mnemonic,
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
-            'qty' => 2000,
-            'status' => 'intransit',
+            'qty_soh' => 2000,
+            'qty_intransit' => 0,
         ]);
 
         // $issueHeader = IssueHeader::create([
