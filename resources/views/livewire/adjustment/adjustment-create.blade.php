@@ -86,12 +86,6 @@
                             </div>
 
                             <div class="col-12">
-                                <div class="alert alert-danger" role="alert">
-                                    I'm so sorry…
-                                </div>
-                            </div>
-
-                            <div class="col-12">
                                 <button type="button" class="btn btn-primary w-100" wire:click="addData">Add</button>
                             </div>
 

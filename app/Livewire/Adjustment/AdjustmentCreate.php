@@ -10,14 +10,12 @@ use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
 use App\Models\Plant;
 use App\Models\Sloc;
-use App\Models\Uom;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class AdjustmentCreate extends Component
 {
     public $plants = [];
-    // public $adjustment;
     public $selectedPlant;
     public $slocs = [];
     public $selectedSloc;
@@ -44,22 +42,6 @@ class AdjustmentCreate extends Component
 
     public function openModal()
     {
-        // $this->loading = true;
-        // if ($userId) {
-        //     $this->user = User::find($userId);
-        //     $this->name = $this->user['name'];
-        //     $this->email = $this->user['email'];
-        //     $this->username = $this->user['username'];
-        //     $this->role = $this->user['role_id'];
-        // } else {
-        //     $this->user = null;
-        //     $this->userId = null;
-        //     $this->name = null;
-        //     $this->email = null;
-        //     $this->username = null;
-        //     $this->role = null;
-        // }
-        // $this->loading = false;
     }
 
     public function updatedSelectedPlant($value)
@@ -100,36 +82,45 @@ class AdjustmentCreate extends Component
 
     public function addData()
     {
-        $this->addError('selectedPlant', 'Eror gaesss');
-        return;
-        if ($this->itemExists()) {
-            return;
-        }
-        $plant = Plant::find($this->selectedPlant);
-        $sloc = Sloc::find($this->selectedSloc);
-        $data_ = (object) [
-            'plant_id' => $this->selectedPlant,
-            'plant' => $plant->plant_name,
-            'sloc_id' => $this->selectedSloc,
-            'sloc' => $sloc->sloc_name,
-            'soh_before' => toNumber($this->soh),
-            'soh_adjust' => toNumber($this->sohAdjustment),
-            'soh_after' => toNumber($this->sohAfter),
-            'notes' => $this->notes,
-        ];
-        array_push($this->datas, $data_);
-        $this->resetForm();
-        // $this->dispatch('logData', $this->datas);
-    }
+        try {
 
-    private function itemExists(): bool
-    {
-        foreach ($this->datas as $data) {
-            if ($data->sloc_id == $this->selectedSloc) {
-                return true;
+            if (empty($this->selectedPlant)) {
+                throw new \Exception('Plant tidak boleh kosong');
             }
+            if (empty($this->selectedSloc)) {
+                throw new \Exception('Sloc tidak boleh kosong');
+            }
+            if (empty($this->sohAdjustment) || $this->sohAdjustment == 0) {
+                throw new \Exception('Adjust Qty tidak boleh nol');
+            }
+
+            if ($this->sohAdjustment < 0 && abs($this->sohAdjustment) > $this->soh) {
+                throw new \Exception('Adjust Qty tidak boleh lebih dari Original Qty');
+            }
+
+            foreach ($this->datas as $data) {
+                if ($data->sloc_id == $this->selectedSloc) {
+                    throw new \Exception('Sloc sudah ada di daftar item');
+                }
+            }
+
+            $plant = Plant::find($this->selectedPlant);
+            $sloc = Sloc::find($this->selectedSloc);
+            $data_ = (object) [
+                'plant_id' => $this->selectedPlant,
+                'plant' => $plant->plant_name,
+                'sloc_id' => $this->selectedSloc,
+                'sloc' => $sloc->sloc_name,
+                'soh_before' => toNumber($this->soh),
+                'soh_adjust' => toNumber($this->sohAdjustment),
+                'soh_after' => toNumber($this->sohAfter),
+                'notes' => $this->notes,
+            ];
+            array_push($this->datas, $data_);
+            $this->resetForm();
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
         }
-        return false;
     }
 
     private function resetForm()
@@ -154,14 +145,17 @@ class AdjustmentCreate extends Component
         $this->dispatch('logData', $this->datas);
         DB::beginTransaction();
         try {
+            if (count($this->datas) == 0) {
+                throw new \Exception('Item tidak boleh kosong');
+            }
             $currentDate = date('Y-m-d');
             $currentYear = date('Y');
             $plant = Plant::find($this->datas[0]->plant_id);
-            $this->dispatch('logData', $plant);
             $company = Company::find($plant->company_id);
-            $runningNumber = AdjustmentHeader::select(
-                DB::raw('IFNULL(MAX(CAST(SUBSTR(adjustment_no, 1, 4) AS UNSIGNED)), 0) + 1 AS running_number')
-            )->value('running_number');
+            $runningNumber = AdjustmentHeader::select(DB::raw("IFNULL(MAX(CAST(SUBSTR(adjustment_no, 1, 4) AS UNSIGNED)), 0) + 1 AS running_number"))
+                ->where('company_id', $company->id)
+                ->where(DB::raw("RIGHT(adjustment_no, 4)"), $currentYear)
+                ->value('running_number');
             $adjustmentNo = str_pad($runningNumber, 4, '0', STR_PAD_LEFT) . '/ADJ/' . $company->company_code . '/' . $currentYear;
             $header = AdjustmentHeader::create([
                 'company_id' => $plant->company_id,
