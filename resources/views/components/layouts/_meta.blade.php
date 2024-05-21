@@ -5,12 +5,12 @@
 {{-- <title>{{ config('app.name', 'JG-Fuel') }} | {{ $title ?? 'Dashboard' }} </title> --}}
 <title>Fuel Monitoring System | @yield('title')</title>
 <!-- CSS files -->
-<link href="./dist/css/tabler.min.css" rel="stylesheet" />
-<link href="./dist/css/tabler-flags.min.css" rel="stylesheet" />
-<link href="./dist/css/tabler-payments.min.css" rel="stylesheet" />
-<link href="./dist/css/tabler-vendors.min.css" rel="stylesheet" />
-<link href="./dist/css/demo.min.css" rel="stylesheet" />
-<link href="./dist/css/costum.css" rel="stylesheet" />
+<link href="{{ asset('./dist/css/tabler.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('./dist/css/tabler-flags.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('./dist/css/tabler-payments.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('./dist/css/tabler-vendors.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('./dist/css/demo.min.css') }}" rel="stylesheet" />
+<link href="{{ asset('./dist/css/costum.css') }}" rel="stylesheet" />
 {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="

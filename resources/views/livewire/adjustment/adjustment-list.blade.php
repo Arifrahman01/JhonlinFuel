@@ -189,7 +189,6 @@
     </div>
     @livewire('adjustment.adjustment-create')
     @push('scripts')
-        <script src="./dist/js/custom.js"></script>
         <script>
             document.addEventListener('livewire:init', function() {
                 Livewire.on('logData', data => {
