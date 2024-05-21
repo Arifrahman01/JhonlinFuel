@@ -100,6 +100,8 @@ class AdjustmentCreate extends Component
 
     public function addData()
     {
+        $this->addError('selectedPlant', 'Eror gaesss');
+        return;
         if ($this->itemExists()) {
             return;
         }
