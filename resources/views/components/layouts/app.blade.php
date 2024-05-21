@@ -23,7 +23,7 @@
 @livewireStyles
 
 <body>
-    <script src="./dist/js/demo-theme.min.js"></script>
+    <script src="{{ asset('./dist/js/demo-theme.min.js') }}"></script>
     <div class="page">
         <header class="navbar navbar-expand-md d-print-none">
             @include('components.layouts._header')
@@ -40,11 +40,12 @@
         </footer> --}}
     </div>
     @livewireScripts
-    <script src="./dist/js/tabler.min.js"></script>
-    <script src="./dist/js/demo.min.js"></script>
-    <script src="./dist/js/button.js"></script>
+    <script src="{{ asset('./dist/js/custom.js') }}"></script>
+    <script src="{{ asset('./dist/js/tabler.min.js') }}"></script>
+    <script src="{{ asset('./dist/js/demo.min.js') }}"></script>
+    <script src="{{ asset('./dist/js/button.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="./dist/js/livewireCustom.js"></script>
+    <script src="{{ asset('./dist/js/livewireCustom.js') }}"></script>
     @stack('scripts')
 </body>
 

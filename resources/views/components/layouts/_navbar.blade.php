@@ -21,7 +21,7 @@
                     </a>
                 </li>
                 <li
-                    class="nav-item {{ request()->is('adjustment') || request()->is('transaction') || request()->is('posting') ? 'active' : '' }} dropdown">
+                    class="nav-item {{ request()->is('adjustment') || request()->is('issue') ? 'active' : '' }} dropdown">
                     <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                         data-bs-auto-close="outside" role="button" aria-expanded="false">
                         <span
@@ -44,7 +44,7 @@
                     <div class="dropdown-menu">
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
-                                <div class="dropend">
+                                {{-- <div class="dropend">
                                     <a class="dropdown-item dropdown-toggle {{ request()->is('transaction') || request()->is('posting') ? 'active' : '' }}"
                                         href="#sidebar-cards" data-bs-toggle="dropdown" data-bs-auto-close="outside"
                                         role="button" aria-expanded="false">
@@ -60,8 +60,13 @@
                                             Sudah Posting
                                         </a>
                                     </div>
-                                </div>
-                                <a class="dropdown-item {{ request()->is('adjustment') || request()->is('adjustment/*') ? 'active' : '' }}"
+                                </div> --}}
+                                <a class="dropdown-item {{ request()->is('issue') ? 'active' : '' }}"
+                                    href="{{ route('issue.index') }}">
+
+                                    Issue
+                                </a>
+                                <a class="dropdown-item {{ request()->is('adjustment') ? 'active' : '' }}"
                                     href="{{ route('adjustment.index') }}">
 
                                     Adjustment
@@ -83,6 +88,87 @@
                                     Adjusment
                                     <span class="badge badge-sm bg-green-lt text-uppercase ms-auto">New</span>
                                 </a> --}}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item {{ request()->is('loader/*') ? 'active' : '' }} dropdown">
+                    <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
+                        data-bs-auto-close="outside" role="button" aria-expanded="false">
+                        <span
+                            class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/package -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" />
+                                <path d="M12 12l8 -4.5" />
+                                <path d="M12 12l0 9" />
+                                <path d="M12 12l-8 -4.5" />
+                                <path d="M16 5.25l-8 4.5" />
+                            </svg>
+                        </span>
+                        <span class="nav-link-title">
+                            Loader
+                        </span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-menu-columns">
+                            <div class="dropdown-menu-column">
+                                {{-- <div class="dropend">
+                                    <a class="dropdown-item dropdown-toggle {{ request()->is('transaction') || request()->is('posting') ? 'active' : '' }}"
+                                        href="#sidebar-cards" data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                                        role="button" aria-expanded="false">
+                                        Loader
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <a href="{{ route('transaction.index') }}"
+                                            class="dropdown-item {{ request()->is('transaction') ? 'active' : '' }}">
+                                            Belum Posting
+                                        </a>
+                                        <a href="{{ route('posting.index') }}"
+                                            class="dropdown-item {{ request()->is('posting') ? 'active' : '' }}">
+                                            Sudah Posting
+                                        </a>
+                                    </div>
+                                </div> --}}
+                                {{-- <a class="dropdown-item {{ request()->is('loader/receive-po') ? 'active' : '' }}"
+                                    href="">
+
+                                    Receive From PO
+                                </a> --}}
+                                <a class="dropdown-item {{ request()->is('loader/issue') ? 'active' : '' }}"
+                                    href="{{ route('issue.loader') }}">
+
+                                    Issue
+                                </a>
+                                {{-- <a class="dropdown-item {{ request()->is('loader/transfer') ? 'active' : '' }}"
+                                    href="">
+
+                                    Transfer
+                                </a> --}}
+                                {{-- <a class="dropdown-item {{ request()->is('loader/receive-transfer') ? 'active' : '' }}"
+                                    href="">
+
+                                    Receive From Transfer
+                                </a> --}}
+                                {{-- <a class="dropdown-item active" href="./blank.html">
+                                Receipt
+                            </a>
+                            <a class="dropdown-item" href="./badges.html">
+                                Transfer
+                            </a>
+                            <a class="dropdown-item" href="./buttons.html">
+                                Receipt Transfer
+                            </a>
+
+                            <a class="dropdown-item" href="./colors.html">
+                                Issue
+                            </a>
+                            <a class="dropdown-item" href="./datagrid.html">
+                                Adjusment
+                                <span class="badge badge-sm bg-green-lt text-uppercase ms-auto">New</span>
+                            </a> --}}
                             </div>
                         </div>
                     </div>

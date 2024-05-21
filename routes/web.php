@@ -31,8 +31,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', UserList::class)->name('users.index');
     Route::get('/qouta', QuotaList::class)->name('qouta.index');
 
-    Route::get('/posting', PostingList::class)->name('posting.index');
-    Route::get('/transaction', TransactionList::class)->name('transaction.index');
+    Route::get('/issue', PostingList::class)->name('issue.index');
+    Route::get('/loader/issue', TransactionList::class)->name('issue.loader');
 
 
 

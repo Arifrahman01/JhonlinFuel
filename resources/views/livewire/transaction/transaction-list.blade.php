@@ -143,7 +143,6 @@
     </div>
     @livewire('transaction.modal-transaction')
     @push('scripts')
-        <script src="./dist/js/custom.js"></script>
         <script>
             async function deleteItem(id) {
                 const isConfirmed = await sweetDeleted({
