@@ -187,4 +187,7 @@
     @push('scripts')
         <script src="./dist/js/custom.js"></script>
     @endpush
+    @section('title')
+        SOH Overview
+    @endsection
 </div>

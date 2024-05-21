@@ -26,7 +26,7 @@ return new class extends Migration
             $table->decimal('qty');
             $table->string('statistic_type', 100)->nullable();
             $table->decimal('meter_value')->nullable();
-            $table->string('status_error', 100);
+            $table->string('status_error', 100)->nullable();
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();

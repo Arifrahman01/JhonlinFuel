@@ -11,6 +11,7 @@ class AdjustmentList extends Component
     use WithPagination;
 
     public $adjNo;
+    public $title;
 
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['refreshPage'];
@@ -26,7 +27,7 @@ class AdjustmentList extends Component
             ->search(['adjNo' => $this->adjNo])
             ->latest()
             ->paginate(10);
-        return view('livewire.adjustment.adjustment-list', compact('adjusts', 'title'));
+        return view('livewire.adjustment.adjustment-list', compact('adjusts'));
     }
 
     public function search()

@@ -8,6 +8,7 @@ use Livewire\Component;
 
 class SOHOverview extends Component
 {
+    public $title = 'SOH Overview';
     public function render()
     {
         $allJhonlin = MaterialStock::selectRaw("'All Jhonlin' as company_name")
