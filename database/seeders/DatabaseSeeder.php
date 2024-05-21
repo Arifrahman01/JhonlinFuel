@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Activity;
 use App\Models\Company;
+use App\Models\Department;
 use App\Models\Equipment;
+use App\Models\Fuelman;
 use App\Models\Issue\IssueDetail;
 use App\Models\Issue\IssueHeader;
 use App\Models\Material\Material;
@@ -342,6 +344,7 @@ class DatabaseSeeder extends Seeder
 
         $equipment = Equipment::create([
             'company_id' => $jg->id,
+            'plant_id' => $jgBtlPlant->id,
             'equipment_no' => 'E1',
             'equipment_description' => 'Equipment 1',
         ]);
@@ -708,6 +711,20 @@ class DatabaseSeeder extends Seeder
             'uom_id' => $uom->id,
             'qty_soh' => 2000,
             'qty_intransit' => 0,
+        ]);
+
+        Fuelman::create([
+            'company_id' => $jg->id,
+            'plant_id' => $jgBtlPlant->id,
+            'nik' => '12311072',
+            'name' => 'SABRIADI',
+        ]);
+
+        Department::create([
+            'company_id' => $jg->id,
+            'plant_id' => $jgBtlPlant->id,
+            'department_code' => 'HRD',
+            'department_name' => 'Human Resource Department',
         ]);
 
         // $issueHeader = IssueHeader::create([

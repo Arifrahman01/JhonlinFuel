@@ -17,6 +17,7 @@ class AdjustmentList extends Component
 
     public function render()
     {
+        $title = "HahaHihi";
         $adjusts = AdjustmentHeader::with([
             'details.plant',
             'details.sloc',
@@ -25,7 +26,7 @@ class AdjustmentList extends Component
             ->search(['adjNo' => $this->adjNo])
             ->latest()
             ->paginate(10);
-        return view('livewire.adjustment.adjustment-list', compact('adjusts'));
+        return view('livewire.adjustment.adjustment-list', compact('adjusts', 'title'));
     }
 
     public function search()
