@@ -10,7 +10,7 @@ use App\Livewire\Issue\IssueList;
 use App\Livewire\SOHOverview;
 use App\Livewire\Transaction\PostingList;
 use App\Livewire\Transaction\TransactionList;
-
+use App\Livewire\Transaction\TransferList;
 use App\Livewire\User\UserList;
 
 use Illuminate\Support\Facades\Route;
@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/issue', PostingList::class)->name('issue.index');
     Route::get('/loader/issue', TransactionList::class)->name('issue.loader');
+    Route::get('/loader/transfer', TransferList::class)->name('transfer.loader');
 
     Route::get('/soh-overview', SOHOverview::class)->name('soh.index');
     Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');

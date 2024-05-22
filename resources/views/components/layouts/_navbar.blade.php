@@ -142,6 +142,11 @@
 
                                     Issue
                                 </a>
+                                <a class="dropdown-item {{ request()->is('loader/transfer') ? 'active' : '' }}"
+                                    href="{{ route('transfer.loader') }}">
+
+                                    Transfer
+                                </a>
                                 {{-- <a class="dropdown-item {{ request()->is('loader/transfer') ? 'active' : '' }}"
                                     href="">
 
