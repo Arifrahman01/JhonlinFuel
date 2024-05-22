@@ -38,8 +38,8 @@
     <div class="page page-center">
         <div class="container container-tight py-4">
             <div class="text-center mb-4">
-                <a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/fms-icon.svg" height="36"
-                        alt=""></a>
+                <a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/fms-icon.svg"
+                        height="36" alt=""></a>
             </div>
             <div class="card card-md">
                 <div class="card-body">
@@ -48,8 +48,11 @@
                         @csrf
                         <div class="mb-3">
                             <label class="form-label">Username</label>
-                            <input type="text" class="form-control" name="username" placeholder="Your username"
-                                autocomplete="off">
+                            <input type="text" class="form-control @error('username') is-invalid @enderror"
+                                name="username" placeholder="Your username" autocomplete="off">
+                            @error('username')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="mb-2">
                             <label class="form-label">
@@ -58,10 +61,10 @@
                                     <a href="./forgot-password.html">I forgot password</a>
                                 </span> --}}
                             </label>
-                            <div class="input-group input-group-flat">
-                                <input type="password" class="form-control" name="password" placeholder="Your password"
-                                    autocomplete="off">
-                                {{-- <span class="input-group-text">
+                            {{-- <div class="input-group input-group-flat"> --}}
+                            <input type="password" class="form-control @error('username') is-invalid @enderror"
+                                name="password" placeholder="Your password" autocomplete="off">
+                            {{-- <span class="input-group-text">
                                     <a href="#" class="link-secondary" title="Show password"
                                         data-bs-toggle="tooltip"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
@@ -74,7 +77,10 @@
                                         </svg>
                                     </a>
                                 </span> --}}
-                            </div>
+                            {{-- </div> --}}
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         {{-- <div class="mb-2">
                             <label class="form-check">

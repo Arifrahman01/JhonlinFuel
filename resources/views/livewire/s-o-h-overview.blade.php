@@ -184,7 +184,7 @@
             </div>
         </div>
     </div>
-    
+
     @section('title')
         SOH Overview
     @endsection
