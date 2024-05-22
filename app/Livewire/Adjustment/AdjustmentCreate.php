@@ -29,6 +29,7 @@ class AdjustmentCreate extends Component
     public $datas = [];
 
     public $isLoadingSloc = false;
+    public $isLoadingSoh = false;
     public $loading = false;
 
     protected $listeners = ['openModal'];
@@ -47,32 +48,47 @@ class AdjustmentCreate extends Component
     public function updatedSelectedPlant($value)
     {
         $this->dispatch('logData', 'Selected Plant: ' . $value);
-        $this->slocs = Sloc::where('plant_id', $value)->get();
-        $this->sohAdjustmentReadOnly = true;
-        $this->updateSohAfter();
+        $this->soh = 0;
+        $this->sohAdjustment = 0;
+        $this->sohAfter = 0;
+        $this->isLoadingSloc = true;
+        try {
+            $this->slocs = Sloc::where('plant_id', $value)->get();
+            $this->sohAdjustmentReadOnly = true;
+            $this->updateSohAfter();
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
+        } finally {
+            $this->isLoadingSloc = false;
+        }
     }
 
     public function updatedSelectedSloc($value)
     {
         $this->dispatch('logData', 'Selected Sloc: ' . $value);
-
-        if (empty($value)) {
-            $this->soh = 0;
-            $this->sohAdjustmentReadOnly = true;
-        } else {
-            $materialStock = MaterialStock::where('sloc_id', $value)
-                ->first();
-            $this->soh = $materialStock->qty_soh;
-            $this->sohAdjustmentReadOnly = false;
+        $this->isLoadingSoh = true;
+        try {
+            if (empty($value)) {
+                $this->soh = 0;
+                $this->sohAdjustmentReadOnly = true;
+            } else {
+                $materialStock = MaterialStock::where('sloc_id', $value)
+                    ->first();
+                $this->soh = $materialStock->qty_soh;
+                $this->sohAdjustmentReadOnly = false;
+            }
+            $this->updateSohAfter();
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
+        } finally {
+            $this->isLoadingSoh = false;
         }
-        $this->updateSohAfter();
-        // $this->soh = 2000;
     }
 
     public function updatedSohAdjustment($value)
     {
         $this->dispatch('logData', 'Soh Adjustment: ' . $value);
-        $this->sohAfter = $this->soh + (empty($value) ? 0 : $value);
+        $this->sohAfter = toNumber($this->soh) + (empty($value) ? 0 : $value);
     }
 
     private function updateSohAfter()
@@ -125,12 +141,14 @@ class AdjustmentCreate extends Component
 
     private function resetForm()
     {
+        $this->slocs = [];
         $this->selectedPlant = null;
         $this->selectedSloc = null;
         $this->soh = 0;
         $this->sohAdjustment = 0;
         $this->sohAfter = 0;
         $this->notes = '';
+        $this->sohAdjustmentReadOnly = true;
     }
 
     public function deleteItem($index)

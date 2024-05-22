@@ -75,13 +75,24 @@
                             <div class="col-2"></div>
                             <div class="col-2 mb-3">
                                 <label class="form-label">Original Qty</label>
-                                <div>{{ $soh != '-' ? number_format($soh, 0, ',', '.') : $soh }}</div>
+                                @if ($isLoadingSoh)
+                                    <div class="spinner-border spinner-border-sm text-muted" role="status">
+                                    </div>
+                                @else
+                                    <div>{{ $soh != '-' ? number_format($soh, 0, ',', '.') : $soh }}</div>
+                                @endif
 
                             </div>
                             <div class="col-2 mb-3">
                                 <label class="form-label">Qty After</label>
-                                <div>{{ $sohAfter != '-' ? number_format($sohAfter, 0, ',', '.') : $sohAfter }}
-                                </div>
+                                @if ($isLoadingSoh)
+                                    <div class="spinner-border spinner-border-sm text-muted" role="status">
+                                    </div>
+                                @else
+                                    <div>{{ $sohAfter != '-' ? number_format($sohAfter, 0, ',', '.') : $sohAfter }}
+                                    </div>
+                                @endif
+
 
                             </div>
 
