@@ -59,7 +59,7 @@ class TransactionList extends Component
         if ($tmpDatas->isNotEmpty()) {
             foreach ($tmpDatas as $value) {
                 $message = $this->cekData($value);
-                $message = false; //hapus untuk kondisi asli
+                // $message = false; //hapus untuk kondisi asli
                 if ($message) {
                     $value->update([
                         'status_error' => $message
@@ -164,7 +164,7 @@ class TransactionList extends Component
     {
         $message = false;
         $companyExists = Company::where('company_code', $val->company_code)->exists();
-        $fuelWarehouseExist = Plant::where('plant_code', $val->fuel_warehouse)->exists();
+        $fuelWarehouseExist = Sloc::where('sloc_code', $val->fuel_warehouse)->exists();
         $transTypeInvalid = in_array($val->trans_type, ['ISS']); /* Hanya untuk ISS/issued */
         $fuelmanExist = Fuelman::where('nik', $val->fuelman)->exists();
         $equipmentExist = Equipment::where('equipment_no', $val->equipment_no)->exists();
