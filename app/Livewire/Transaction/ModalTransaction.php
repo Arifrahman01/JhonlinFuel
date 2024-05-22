@@ -5,6 +5,7 @@ namespace App\Livewire\Transaction;
 use App\Imports\TransactionImport;
 use App\Models\Activity;
 use App\Models\Company;
+use App\Models\Department;
 use App\Models\Equipment;
 use App\Models\Fuelman;
 use App\Models\Material\Material;
@@ -30,9 +31,10 @@ class ModalTransaction extends Component
     public $material;
     public $slocs = [];
     public $plants = [];
+    public $departments = [];
+    public $fuelmans = [];
     public $equipments;
     public $activitys;
-    public $fuelmans;
 
     public $selectedCompany;
     public $selectedlocation;
@@ -49,7 +51,6 @@ class ModalTransaction extends Component
         $this->material = Material::all();
         $this->equipments = Equipment::all();
         $this->activitys = Activity::all();
-        $this->fuelmans = Fuelman::all();
 
         if ($this->id) {
             $this->dataTmp =  TmpTransaction::find($this->id)->first();
@@ -108,6 +109,8 @@ class ModalTransaction extends Component
             $this->statistic_type = $this->dataTmp['statistic_type'];
             $this->plants = Plant::where('company_id', Company::where('company_code',  $this->dataTmp['company_code'])->value('id'))->get();
             $this->slocs = Sloc::where('plant_id', $this->dataTmp['location'])->get();
+            $this->departments = Department::where('company_id', Company::where('company_code',  $this->dataTmp['company_code'])->value('id'))->get();
+            $this->fuelmans = Fuelman::where('plant_id', $this->dataTmp['location'])->get();
         }else{
             $this->dataTmp = null;
             $this->selectedCompany = null;
@@ -130,11 +133,16 @@ class ModalTransaction extends Component
     public function updatedSelectedCompany($value)
     {
         $this->plants = Plant::where('company_id', Company::where('company_code', $value)->value('id'))->get();
+        $this->departments = Department::where('company_id', Company::where('company_code', $value)->value('id'))->get();
+
+
 
     }
     public function updatedSelectedlocation($value)
     {
         $this->slocs = Sloc::where('plant_id', $value)->get();
+        $this->fuelmans = Fuelman::where('plant_id', $value)->get();
+
     }
 
     public function render()

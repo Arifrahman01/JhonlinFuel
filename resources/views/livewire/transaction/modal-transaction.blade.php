@@ -88,6 +88,32 @@
                                     </select>
                                 </div>
                                 <div class="col-3">
+                                    <label for="" class="form-label">Department
+                                        <div wire:loading wire:target="selectedCompany">
+                                            <i class="fa fa-spinner fa-spin"></i>
+                                        </div>
+                                    </label>
+                                    <select name="" id="" class="form-control" wire:model="department" required>
+                                        <option value="">-Select Department-</option>
+                                        @foreach ($departments as $dept)
+                                            <option value="{{ $dept->id }}" {{ selected($dept->id, $dataTmp ? $dataTmp->department : '') }}>{{ $dept->department_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <label for="" class="form-label">Fuelman
+                                        <div wire:loading wire:target="selectedlocation">
+                                            <i class="fa fa-spinner fa-spin"></i>
+                                        </div>
+                                    </label>
+                                    <select name="" id="" class="form-control" wire:model="fuelman" required>
+                                        <option value="">-Fuelman-</option>
+                                        @foreach ($fuelmans as $fuelMan)
+                                        <option value="{{ $fuelMan->nik }}">{{ $fuelMan->nik.' - '.$fuelMan->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-3">
                                     <label for="" class="form-label">Trans Type</label>
                                     <select name="" id="" class="form-control" wire:model="trans_type" required>
                                         <option value="">-Trans Type-</option>
@@ -100,16 +126,7 @@
                                     <label for="" class="form-label">Issue Date</label>
                                     <input type="date" class="form-control" wire:model='trans_date' value="{{ $dataTmp ? $dataTmp->trans_date : '' }}" required>
                                 </div>
-                                <div class="col-3">
-                                    <label for="" class="form-label">Fuelman</label>
-                                    <select name="" id="" class="form-control" wire:model="fuelman" required>
-                                        <option value="">-Fuelman-</option>
-                                        @foreach ($fuelmans as $fuelMan)
-                                        <option value="{{ $fuelMan->nik }}">{{ $fuelMan->nik.' - '.$fuelMan->name }}</option>
-                                        @endforeach
-                                        <option value="123">Contoh Fuelman</option>
-                                    </select>
-                                </div>
+                               
                                 <div class="col-3">
                                     <label for="" class="form-label">Equipment Number</label>
                                     <select name="" id="" class="form-control" wire:model="equipment_no" required>
@@ -121,13 +138,7 @@
                                     </select>
                                 </div>
 
-                                <div class="col-3">
-                                    <label for="" class="form-label">Department</label>
-                                    <select name="" id="" class="form-control" wire:model="department" required>
-                                        <option value="">-Select Department-</option>
-                                        <option value="12">Department Contoh</option>
-                                    </select>
-                                </div>
+                               
                                 <div class="col-3">
                                     <label for="" class="form-label">Activity</label>
                                     <select name="" id="" class="form-control" wire:model="activity" required>
