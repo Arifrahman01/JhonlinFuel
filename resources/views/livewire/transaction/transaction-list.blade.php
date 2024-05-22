@@ -33,11 +33,6 @@
                                                 value="{{ date('Y-m-d') }}">
                                         </div>
                                     </div>
-                                    {{-- <div class="ms-auto text-muted">
-                                        <div class="ms-2 d-inline-block">
-                                            s/d
-                                        </div>
-                                    </div> --}}
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             {{-- <input type="date" class="form-control form-control-sm" id="end_date" aria-label="End Date" placeholder="End Date" value="{{ date('Y-m-d') }}"> --}}

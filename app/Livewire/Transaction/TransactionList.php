@@ -73,7 +73,7 @@ class TransactionList extends Component
                 $this->storeData($tmpDatas);
             }
         } else {
-            $this->dispatch('error', 'There is no data toposting');
+            $this->dispatch('error', 'There is no data to posting');
         }
     }
     public function storeData($data)

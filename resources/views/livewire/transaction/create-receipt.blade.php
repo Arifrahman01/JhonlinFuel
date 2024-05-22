@@ -41,7 +41,7 @@
                         </div>
                     </form>
                 @else
-                    <form wire:submit.prevent="storeData({{ $dataTransfer->id ?? '' }})">
+                    <form wire:submit.prevent="storeData({{ $dataReceipt->id ?? '' }})">
                         <div class="modal-header">
                             <h5 class="modal-title" id="modal-largeLabel">Edit Data</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal" id="closeModalID"></button>
@@ -53,7 +53,7 @@
                                     <select wire:model.live="selectedCompany" class="form-control" required>
                                         <option value="">-Select Company-</option>
                                         @foreach ($companies as $comp)
-                                            <option value="{{ $comp->company_code }}" {{ selected($comp->company_code, $dataTransfer ? $dataTransfer->company_code : '') }}>{{ $comp->company_name }}</option>
+                                            <option value="{{ $comp->company_code }}" {{ selected($comp->company_code, $dataReceipt ? $dataReceipt->company_code : '') }}>{{ $comp->company_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -66,7 +66,7 @@
                                     <select name="" id="" class="form-control" wire:model.live="selectedlocation" required>
                                         <option value="">-Select Location-</option>
                                         @foreach ($plants as $plant)
-                                            <option value="{{ $plant->id }}"  {{ selected($plant->id, $dataTransfer ? $dataTransfer->selectedlocation : '') }}>
+                                            <option value="{{ $plant->id }}"  {{ selected($plant->id, $dataReceipt ? $dataReceipt->selectedlocation : '') }}>
                                                 {{ $plant->id . ' - ' . $plant->plant_name }}
                                             </option>
                                         @endforeach
@@ -78,49 +78,49 @@
                                             <i class="fa fa-spinner fa-spin"></i>
                                         </div>
                                     </label>
-                                    <select name="" id="" class="form-control" wire:model="fuel_warehouse" required>
+                                    <select name="" id="" class="form-control" wire:model="warehouse" required>
                                         <option value="">-Select Warehouse-</option>
                                         @foreach ($slocs as $sloc)
-                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code, $dataTransfer ? $dataTransfer->fuel_warehouse : '') }}>
+                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code, $dataReceipt ? $dataReceipt->fuel_warehouse : '') }}>
                                                 {{ $sloc->sloc_code . ' - ' . $sloc->sloc_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">Trans Type</label>
-                                    <select name="" id="" class="form-control" wire:model="trans_type" required>
-                                        <option value="">-Trans Type-</option>
-                                        <option value="ISS" {{ selected('ISS', $dataTransfer ? $dataTransfer->trans_type : '') }}>ISS</option>
-                                        <option value="TRF" {{ selected('TRF', $dataTransfer ? $dataTransfer->trans_type : '') }}>TRF</option>
-                                        <option value="IRS" {{ selected('IRS', $dataTransfer ? $dataTransfer->trans_type : '') }}>IRS</option>
-                                    </select>
-                                </div>
-                                <div class="col-3">
                                     <label for="" class="form-label">Issue Date</label>
-                                    <input type="date" class="form-control" wire:model='trans_date' value="{{ $dataTransfer ? $dataTransfer->trans_date : '' }}" required>
+                                    <input type="date" class="form-control" wire:model='trans_date' value="{{ $dataReceipt ? $dataReceipt->trans_date : '' }}" required>
                                 </div>
-                               
-                             
-
                                 <div class="col-3">
-                                    <label for="" class="form-label">Fuel Type</label>
-                                    <select name="" id="" class="form-control" wire:model="fuel_type" required>
-                                        <option value="">-Select Fuel Type-</option>
+                                    <label for="" class="form-label">PO NO</label>
+                                    <input type="text" class="form-control" wire:model='po_no' value="{{ $dataReceipt ? $dataReceipt->qty : '' }}" required>
+                                </div>
+                                <div class="col-3">
+                                    <label for="" class="form-label">DO NO</label>
+                                    <input type="text" class="form-control" wire:model='do_no' value="{{ $dataReceipt ? $dataReceipt->qty : '' }}" required>
+                                </div>
+                                <div class="col-3">
+                                    <label for="" class="form-label">Transportir</label>
+                                    <input type="text" class="form-control" wire:model='transportir' value="{{ $dataReceipt ? $dataReceipt->qty : '' }}" required>
+                                </div>
+                                <div class="col-3">
+                                    <label for="" class="form-label">Material Code</label>
+                                    <select name="" id="" class="form-control"  wire:model='material_code' required>
+                                        <option value="">-Select Material-</option>
                                         @foreach ($materials as $mat)
-                                            <option value="{{ $mat->id }}" {{ selected($mat->id, $dataTransfer ? $dataTransfer->fuel_type : '') }}>{{ $mat->material_description }}</option>
+                                        <option value="{{ $mat->id }}">{{ $mat->material_description }}</option>
+                                            
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-3">
                                     <label for="" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" wire:model='qty' value="{{ $dataTransfer ? $dataTransfer->qty : '' }}" required>
+                                    <input type="number" class="form-control" wire:model='qty' value="" required>
                                 </div>
-                                
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn me-auto" data-bs-dismiss="modal" wire:click="closeModal">Close</button>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp; {{ $dataTransfer ? 'Update' : 'Create' }}</button>
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp; {{ $dataReceipt ? 'Update' : 'Create' }}</button>
                         </div>
                     </form>
                 @endif

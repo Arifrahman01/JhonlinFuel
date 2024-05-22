@@ -149,7 +149,7 @@
                                 </a>
                                 <a class="dropdown-item {{ request()->is('loader/deceived ') ? 'active' : '' }}"
                                     href="{{ route('received.loader') }}">
-                                    Received 
+                                    Receipt PO
                                 </a>
                                 {{-- <a class="dropdown-item {{ request()->is('loader/transfer') ? 'active' : '' }}"
                                     href="">
