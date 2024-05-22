@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rcv_transfer_loaders', function (Blueprint $table) {
+        Schema::create('rcv_transfers', function (Blueprint $table) {
             $table->id();
             $table->string('trans_type');
             $table->date('trans_date');
@@ -37,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rcv_transfer_loaders');
+        Schema::dropIfExists('rcv_transfers');
     }
 };
