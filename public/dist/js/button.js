@@ -1,4 +1,4 @@
-const sweetDeleted = async ({ head = 'Are you sure?', title = 'Deleted this data !', buttonText = 'Yes, delete it!', id }) => {
+const sweetDeleted = async ({ head = 'Are you sure?', title = 'Deleted this data !', buttonText = 'Yes, delete it!', id ,textLoadong = ''}) => {
     try {
         const result = await Swal.fire({
             title: head,
@@ -14,7 +14,7 @@ const sweetDeleted = async ({ head = 'Are you sure?', title = 'Deleted this data
             if (id) {
                 const btnDelete = document.getElementById('btn-delete' + id);
                 if (btnDelete) {
-                    btnDelete.innerHTML = "<i class='fa fa-spinner fa-spin'></i>";
+                    btnDelete.innerHTML = "<i class='fa fa-spinner fa-spin'></i> "+textLoadong;
                     btnDelete.disabled = true;
                 } else {
                     console.warn(`Button with id 'btn-delete${id}' not found`);
@@ -65,7 +65,7 @@ const sweetReset = async ({ head = 'Are you sure?', title = 'Reset this password
     }
 };
 
-const sweetPosting = async ({ head = 'Are you sure?', title = 'Posting this transaction !', buttonText = 'Yes, do it!', id }) => { 
+const sweetPosting = async ({ head = 'Are you sure?', title = 'Posting this transaction !', buttonText = 'Yes, do it!', id ,textLoadong = ''}) => { 
     try {
         const result = await Swal.fire({
             title: head,
@@ -81,7 +81,7 @@ const sweetPosting = async ({ head = 'Are you sure?', title = 'Posting this tran
             if (id) {
                 const btnPosting = document.getElementById('btn-posting' + id);
                 if (btnPosting) {
-                    btnPosting.innerHTML = "<i class='fa fa-spinner fa-spin'></i>";
+                    btnPosting.innerHTML = "<i class='fa fa-spinner fa-spin'></i> "+ textLoadong;
                     btnPosting.disabled = true;
                 } else {
                     console.warn(`Button with id 'btn-posting${id}' not found`);
