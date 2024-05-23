@@ -13,4 +13,16 @@ class Receipt extends BaseModel
         'id',
     ];
 
+    public function scopeSearch($query, $filters)
+    {
+        return $query->when($filters, function ($query, $value) {
+            $query->where(function ($query) use ($value) {
+                $query->where('po_no', 'like', '%' . $value . '%')
+                      ->orWhere('do_no', 'like', '%' . $value . '%');
+            });
+        });
+    }
+    
+    
+
 }

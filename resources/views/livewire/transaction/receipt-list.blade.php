@@ -29,7 +29,7 @@
                                 <div class="d-flex">
                                     <div class="ms-auto">
                                         <div class="d-inline-flex">
-                                            <input type="text" class="form-control form-control-sm me-2" wire:model="filter_search" aria-label="Search Label" placeholder="Search">
+                                            <input type="text" class="form-control form-control-sm me-2" wire:model="filter_search" aria-label="Search Label" placeholder="Search:Number PO and DO">
                                             <input type="date" class="form-control form-control-sm" id="start_date" wire:model="filter_date" aria-label="Start Date" placeholder="Start Date"
                                                 value="{{ date('Y-m-d') }}"> &nbsp;
 
