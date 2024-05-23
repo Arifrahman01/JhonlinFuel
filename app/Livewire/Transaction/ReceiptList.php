@@ -5,9 +5,11 @@ namespace App\Livewire\Transaction;
 use App\Models\Company;
 use App\Models\Equipment;
 use App\Models\Material\Material;
+use App\Models\Material\MaterialMovement;
 use App\Models\Plant;
 use App\Models\Receipt;
 use App\Models\Sloc;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -40,11 +42,90 @@ class ReceiptList extends Component
         if ($data->isNotEmpty()) {
             foreach ($data as $key => $value) {
                 $message = $this->cekData($value);
+                 // $message = false; //hapus untuk kondisi asli
+                 if ($message) {
+                    $value->update([
+                        'status_error' => $message
+                    ]);
+                }
             }
+            if ($message) {
+                $this->dispatch('error', $message);
+            } else {
+                /* Save nya langsung per batch jika tidak ada error di validasi cekData() */
+                $this->storeData($data);
+            }
+
         } else {
             $this->dispatch('error', 'There is no data to posting');
         }
     }
+
+    public function storeData($data)
+    {
+        DB::beginTransaction();
+        $lastPosting = Receipt::max('posting_no');
+        if (isset($lastPosting)) {
+            $explod = explode('/', $lastPosting);
+            if ($explod[0] == date('Y')) {
+                $number = $explod[0];
+            } else {
+                $number = 0;
+            }
+        } else {
+            $number = 0;
+        }
+
+        $newPostingNumber = date('Y').'/'.$data[0]->company_code.'/'.str_pad($number + 1, 6, '0', STR_PAD_LEFT) ;
+        try {
+            foreach ($data as $tmp) {
+                $company = Company::where('company_code', $tmp->company_code)->first();
+                // $fuelman = Fuelman::where('nik', $tmp->fuelman)->first();
+                // $equipment = Equipment::where('equipment_no', $tmp->equipment_no)->first();
+                // $location = Plant::where('id', $tmp->location)->first();
+                // $activity = Activity::where('id', $tmp->activity)->first();
+                $fuelType = Material::where('id',$tmp->material_code)->first();
+                $slocId = Sloc::where('sloc_code',  $tmp->warehouse)->value('id');
+
+                Receipt::find($tmp->id)->update(['posting_no' => $newPostingNumber]);
+
+                $paramMovement = [
+                    'company_id'    => $company->id,
+                    'doc_header_id' => $tmp->id,
+                    'doc_no'        => $newPostingNumber,
+                    'doc_detail_id' => $tmp->id,
+                    'material_id'   => $fuelType->id,
+                    'material_code' => $fuelType->material_code,
+                    'part_no'       => $fuelType->part_no,
+                    'material_mnemonic' => $fuelType->material_mnemonic,
+                    'material_description' => $fuelType->material_description,
+                    'movement_date' => date('Y-m-d'),
+                    'movement_type' => $tmp->trans_type,
+                    'plant_id'  => $tmp->location,
+                    'sloc_id'   =>  $slocId,
+                    'uom_id'    =>  $tmp->uom,
+                    'qty'       => $tmp->qty,
+                ];
+
+                MaterialMovement::create($paramMovement);
+                $cekStok = Material::where('company_id', $company->id)->where('plant_id', $tmp->location)->where('sloc_id', $slocId)->first();
+                if ($cekStok) {
+                    $newStock = $cekStok->qty_soh + $tmp->qty;
+                    $cekStok->qty_soh = $newStock;
+                    $cekStok->save();
+                } else {
+                    throw new \Exception('Material stock not found.');
+                }
+            }
+            DB::commit();
+            $this->dispatch('success', 'Data has been posting :' . $newPostingNumber);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatch('error', $e->getMessage());
+        }
+    }
+
+
     public function search()
     {
         $this->resetPage();

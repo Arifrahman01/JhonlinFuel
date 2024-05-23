@@ -22,6 +22,7 @@ Route::get('/dashboard', function () {
     return redirect('/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
 Route::middleware('auth')->group(function () {
     // Route::get('/', function () {
     //     return view('welcome1');
