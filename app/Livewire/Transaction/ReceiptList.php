@@ -16,13 +16,20 @@ use Livewire\WithPagination;
 class ReceiptList extends Component
 {
     use WithPagination;
+    public $filter_date;
+    public $filter_search;
 
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['refreshPage'];
 
+    public function mount()
+    {
+        $this->filter_date = $this->filter_date ?? date('Y-m-d');
+    }
+
     public function render()
     {
-        $receipts = Receipt::paginate(5);
+        $receipts = Receipt::where('trans_date',$this->filter_date)->search($this->filter_search)->paginate(10);
         return view('livewire.transaction.receipt-list', ['receipts' => $receipts]);
     }
 

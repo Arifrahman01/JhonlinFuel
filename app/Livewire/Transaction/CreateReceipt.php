@@ -61,8 +61,7 @@ class CreateReceipt extends Component
             $this->do_no = $this->dataReceipt['do_no'];
             $this->transportir = $this->dataReceipt['transportir'];
             $this->material_code = $this->dataReceipt['material_code'];
-            $this->qty = number_format($this->dataReceipt['qty']);
-            
+            $this->qty = str_replace('.00', '', $this->dataReceipt['qty']); 
             $this->plants = Plant::where('company_id', Company::where('company_code',  $this->dataReceipt['company_code'])->value('id'))->get();
             $this->slocs = Sloc::where('plant_id', $this->dataReceipt['location'])->get();
         } else {
