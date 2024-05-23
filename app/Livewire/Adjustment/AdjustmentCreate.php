@@ -13,8 +13,11 @@ use App\Models\Sloc;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
+use function PHPUnit\Framework\isEmpty;
+
 class AdjustmentCreate extends Component
 {
+    public $adjDate;
     public $plants = [];
     public $selectedPlant;
     public $slocs = [];
@@ -160,9 +163,12 @@ class AdjustmentCreate extends Component
 
     public function storeAdjustment()
     {
-        $this->dispatch('logData', $this->datas);
+        $this->dispatch('logData', [$this->adjDate, $this->datas]);
         DB::beginTransaction();
         try {
+            if (!isset($this->adjDate)) {
+                throw new \Exception('Adjustment Date tidak boleh kosong');
+            }
             if (count($this->datas) == 0) {
                 throw new \Exception('Item tidak boleh kosong');
             }
@@ -178,6 +184,7 @@ class AdjustmentCreate extends Component
             $header = AdjustmentHeader::create([
                 'company_id' => $plant->company_id,
                 'adjustment_no' => $adjustmentNo,
+                'adjustment_date' => $this->adjDate,
             ]);
 
             $material = Material::find(1);
@@ -209,7 +216,7 @@ class AdjustmentCreate extends Component
                     'part_no' => $material->part_no,
                     'material_mnemonic' => $material->material_mnemonic,
                     'material_description' => $material->material_description,
-                    'movement_date' => $currentDate,
+                    'movement_date' => $this->adjDate,
                     'movement_type' => 'adj',
                     'plant_id' => $data->plant_id,
                     'sloc_id' => $data->sloc_id,

@@ -43,6 +43,13 @@ class DatabaseSeeder extends Seeder
             'company_name' => 'PT. Jhonlin Group',
         ]);
 
+        User::create([
+            'name' => 'Admin JG',
+            'username' => 'jg-admin',
+            'password' => Hash::make('Jhonlin@123'),
+            'company_id' => $jg->id,
+        ]);
+
         $jb = Company::create([
             'company_code' => 'JB',
             'company_name' => 'PT. Jhonlin Baratama',
@@ -416,7 +423,7 @@ class DatabaseSeeder extends Seeder
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
             'qty_soh' => 17000,
-            'qty_intransit' => 1000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
@@ -598,7 +605,7 @@ class DatabaseSeeder extends Seeder
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
             'qty_soh' => 7000,
-            'qty_intransit' => 0,
+            'qty_intransit' => -2000,
         ]);
 
         MaterialStock::create([
@@ -612,7 +619,7 @@ class DatabaseSeeder extends Seeder
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
             'qty_soh' => 5000,
-            'qty_intransit' => 0,
+            'qty_intransit' => 2000,
         ]);
 
         MaterialStock::create([
@@ -626,7 +633,7 @@ class DatabaseSeeder extends Seeder
             'material_description' => $material->material_description,
             'uom_id' => $uom->id,
             'qty_soh' => 9000,
-            'qty_intransit' => 9000,
+            'qty_intransit' => 0,
         ]);
 
         MaterialStock::create([
