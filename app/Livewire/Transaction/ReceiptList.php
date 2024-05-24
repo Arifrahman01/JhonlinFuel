@@ -6,9 +6,11 @@ use App\Models\Company;
 use App\Models\Equipment;
 use App\Models\Material\Material;
 use App\Models\Material\MaterialMovement;
+use App\Models\Material\MaterialStock;
 use App\Models\Plant;
 use App\Models\Receipt;
 use App\Models\Sloc;
+use App\Models\Uom;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -29,7 +31,9 @@ class ReceiptList extends Component
 
     public function render()
     {
-        $receipts = Receipt::where('trans_date',$this->filter_date)->search($this->filter_search)->paginate(10);
+        $receipts = Receipt::whereNull('posting_no')
+            ->where('trans_date', $this->filter_date)->search($this->filter_search)
+            ->paginate(10);
         return view('livewire.transaction.receipt-list', ['receipts' => $receipts]);
     }
 
@@ -49,8 +53,8 @@ class ReceiptList extends Component
         if ($data->isNotEmpty()) {
             foreach ($data as $key => $value) {
                 $message = $this->cekData($value);
-                 // $message = false; //hapus untuk kondisi asli
-                 if ($message) {
+                // $message = false; //hapus untuk kondisi asli
+                if ($message) {
                     $value->update([
                         'status_error' => $message
                     ]);
@@ -62,7 +66,6 @@ class ReceiptList extends Component
                 /* Save nya langsung per batch jika tidak ada error di validasi cekData() */
                 $this->storeData($data);
             }
-
         } else {
             $this->dispatch('error', 'There is no data to posting');
         }
@@ -83,7 +86,7 @@ class ReceiptList extends Component
             $number = 0;
         }
 
-        $newPostingNumber = date('Y').'/'.$data[0]->company_code.'/'.str_pad($number + 1, 6, '0', STR_PAD_LEFT) ;
+        $newPostingNumber = date('Y') . '/' . $data[0]->company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
         try {
             foreach ($data as $tmp) {
                 $company = Company::where('company_code', $tmp->company_code)->first();
@@ -91,9 +94,9 @@ class ReceiptList extends Component
                 // $equipment = Equipment::where('equipment_no', $tmp->equipment_no)->first();
                 // $location = Plant::where('id', $tmp->location)->first();
                 // $activity = Activity::where('id', $tmp->activity)->first();
-                $fuelType = Material::where('id',$tmp->material_code)->first();
+                $fuelType = Material::where('id', $tmp->material_code)->first();
                 $slocId = Sloc::where('sloc_code',  $tmp->warehouse)->value('id');
-
+                $uomId = Uom::where('uom_code', $tmp->uom)->value('id');
                 Receipt::find($tmp->id)->update(['posting_no' => $newPostingNumber]);
 
                 $paramMovement = [
@@ -106,16 +109,17 @@ class ReceiptList extends Component
                     'part_no'       => $fuelType->part_no,
                     'material_mnemonic' => $fuelType->material_mnemonic,
                     'material_description' => $fuelType->material_description,
-                    'movement_date' => date('Y-m-d'),
+                    'movement_date' => $tmp->trans_date,
+                    // 'movement_date' => date('Y-m-d'),
                     'movement_type' => $tmp->trans_type,
                     'plant_id'  => $tmp->location,
                     'sloc_id'   =>  $slocId,
-                    'uom_id'    =>  $tmp->uom,
+                    'uom_id'    =>  $uomId,
                     'qty'       => $tmp->qty,
                 ];
 
                 MaterialMovement::create($paramMovement);
-                $cekStok = Material::where('company_id', $company->id)->where('plant_id', $tmp->location)->where('sloc_id', $slocId)->first();
+                $cekStok = MaterialStock::where('company_id', $company->id)->where('plant_id', $tmp->location)->where('sloc_id', $slocId)->first();
                 if ($cekStok) {
                     $newStock = $cekStok->qty_soh + $tmp->qty;
                     $cekStok->qty_soh = $newStock;
@@ -143,10 +147,10 @@ class ReceiptList extends Component
         $companyExists = Company::where('company_code', $data->company_code)->exists();
         $transTypeInvalid = in_array($data->trans_type, ['RCV']);
         $locationExist = Plant::where('id', $data->location)->exists();
-        $fuelWarehouseExist = Sloc::where('sloc_code', $data->fuel_warehouse)->exists();
+        $fuelWarehouseExist = Sloc::where('sloc_code', $data->warehouse)->exists();
         $transportirExist = Equipment::where('equipment_no', $data->transportir)->exists();
         $materialExist = Material::where('id', $data->material_code)->exists();
-       
+
 
         if (!$companyExists) {
             $message = 'Company code ' . $data->company_code . ' not registered in master';
@@ -158,7 +162,7 @@ class ReceiptList extends Component
             $message = 'Location ' . $data->location . ' not registered in master';
         }
         if (!$fuelWarehouseExist) {
-            $message = 'Fuel warehouse ' . $data->fuel_warehouse . ' not registered in master';
+            $message = 'Fuel warehouse ' . $data->warehouse . ' not registered in master';
         }
         if (!$transportirExist) {
             $message = 'Transportir ' . $data->transportir . ' not registered in master';

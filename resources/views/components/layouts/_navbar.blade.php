@@ -21,7 +21,7 @@
                     </a>
                 </li>
                 <li
-                    class="nav-item {{ request()->is('adjustment') || request()->is('issue') || request()->is('receipt-transfer') ? 'active' : '' }} dropdown">
+                    class="nav-item {{ request()->is('receipt') || request()->is('adjustment') || request()->is('issue') || request()->is('receipt-transfer') ? 'active' : '' }} dropdown">
                     <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                         data-bs-auto-close="outside" role="button" aria-expanded="false">
                         <span
@@ -61,6 +61,11 @@
                                         </a>
                                     </div>
                                 </div> --}}
+                                <a class="dropdown-item {{ request()->is('receipt') ? 'active' : '' }}"
+                                    href="{{ route('receipt.index') }}">
+
+                                    Receipt
+                                </a>
                                 <a class="dropdown-item {{ request()->is('receipt-transfer') ? 'active' : '' }}"
                                     href="{{ route('receipt-transfer.index') }}">
 

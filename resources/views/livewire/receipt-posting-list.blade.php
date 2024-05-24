@@ -5,7 +5,7 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6 d-flex justify-content-start">
-                            <h1>Receipt Transfer</h1>
+                            <h1>Receipt</h1>
                         </div>
                     </h2>
                 </div>
@@ -45,38 +45,41 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
-                                        <th class="text-center">Posting No</th>
-                                        <th class="text-center">Trans Type</th>
-                                        <th class="text-center">Trans Date</th>
-                                        <th class="text-center">From Company Code</th>
-                                        <th class="text-center">From Warehouse</th>
-                                        <th class="text-center">To Company Code</th>
-                                        <th class="text-center">To Warehouse</th>
-                                        <th class="text-center">Transportir</th>
-                                        <th class="text-center">Material Code</th>
-                                        <th class="text-center">Qty</th>
+                                        <th>Posting</th>
+                                        <th>Company</th>
+                                        <th>Trans Type</th>
+                                        <th>Trans Date</th>
+                                        <th>PO NO</th>
+                                        <th>DO NO</th>
+                                        <th>Location</th>
+                                        <th>Warehouse</th>
+                                        <th>Transportir</th>
+                                        <th>Material</th>
+                                        <th>UOM</th>
+                                        <th>Quantity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($rcvTransfers->isEmpty())
+                                    @if ($receipts->isEmpty())
                                         {!! dataNotFond(6) !!}
                                     @else
-                                        @foreach ($rcvTransfers as $rcv)
+                                        @foreach ($receipts as $rcv)
                                             <tr>
                                                 <td class="text-center">
-                                                    {{ ($rcvTransfers->currentPage() - 1) * $rcvTransfers->perPage() + $loop->index + 1 }}
+                                                    {{ ($receipts->currentPage() - 1) * $receipts->perPage() + $loop->index + 1 }}
                                                 </td>
-                                                <td class="text-center">{{ $rcv->posting_no }}</td>
-                                                <td class="text-center">{{ $rcv->trans_type }}</td>
-                                                <td class="text-center">{{ $rcv->trans_date }}</td>
-                                                <td class="text-center">{{ $rcv->from_company_code }}</td>
-                                                <td class="text-center">{{ $rcv->from_warehouse }}</td>
-                                                <td class="text-center">{{ $rcv->to_company_code }}</td>
-                                                <td class="text-center">{{ $rcv->to_warehouse }}</td>
-                                                <td class="text-center">{{ $rcv->transportir }}</td>
-                                                <td class="text-center">{{ $rcv->material_code }}</td>
-                                                <td style="text-align: right;">
-                                                    {{ number_format($rcv->qty, 0, ',', '.') }}</td>
+                                                <td>{{ $rcv->posting_no }}</td>
+                                                <td>{{ $rcv->company_code }}</td>
+                                                <td>{{ $rcv->trans_type }}</td>
+                                                <td>{{ $rcv->trans_date }}</td>
+                                                <td>{{ $rcv->po_no }}</td>
+                                                <td>{{ $rcv->do_no }}</td>
+                                                <td>{{ $rcv->location }}</td>
+                                                <td>{{ $rcv->warehouse }}</td>
+                                                <td>{{ $rcv->transportir }}</td>
+                                                <td>{{ $rcv->material_code }}</td>
+                                                <td class="text-center">{{ $rcv->uom }}</td>
+                                                <td class="text-end">{{ number_format($rcv->qty) }}</td>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -85,7 +88,8 @@
                         </div>
 
                         <div class="card-footer justify-content-between align-items-center">
-                            {{ $rcvTransfers->links() }}
+                            {{ $receipts->links() }}
+
                         </div>
                     </div>
                 </div>
