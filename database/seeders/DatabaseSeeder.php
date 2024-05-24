@@ -27,11 +27,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Super Administrator',
-            'username' => 'sa',
-            'password' => Hash::make('Jhonlin@123'),
-        ]);
+        // User::create([
+        //     'name' => 'Super Administrator',
+        //     'username' => 'sa',
+        //     'password' => Hash::make('Jhonlin@123'),
+        // ]);
 
         $jgh = Company::create([
             'company_code' => 'JG-Holding',
@@ -43,16 +43,16 @@ class DatabaseSeeder extends Seeder
             'company_name' => 'PT. Jhonlin Group',
         ]);
 
-        User::create([
-            'name' => 'Admin JG',
-            'username' => 'jg-admin',
-            'password' => Hash::make('Jhonlin@123'),
-            'company_id' => $jg->id,
-        ]);
-
         $jb = Company::create([
             'company_code' => 'JB',
             'company_name' => 'PT. Jhonlin Baratama',
+        ]);
+
+        User::create([
+            'name' => 'Admin JB',
+            'username' => 'jb-admin',
+            'password' => Hash::make('Jhonlin@123'),
+            'company_id' => $jb->id,
         ]);
 
         $kam = Company::create([

@@ -49,9 +49,9 @@
                         </div>
                     </form>
                 @else
-                    <form>
+                    <form wire:submit.prevent="storeData({{ '' }})">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modal-largeLabel">Create Receipt Transfer</h5>
+                            <h5 class="modal-title" id="modal-largeLabel">{{ $statusModal . ' Receipt Transfer' }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                                 wire:click="closeModal" id="closeModalID"></button>
                         </div>
@@ -59,7 +59,7 @@
                             <div class="row row-cards">
                                 <div class="col-3">
                                     <label for="" class="form-label required">Trans Date</label>
-                                    <input type="date" class="form-control" wire:model='trans_date' required>
+                                    <input type="date" class="form-control" wire:model='transDate' required>
                                 </div>
                                 <div class="col-3">
                                     <label class="form-label required">From Warehouse</label>
@@ -74,9 +74,9 @@
                                         </div>
                                     @else
                                         <select wire:model.live="selectedFromWarehouse" class="form-select" required>
-                                            <option value="0">-Select Warehouse-</option>
+                                            <option value="">-Select Warehouse-</option>
                                             @foreach ($fromSlocs as $fromSloc)
-                                                <option value="{{ $fromSloc->id }}">
+                                                <option value="{{ $fromSloc->sloc_code }}">
                                                     {{ $fromSloc->sloc_name }}</option>
                                             @endforeach
                                         </select>
@@ -106,101 +106,40 @@
                                     @else
                                         <select wire:model.live="selectedToWarehouse"
                                             wire:key="{{ $selectedToCompany }}" class="form-select" required>
-                                            <option value="0">-Select Warehouse-</option>
+                                            <option value="">-Select Warehouse-</option>
                                             @foreach ($toSlocs as $toSloc)
-                                                <option value="{{ $toSloc->id }}">
+                                                <option value="{{ $toSloc->sloc_code }}">
                                                     {{ $toSloc->sloc_name }}</option>
                                             @endforeach
                                         </select>
                                     @endif
                                 </div>
-                                <div class="col-4">
-                                    <label class="form-label">Transportir</label>
-                                    <input type="text" value="" class="form-control" placeholder="Loading…"
-                                        disabled>
+                                <div class="col-3">
+                                    <label class="form-label required">Transportir</label>
+                                    <input type="text" class="form-control" wire:model="transportir" required>
                                 </div>
-                                {{-- <div class="col-4">
-                                    <label for="" class="form-label">Location/Plant
-                                        <div wire:loading wire:target="selectedCompany">
-                                            <i class="fa fa-spinner fa-spin"></i>
-                                        </div>
-                                    </label>
-                                    <select name="" id="" class="form-control"
-                                        wire:model.live="selectedlocation" required>
-                                        <option value="">-Select Location-</option>
-                                        @foreach ($plants as $plant)
-                                            <option value="{{ $plant->id }}"
-                                                {{ selected($plant->id, $dataTransfer ? $dataTransfer->selectedlocation : '') }}>
-                                                {{ $plant->id . ' - ' . $plant->plant_name }}
+                                <div class="col-3">
+                                    <label class="form-label required">Material</label>
+                                    <select wire:model="selectedMaterial" class="form-select" required>
+                                        <option value="">-Select Material-</option>
+                                        @foreach ($materials as $material)
+                                            <option value="{{ $material->material_code }}">
+                                                {{ $material->material_code . ' - ' . $material->material_description }}
                                             </option>
                                         @endforeach
                                     </select>
-                                </div> --}}
-                                {{-- <div class="col-4">
-                                    <label for="" class="form-label">Fuel Warehouse
-                                        <div wire:loading wire:target="selectedlocation">
-                                            <i class="fa fa-spinner fa-spin"></i>
-                                        </div>
-                                    </label>
-                                    <select name="" id="" class="form-control"
-                                        wire:model="fuel_warehouse" required>
-                                        <option value="">-Select Warehouse-</option>
-                                        @foreach ($slocs as $sloc)
-                                            <option value="{{ $sloc->sloc_code }}"
-                                                {{ selected($sloc->sloc_code, $dataTransfer ? $dataTransfer->fuel_warehouse : '') }}>
-                                                {{ $sloc->sloc_code . ' - ' . $sloc->sloc_name }}</option>
-                                        @endforeach
-                                    </select>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">Trans Type</label>
-                                    <select name="" id="" class="form-control"
-                                        wire:model="trans_type" required>
-                                        <option value="">-Trans Type-</option>
-                                        <option value="ISS"
-                                            {{ selected('ISS', $dataTransfer ? $dataTransfer->trans_type : '') }}>ISS
-                                        </option>
-                                        <option value="TRF"
-                                            {{ selected('TRF', $dataTransfer ? $dataTransfer->trans_type : '') }}>TRF
-                                        </option>
-                                        <option value="IRS"
-                                            {{ selected('IRS', $dataTransfer ? $dataTransfer->trans_type : '') }}>IRS
-                                        </option>
-                                    </select>
-                                </div> --}}
-                                {{-- <div class="col-3">
-                                    <label for="" class="form-label">Issue Date</label>
-                                    <input type="date" class="form-control" wire:model='trans_date'
-                                        value="{{ $dataTransfer ? $dataTransfer->trans_date : '' }}" required>
+                                    <label class="form-label required">Qty</label>
+                                    <input type="number" wire:model="qty" class="form-control" required>
                                 </div>
-
-
-
-                                <div class="col-3">
-                                    <label for="" class="form-label">Fuel Type</label>
-                                    <select name="" id="" class="form-control"
-                                        wire:model="fuel_type" required>
-                                        <option value="">-Select Fuel Type-</option>
-                                        @foreach ($materials as $mat)
-                                            <option value="{{ $mat->id }}"
-                                                {{ selected($mat->id, $dataTransfer ? $dataTransfer->fuel_type : '') }}>
-                                                {{ $mat->material_description }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-3">
-                                    <label for="" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" wire:model='qty'
-                                        value="{{ $dataTransfer ? $dataTransfer->qty : '' }}" required>
-                                </div> --}}
-
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn me-auto" data-bs-dismiss="modal"
                                 wire:click="closeModal">Close</button>
                             <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;
-                                {{ 'Create' }}</button>
+                                {{ 'Submit' }}</button>
                         </div>
                     </form>
                 @endif

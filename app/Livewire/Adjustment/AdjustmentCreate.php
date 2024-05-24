@@ -39,8 +39,8 @@ class AdjustmentCreate extends Component
 
     public function render()
     {
-        $userCompany = 1;
-        $this->plants = Plant::where('company_id', $userCompany)->get();
+        $userCompanyId = auth()->user()->company_id;
+        $this->plants = Plant::where('company_id', $userCompanyId)->get();
         return view('livewire.adjustment.adjustment-create');
     }
 
@@ -172,7 +172,6 @@ class AdjustmentCreate extends Component
             if (count($this->datas) == 0) {
                 throw new \Exception('Item tidak boleh kosong');
             }
-            $currentDate = date('Y-m-d');
             $currentYear = date('Y');
             $plant = Plant::find($this->datas[0]->plant_id);
             $company = Company::find($plant->company_id);
