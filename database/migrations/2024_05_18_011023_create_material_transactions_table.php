@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('department', 100)->nullable();
             $table->string('activity', 100)->nullable();
             $table->string('fuel_type', 100);
-            $table->decimal('qty');
+            $table->decimal('qty', 12, 2);
             $table->string('statistic_type', 100)->nullable();
             $table->decimal('meter_value')->nullable();
             $table->string('status_error', 100)->nullable();
@@ -50,7 +50,7 @@ return new class extends Migration
             $table->smallInteger('activity_id', false, true)->nullable();
             $table->string('activity_name', 100)->nullable();
             $table->string('fuel_type', 100);
-            $table->decimal('qty');
+            $table->decimal('qty', 12, 2);
             $table->string('statistic_type', 100)->nullable();
             $table->decimal('meter_value')->nullable();
             $table->integer('created_id')->nullable();

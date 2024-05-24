@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('material_mnemonic', 255)->nullable();
             $table->string('material_description', 255);
             $table->smallInteger('uom_id');
-            $table->decimal('qty_soh');
-            $table->decimal('qty_intransit');
+            $table->decimal('qty_soh', 12, 2);
+            $table->decimal('qty_intransit', 12, 2);
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();
