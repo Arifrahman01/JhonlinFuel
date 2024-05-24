@@ -118,8 +118,8 @@
                                     <select name="" id="" class="form-control" wire:model="trans_type" required>
                                         <option value="">-Trans Type-</option>
                                         <option value="ISS" {{ selected('ISS', $dataTmp ? $dataTmp->trans_type : '') }}>ISS</option>
-                                        <option value="TRF" {{ selected('TRF', $dataTmp ? $dataTmp->trans_type : '') }}>TRF</option>
-                                        <option value="IRS" {{ selected('IRS', $dataTmp ? $dataTmp->trans_type : '') }}>IRS</option>
+                                        {{-- <option value="TRF" {{ selected('TRF', $dataTmp ? $dataTmp->trans_type : '') }}>TRF</option>
+                                        <option value="IRS" {{ selected('IRS', $dataTmp ? $dataTmp->trans_type : '') }}>IRS</option> --}}
                                     </select>
                                 </div>
                                 <div class="col-3">
