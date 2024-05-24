@@ -101,7 +101,7 @@ class TransferList extends Component
         if (isset($lastPosting)) {
             $explod = explode('/', $lastPosting);
             if ($explod[0] == date('Y')) {
-                $number = $explod[0];
+                $number = $explod[2];
             } else {
                 $number = 0;
             }
