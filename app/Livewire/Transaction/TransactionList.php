@@ -82,8 +82,8 @@ class TransactionList extends Component
         $lastPosting = Transaction::max('posting_no');
         if (isset($lastPosting)) {
             $explod = explode('/', $lastPosting);
-            if ($explod[1] == date('Y')) {
-                $number = $explod[0];
+            if ($explod[0] == date('Y')) {
+                $number = $explod[2];
             } else {
                 $number = 0;
             }
@@ -91,7 +91,7 @@ class TransactionList extends Component
             $number = 0;
         }
 
-        $newPostingNumber = str_pad($number + 1, 6, '0', STR_PAD_LEFT) . '/' . $data[0]->company_code . '/' . date('Y');
+        $newPostingNumber = date('Y') . '/' . $data[0]->company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
         try {
             foreach ($data as $tmp) {
                 $company = Company::where('company_code', $tmp->company_code)->first();

@@ -76,7 +76,9 @@ class CreateTransfer extends Component
             $this->dataTransfer = null;
             $this->trans_type = null;
             $this->trans_date = null;
+            $this->selectedFromCompany = null;
             $this->from_company_code = null;
+            $this->selectedToCompany = null;
             $this->from_warehouse  = null;
             $this->to_company_code = null;
             $this->to_warehouse  = null;

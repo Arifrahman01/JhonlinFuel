@@ -88,7 +88,7 @@
                                         </thead>
                                         <tbody>
                                             @if ($receipts->isEmpty())
-                                                {!! dataNotFond(8) !!}
+                                                {!! dataNotFond(13) !!}
                                             @else
                                                 @foreach ($receipts as $idx => $val)
                                                     <tr class="text-nowrap">
