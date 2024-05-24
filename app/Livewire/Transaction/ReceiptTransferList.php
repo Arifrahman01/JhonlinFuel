@@ -120,12 +120,12 @@ class ReceiptTransferList extends Component
 
     public function storeData($ids)
     {
+        // dd($ids);
         DB::beginTransaction();
         try {
             foreach ($ids as $id) {
                 $lastPosting = ReceiptTransfer::max('posting_no');
                 $number = 0;
-
                 if (isset($lastPosting)) {
                     $explod = explode('/', $lastPosting);
                     if ($explod[1] == date('Y')) {
@@ -134,6 +134,7 @@ class ReceiptTransferList extends Component
                 }
 
                 $receiptTransfer = ReceiptTransfer::findOrFail($id);
+                // dd($receiptTransfer);
                 $newPostingNumber = str_pad($number + 1, 6, '0', STR_PAD_LEFT) . '/' . $receiptTransfer->value('to_company_code') . '/' . date('Y');
                 $receiptTransfer->update([
                     'posting_no' => $newPostingNumber,
@@ -148,18 +149,18 @@ class ReceiptTransferList extends Component
                 //     'qty_intransit' => $qtyIntransit + $receiptTransfer->value('qty'),
                 // ]);
 
-                $stokFrom = MaterialStock::where('sloc_id', Sloc::where('sloc_code', $receiptTransfer->value('from_warehouse'))->value('id'));
+                $stokFrom = MaterialStock::where('sloc_id', Sloc::where('sloc_code', $receiptTransfer->from_warehouse)->value('id'));
 
-                $stokFrom->decrement('qty_soh', $receiptTransfer->value('qty'));
-                $stokFrom->increment('qty_intransit', $receiptTransfer->value('qty'));
+                $stokFrom->decrement('qty_soh', $receiptTransfer->qty);
+                $stokFrom->increment('qty_intransit', $receiptTransfer->qty);
 
-                $slocTo = Sloc::where('sloc_code', $receiptTransfer->value('to_warehouse'))->first();
+                $slocTo = Sloc::where('sloc_code', $receiptTransfer->to_warehouse)->first();
                 $stokTo = MaterialStock::where('sloc_id', $slocTo->id);
 
-                $stokTo->increment('qty_soh', $receiptTransfer->value('qty'));
-                $stokTo->decrement('qty_intransit', $receiptTransfer->value('qty'));
+                $stokTo->increment('qty_soh', $receiptTransfer->qty);
+                $stokTo->decrement('qty_intransit', $receiptTransfer->qty);
 
-                $material = Material::where('material_code', $receiptTransfer->value('material_code'))->first();
+                $material = Material::where('material_code', $receiptTransfer->material_code)->first();
 
                 MaterialMovement::create([
                     'company_id' => $slocTo->company_id,
