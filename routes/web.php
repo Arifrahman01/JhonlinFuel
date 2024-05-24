@@ -7,6 +7,7 @@ use App\Livewire\Adjustment\AdjustmentList;
 use App\Livewire\Dashboard;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Issue\IssueList;
+use App\Livewire\ReceiptPostingList;
 use App\Livewire\ReceiptTransferPostingList;
 use App\Livewire\SOHOverview;
 use App\Livewire\Transaction\PostingList;
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', UserList::class)->name('users.index');
     Route::get('/qouta', QuotaList::class)->name('qouta.index');
 
+    Route::get('/receipt', ReceiptPostingList::class)->name('receipt.index');
     Route::get('/receipt-transfer', ReceiptTransferPostingList::class)->name('receipt-transfer.index');
     Route::get('/issue', PostingList::class)->name('issue.index');
     Route::get('/loader/issue', TransactionList::class)->name('issue.loader');

@@ -176,6 +176,7 @@
                         </div>
 
                         <div class="card-footer justify-content-between align-items-center">
+                            {{ $rcvTransfers->links() }}
                         </div>
                     </div>
                 </div>
