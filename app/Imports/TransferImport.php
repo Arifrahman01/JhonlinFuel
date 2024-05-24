@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Transaction\TransferLoader;
+use App\Models\Transfer;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -17,7 +17,7 @@ class TransferImport implements ToCollection
         $rows->shift();
         foreach ($rows as $row) {
             if (!is_null($row[0])) {
-                $transfer = new TransferLoader();
+                $transfer = new Transfer();
                 $transfer->trans_type = $row[0];
                 $transfer->trans_date = Carbon::createFromFormat('Y-m-d', '1900-01-01')->addDays($row[1] - 2)->format('Y-m-d');
                 $transfer->from_company_code = $row[2];

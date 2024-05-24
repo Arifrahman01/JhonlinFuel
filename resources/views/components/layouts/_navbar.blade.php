@@ -3,7 +3,7 @@
         <div class="container-xl">
             <ul class="navbar-nav">
                 <li class="nav-item {{ request()->is('/') || request()->is('/*') ? 'active' : '' }}">
-                    <a class="nav-link" href="./">
+                    <a class="nav-link" href="{{ route('home') }}">
                         <span
                             class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler-icons.io/i/home -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -21,7 +21,7 @@
                     </a>
                 </li>
                 <li
-                    class="nav-item {{ request()->is('adjustment') || request()->is('issue') ? 'active' : '' }} dropdown">
+                    class="nav-item {{ request()->is('receipt') || request()->is('adjustment') || request()->is('issue') || request()->is('receipt-transfer') ? 'active' : '' }} dropdown">
                     <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
                         data-bs-auto-close="outside" role="button" aria-expanded="false">
                         <span
@@ -61,6 +61,16 @@
                                         </a>
                                     </div>
                                 </div> --}}
+                                <a class="dropdown-item {{ request()->is('receipt') ? 'active' : '' }}"
+                                    href="{{ route('receipt.index') }}">
+
+                                    Receipt
+                                </a>
+                                <a class="dropdown-item {{ request()->is('receipt-transfer') ? 'active' : '' }}"
+                                    href="{{ route('receipt-transfer.index') }}">
+
+                                    Receipt Transfer
+                                </a>
                                 <a class="dropdown-item {{ request()->is('issue') ? 'active' : '' }}"
                                     href="{{ route('issue.index') }}">
 
@@ -137,20 +147,27 @@
 
                                     Receive From PO
                                 </a> --}}
-                                <a class="dropdown-item {{ request()->is('loader/issue') ? 'active' : '' }}"
-                                    href="{{ route('issue.loader') }}">
-
-                                    Issue
+                                <a class="dropdown-item {{ request()->is('loader/receipt') ? 'active' : '' }}"
+                                    href="{{ route('received.loader') }}">
+                                    Receipt PO
                                 </a>
                                 <a class="dropdown-item {{ request()->is('loader/transfer') ? 'active' : '' }}"
                                     href="{{ route('transfer.loader') }}">
 
                                     Transfer
                                 </a>
-                                <a class="dropdown-item {{ request()->is('loader/deceived ') ? 'active' : '' }}"
-                                    href="{{ route('received.loader') }}">
-                                    Receipt PO
+                                <a class="dropdown-item {{ request()->is('loader/receipt-transfer') ? 'active' : '' }}"
+                                    href="{{ route('receipt-transfer.loader') }}">
+
+                                    Receipt Transfer
                                 </a>
+                                <a class="dropdown-item {{ request()->is('loader/issue') ? 'active' : '' }}"
+                                    href="{{ route('issue.loader') }}">
+
+                                    Issue
+                                </a>
+
+
                                 {{-- <a class="dropdown-item {{ request()->is('loader/transfer') ? 'active' : '' }}"
                                     href="">
 

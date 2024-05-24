@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rcv_transfer_loaders', function (Blueprint $table) {
+        Schema::create('rcv_transfers', function (Blueprint $table) {
             $table->id();
             $table->string('trans_type');
             $table->date('trans_date');
@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string('material_code');
             $table->string('uom')->comment('diisi dengan uom_code');
             $table->decimal('qty');
-            $table->string('posting_no')->comment('diisi ketika sudah posting');
+            $table->string('posting_no')->nullable()->comment('diisi ketika sudah posting');
+            $table->string('error_status')->nullable();
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();
@@ -37,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rcv_transfer_loaders');
+        Schema::dropIfExists('rcv_transfers');
     }
 };
