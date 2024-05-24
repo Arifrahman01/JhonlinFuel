@@ -64,7 +64,7 @@
                                 <a class="dropdown-item {{ request()->is('receipt') ? 'active' : '' }}"
                                     href="{{ route('receipt.index') }}">
 
-                                    Receipt
+                                    Receipt PO
                                 </a>
                                 <a class="dropdown-item {{ request()->is('receipt-transfer') ? 'active' : '' }}"
                                     href="{{ route('receipt-transfer.index') }}">
