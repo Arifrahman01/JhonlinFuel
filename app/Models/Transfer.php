@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transfer extends Model
 {
-    protected $table = 'rcv_transfer';
+    protected $table = 'transfer';
 
     protected $guarded = [
         'id',

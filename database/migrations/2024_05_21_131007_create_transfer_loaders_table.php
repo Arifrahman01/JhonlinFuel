@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string('material_code');
             $table->string('uom')->comment('diisi dengan uom_code');
             $table->decimal('qty');
-            $table->string('posting_no')->comment('diisi ketika sudah posting');
+            $table->string('posting_no')->nullable()->comment('diisi ketika sudah posting');
+            $table->string('error_status')->nullable();
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();

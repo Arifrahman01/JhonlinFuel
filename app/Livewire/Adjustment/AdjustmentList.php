@@ -18,7 +18,6 @@ class AdjustmentList extends Component
 
     public function render()
     {
-        $title = "HahaHihi";
         $adjusts = AdjustmentHeader::with([
             'details.plant',
             'details.sloc',

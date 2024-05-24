@@ -13,8 +13,11 @@ use App\Models\Sloc;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
+use function PHPUnit\Framework\isEmpty;
+
 class AdjustmentCreate extends Component
 {
+    public $adjDate;
     public $plants = [];
     public $selectedPlant;
     public $slocs = [];
@@ -29,14 +32,15 @@ class AdjustmentCreate extends Component
     public $datas = [];
 
     public $isLoadingSloc = false;
+    public $isLoadingSoh = false;
     public $loading = false;
 
     protected $listeners = ['openModal'];
 
     public function render()
     {
-        $userCompany = 1;
-        $this->plants = Plant::where('company_id', $userCompany)->get();
+        $userCompanyId = auth()->user()->company_id;
+        $this->plants = Plant::where('company_id', $userCompanyId)->get();
         return view('livewire.adjustment.adjustment-create');
     }
 
@@ -47,32 +51,47 @@ class AdjustmentCreate extends Component
     public function updatedSelectedPlant($value)
     {
         $this->dispatch('logData', 'Selected Plant: ' . $value);
-        $this->slocs = Sloc::where('plant_id', $value)->get();
-        $this->sohAdjustmentReadOnly = true;
-        $this->updateSohAfter();
+        $this->soh = 0;
+        $this->sohAdjustment = 0;
+        $this->sohAfter = 0;
+        $this->isLoadingSloc = true;
+        try {
+            $this->slocs = Sloc::where('plant_id', $value)->get();
+            $this->sohAdjustmentReadOnly = true;
+            $this->updateSohAfter();
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
+        } finally {
+            $this->isLoadingSloc = false;
+        }
     }
 
     public function updatedSelectedSloc($value)
     {
         $this->dispatch('logData', 'Selected Sloc: ' . $value);
-
-        if (empty($value)) {
-            $this->soh = 0;
-            $this->sohAdjustmentReadOnly = true;
-        } else {
-            $materialStock = MaterialStock::where('sloc_id', $value)
-                ->first();
-            $this->soh = $materialStock->qty_soh;
-            $this->sohAdjustmentReadOnly = false;
+        $this->isLoadingSoh = true;
+        try {
+            if (empty($value)) {
+                $this->soh = 0;
+                $this->sohAdjustmentReadOnly = true;
+            } else {
+                $materialStock = MaterialStock::where('sloc_id', $value)
+                    ->first();
+                $this->soh = $materialStock->qty_soh;
+                $this->sohAdjustmentReadOnly = false;
+            }
+            $this->updateSohAfter();
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
+        } finally {
+            $this->isLoadingSoh = false;
         }
-        $this->updateSohAfter();
-        // $this->soh = 2000;
     }
 
     public function updatedSohAdjustment($value)
     {
         $this->dispatch('logData', 'Soh Adjustment: ' . $value);
-        $this->sohAfter = $this->soh + (empty($value) ? 0 : $value);
+        $this->sohAfter = toNumber($this->soh) + (empty($value) ? 0 : $value);
     }
 
     private function updateSohAfter()
@@ -125,12 +144,14 @@ class AdjustmentCreate extends Component
 
     private function resetForm()
     {
+        $this->slocs = [];
         $this->selectedPlant = null;
         $this->selectedSloc = null;
         $this->soh = 0;
         $this->sohAdjustment = 0;
         $this->sohAfter = 0;
         $this->notes = '';
+        $this->sohAdjustmentReadOnly = true;
     }
 
     public function deleteItem($index)
@@ -142,13 +163,15 @@ class AdjustmentCreate extends Component
 
     public function storeAdjustment()
     {
-        $this->dispatch('logData', $this->datas);
+        $this->dispatch('logData', [$this->adjDate, $this->datas]);
         DB::beginTransaction();
         try {
+            if (!isset($this->adjDate)) {
+                throw new \Exception('Adjustment Date tidak boleh kosong');
+            }
             if (count($this->datas) == 0) {
                 throw new \Exception('Item tidak boleh kosong');
             }
-            $currentDate = date('Y-m-d');
             $currentYear = date('Y');
             $plant = Plant::find($this->datas[0]->plant_id);
             $company = Company::find($plant->company_id);
@@ -160,6 +183,7 @@ class AdjustmentCreate extends Component
             $header = AdjustmentHeader::create([
                 'company_id' => $plant->company_id,
                 'adjustment_no' => $adjustmentNo,
+                'adjustment_date' => $this->adjDate,
             ]);
 
             $material = Material::find(1);
@@ -191,7 +215,7 @@ class AdjustmentCreate extends Component
                     'part_no' => $material->part_no,
                     'material_mnemonic' => $material->material_mnemonic,
                     'material_description' => $material->material_description,
-                    'movement_date' => $currentDate,
+                    'movement_date' => $this->adjDate,
                     'movement_type' => 'adj',
                     'plant_id' => $data->plant_id,
                     'sloc_id' => $data->sloc_id,

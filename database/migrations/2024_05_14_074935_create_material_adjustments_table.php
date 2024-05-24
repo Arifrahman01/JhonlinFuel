@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('adjustment_headers', function (Blueprint $table) {
             $table->increments('id');
             $table->smallInteger('company_id');
+            $table->date('adjustment_date');
             $table->string('adjustment_no', 100);
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
