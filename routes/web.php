@@ -16,6 +16,7 @@ use App\Livewire\Transaction\ReceiptTransferList;
 use App\Livewire\Transaction\ReceivedList;
 use App\Livewire\Transaction\TransactionList;
 use App\Livewire\Transaction\TransferList;
+use App\Livewire\TransferPostingList;
 use App\Livewire\User\UserList;
 
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/qouta', QuotaList::class)->name('qouta.index');
 
     Route::get('/receipt', ReceiptPostingList::class)->name('receipt.index');
+    Route::get('/transfer', TransferPostingList::class)->name('transfer.index');
     Route::get('/receipt-transfer', ReceiptTransferPostingList::class)->name('receipt-transfer.index');
     Route::get('/issue', PostingList::class)->name('issue.index');
     Route::get('/loader/issue', TransactionList::class)->name('issue.loader');
