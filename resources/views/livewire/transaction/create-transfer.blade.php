@@ -48,74 +48,89 @@
                         </div>
                         <div class="modal-body">
                             <div class="row row-cards">
-                                <div class="col-4">
-                                    <label class="form-label">Company</label>
-                                    <select wire:model.live="selectedCompany" class="form-control" required>
-                                        <option value="">-Select Company-</option>
-                                        @foreach ($companies as $comp)
-                                            <option value="{{ $comp->company_code }}" {{ selected($comp->company_code, $dataTransfer ? $dataTransfer->company_code : '') }}>{{ $comp->company_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-4">
-                                    <label for="" class="form-label">Location/Plant
-                                        <div wire:loading wire:target="selectedCompany">
-                                            <i class="fa fa-spinner fa-spin"></i>
-                                        </div>
-                                    </label>
-                                    <select name="" id="" class="form-control" wire:model.live="selectedlocation" required>
-                                        <option value="">-Select Location-</option>
-                                        @foreach ($plants as $plant)
-                                            <option value="{{ $plant->id }}"  {{ selected($plant->id, $dataTransfer ? $dataTransfer->selectedlocation : '') }}>
-                                                {{ $plant->id . ' - ' . $plant->plant_name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-4">
-                                    <label for="" class="form-label">Fuel Warehouse
-                                        <div wire:loading wire:target="selectedlocation">
-                                            <i class="fa fa-spinner fa-spin"></i>
-                                        </div>
-                                    </label>
-                                    <select name="" id="" class="form-control" wire:model="fuel_warehouse" required>
-                                        <option value="">-Select Warehouse-</option>
-                                        @foreach ($slocs as $sloc)
-                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code, $dataTransfer ? $dataTransfer->fuel_warehouse : '') }}>
-                                                {{ $sloc->sloc_code . ' - ' . $sloc->sloc_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">Trans Type</label>
-                                    <select name="" id="" class="form-control" wire:model="trans_type" required>
-                                        <option value="">-Trans Type-</option>
-                                        <option value="ISS" {{ selected('ISS', $dataTransfer ? $dataTransfer->trans_type : '') }}>ISS</option>
-                                        <option value="TRF" {{ selected('TRF', $dataTransfer ? $dataTransfer->trans_type : '') }}>TRF</option>
-                                        <option value="IRS" {{ selected('IRS', $dataTransfer ? $dataTransfer->trans_type : '') }}>IRS</option>
-                                    </select>
-                                </div>
-                                <div class="col-3">
-                                    <label for="" class="form-label">Issue Date</label>
+                                    <label for="" class="form-label">Transfer Date</label>
                                     <input type="date" class="form-control" wire:model='trans_date' value="{{ $dataTransfer ? $dataTransfer->trans_date : '' }}" required>
                                 </div>
-                               
-                             
-
                                 <div class="col-3">
-                                    <label for="" class="form-label">Fuel Type</label>
-                                    <select name="" id="" class="form-control" wire:model="fuel_type" required>
-                                        <option value="">-Select Fuel Type-</option>
+                                    <label for="" class="form-label">Transportir</label>
+                                    <input type="text" class="form-control" wire:model='transportir' value="{{ $dataTransfer ? $dataTransfer->qty : '' }}" required>
+                                </div>
+                                <div class="col-3">
+                                    <label for="" class="form-label">Material Code</label>
+                                    <select name="" id="" class="form-control" wire:model='material_code' required>
+                                        <option value="">-Select Material-</option>
                                         @foreach ($materials as $mat)
-                                            <option value="{{ $mat->id }}" {{ selected($mat->id, $dataTransfer ? $dataTransfer->fuel_type : '') }}>{{ $mat->material_description }}</option>
+                                            <option value="{{ $mat->id }}" {{ selected($mat->id, $dataTransfer ?  $dataTransfer->material_code :'') }}>{{ $mat->material_description }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-3">
                                     <label for="" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" wire:model='qty' value="{{ $dataTransfer ? $dataTransfer->qty : '' }}" required>
+                                    <input type="number" class="form-control" wire:model='qty' value="" required>
                                 </div>
-                                
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-status-top bg-red"></div>
+                                        <div class="card-body p-1">
+                                            <div class="row row-cards mt-1 mb-1">
+                                                <div class="col-3">
+                                                    <label class="form-label">From Company</label>
+                                                    <select wire:model.live="selectedFromCompany" class="form-control" required>
+                                                        <option value="">-Select Company-</option>
+                                                        @foreach ($companiesFrom as $comp)
+                                                            <option value="{{ $comp->company_code }}" {{ selected($comp->company_code, $dataTransfer ? $dataTransfer->selectedFromCompany : '') }}>
+                                                                {{ $comp->company_name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-3">
+                                                    <label for="" class="form-label">From Warehouse
+                                                        <div wire:loading wire:target="selectedFromCompany">
+                                                            <i class="fa fa-spinner fa-spin"></i>
+                                                        </div>
+                                                    </label>
+                                                    <select name="" id="" class="form-control" wire:model="from_warehouse" required>
+                                                        <option value="">-Select Warehouse-</option>
+                                                        @foreach ($slocsFrom as $sloc)
+                                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code, $dataTransfer ? $dataTransfer->from_warehouse : '') }}>
+                                                                {{ $sloc->sloc_code . ' - ' . $sloc->sloc_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-3">
+                                                    <label class="form-label">To Company</label>
+                                                    <select wire:model.live="selectedToCompany" class="form-control" required>
+                                                        <option value="">-Select Company-</option>
+                                                        @foreach ($companiesTo as $comp)
+                                                            <option value="{{ $comp->company_code }}" {{ selected($comp->company_code, $dataTransfer ? $dataTransfer->selectedToCompany : '') }}>
+                                                                {{ $comp->company_name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-3">
+                                                    <label for="" class="form-label">To Warehouse
+                                                        <div wire:loading wire:target="selectedToCompany">
+                                                            <i class="fa fa-spinner fa-spin"></i>
+                                                        </div>
+                                                    </label>
+                                                    <select name="" id="" class="form-control" wire:model.live="to_warehouse" required>
+                                                        <option value="">-Select Location-</option>
+                                                        @foreach ($slocsTo as $sloc)
+                                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code, $dataTransfer ? $dataTransfer->to_warehouse : '') }}>
+                                                                {{ $sloc->sloc_code . ' - ' . $sloc->sloc_name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </div>
                         </div>
                         <div class="modal-footer">
