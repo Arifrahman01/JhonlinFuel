@@ -171,7 +171,7 @@ class TransactionList extends Component
         $locationExist = Plant::where('id', $val->location)->exists();
         $departmentExist = true;
         $activityExist = Activity::where('id', $val->activity)->exists();
-        $fuelTypeExist = Material::where('id',$val->fuel_type)->exists();
+        $fuelTypeExist = Material::where('material_code',$val->fuel_type)->exists();
 
         if (!$companyExists) {
             $message = 'Company code ' . $val->company_code . ' not registered in master';
