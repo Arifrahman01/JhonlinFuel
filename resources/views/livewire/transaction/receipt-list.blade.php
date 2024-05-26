@@ -103,7 +103,6 @@
                                                                 <a title="Edit User" wire:click="$dispatch('openCreate', [{{ $val->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
                                                                     <i class="fas fa-edit"></i>
                                                                 </a>
-                                                            @else
                                                             @endif
                                                         </td>
                                                         <td>{{ $val->posting_no }}</td>

@@ -5,7 +5,7 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6">
-                            Company
+                            Plant
                         </div>
                         <div class="col-6 d-flex justify-content-end">
                             <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
@@ -29,9 +29,20 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
+                                            <select wire:model="c" class="form-select form-select-sm">
+                                                <option value="">-Select Company-</option>
+                                                @foreach ($companies as $company)
+                                                    <option value="{{ $company->id }}">
+                                                        {{ $company->company_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
                                             <input type="text" class="form-control form-control-sm"
-                                                aria-label="Company Code, Company Name"
-                                                placeholder="Company Code, Company Name" wire:model="q">
+                                                aria-label="Plant Code, Plant Name" placeholder="Plant Code, Plant Name"
+                                                wire:model="q">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -51,33 +62,34 @@
                                     <tr>
                                         <th class="text-center" style="width: 6%">Action</th>
                                         {{-- <th class="text-center" style="width: 5%">Action</th> --}}
-                                        <th class="text-center">Company Code</th>
-                                        <th class="text-center">Company Name</th>
+                                        <th class="text-center">Company</th>
+                                        <th class="text-center">Plant Code</th>
+                                        <th class="text-center">Plant Name</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($companies->isEmpty())
+                                    @if ($plants->isEmpty())
                                         {!! dataNotFond(2) !!}
                                     @else
-                                        @foreach ($companies as $company)
-                                            <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1"
-                                                aria-expanded="false">
+                                        @foreach ($plants as $plant)
+                                            <tr>
                                                 <td class="text-center">
-                                                    @if (!$company->hasDataById() && !$company->hasDataByCode())
-                                                        <a id="btn-delete{{ $company->id }}" title="Delete Company"
-                                                            onclick="deleteItem({{ $company->id }})">
+                                                    @if (!$plant->hasDataById() && !$plant->hasDataByCode())
+                                                        <a id="btn-delete{{ $plant->id }}" title="Delete Plant"
+                                                            onclick="deleteItem({{ $plant->id }})">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a> &nbsp;
                                                     @endif
 
-                                                    <a title="Edit Company"
-                                                        wire:click="$dispatch('openCreate', [{{ $company->id }}])"
+                                                    <a title="Edit Plant"
+                                                        wire:click="$dispatch('openCreate', [{{ $plant->id }}])"
                                                         data-bs-toggle="modal" data-bs-target="#modal-large">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </td>
-                                                <td>{{ $company->company_code }}</td>
-                                                <td>{{ $company->company_name }}</td>
+                                                <td>{{ data_get($plant, 'company.company_name') }}</td>
+                                                <td>{{ $plant->plant_code }}</td>
+                                                <td>{{ $plant->plant_name }}</td>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -87,14 +99,14 @@
                         {{-- </div> --}}
 
                         <div class="card-footer justify-content-between align-items-center">
-                            {{ $companies->links() }}
+                            {{ $plants->links() }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @livewire('company.company-create')
+    @livewire('plant.plant-create')
     @push('scripts')
         <script>
             document.addEventListener('livewire:init', function() {

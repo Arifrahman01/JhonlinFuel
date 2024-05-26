@@ -24,19 +24,30 @@
                 <form wire:submit.prevent="store">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modal-largeLabel">
-                            {{ $statusModal }} Company</h5>
+                            {{ $statusModal }} Plant</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                             wire:click="closeModal" id="closeModalID"></button>
                     </div>
                     <div class="modal-body">
                         <div class="col-12 mb-3">
-                            <label for="" class="form-label required">Company Code</label>
-                            <input type="text" class="form-control" wire:model='companyCode' required
-                                @if ($companyCodeReadOnly) readonly disabled @endif>
+                            <label for="" class="form-label required">Company</label>
+                            <select wire:model="selectedCompany" class="form-select" required>
+                                <option value="">-Select Company-</option>
+                                @foreach ($companies as $company)
+                                    <option value="{{ $company->id }}">
+                                        {{ $company->company_name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-12 mb-3">
-                            <label for="" class="form-label required">Company Name</label>
-                            <input type="text" class="form-control" wire:model='companyName' required>
+                            <label for="" class="form-label required">Plant Code</label>
+                            <input type="text" class="form-control" wire:model='plantCode' placeholder="Plant Code"
+                                required @if ($plantCodeReadOnly) readonly disabled @endif>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="" class="form-label required">Plant Name</label>
+                            <input type="text" class="form-control" wire:model='plantName' placeholder="Plant Name"
+                                required>
                         </div>
                     </div>
                     <div class="modal-footer">

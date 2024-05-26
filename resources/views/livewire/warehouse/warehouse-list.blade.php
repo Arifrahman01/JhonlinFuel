@@ -5,7 +5,7 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6">
-                            Company
+                            Warehouse
                         </div>
                         <div class="col-6 d-flex justify-content-end">
                             <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
@@ -29,9 +29,32 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
+                                            <select wire:model.live="c" class="form-select form-select-sm">
+                                                <option value="">-Select Company-</option>
+                                                @foreach ($companies as $company)
+                                                    <option value="{{ $company->id }}">
+                                                        {{ $company->company_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <select wire:model.live="p" wire:key="c"
+                                                class="form-select form-select-sm">
+                                                <option value="">-Select Plant-</option>
+                                                @foreach ($plants as $plant)
+                                                    <option value="{{ $plant->id }}">
+                                                        {{ $plant->plant_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
                                             <input type="text" class="form-control form-control-sm"
-                                                aria-label="Company Code, Company Name"
-                                                placeholder="Company Code, Company Name" wire:model="q">
+                                                aria-label="Warehouse Code, Warehouse Name"
+                                                placeholder="Warehouse Code, Warehouse Name" wire:model="q">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -50,34 +73,36 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 6%">Action</th>
-                                        {{-- <th class="text-center" style="width: 5%">Action</th> --}}
-                                        <th class="text-center">Company Code</th>
-                                        <th class="text-center">Company Name</th>
+                                        <th class="text-center">Company</th>
+                                        <th class="text-center">Plant</th>
+                                        <th class="text-center">Warehouse Code</th>
+                                        <th class="text-center">Warehouse Name</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($companies->isEmpty())
+                                    @if ($warehouses->isEmpty())
                                         {!! dataNotFond(2) !!}
                                     @else
-                                        @foreach ($companies as $company)
-                                            <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1"
-                                                aria-expanded="false">
+                                        @foreach ($warehouses as $warehouse)
+                                            <tr>
                                                 <td class="text-center">
-                                                    @if (!$company->hasDataById() && !$company->hasDataByCode())
-                                                        <a id="btn-delete{{ $company->id }}" title="Delete Company"
-                                                            onclick="deleteItem({{ $company->id }})">
+                                                    @if (!$warehouse->hasDataById() && !$warehouse->hasDataByCode())
+                                                        <a id="btn-delete{{ $warehouse->id }}" title="Delete Warehouse"
+                                                            onclick="deleteItem({{ $warehouse->id }})">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a> &nbsp;
                                                     @endif
 
-                                                    <a title="Edit Company"
-                                                        wire:click="$dispatch('openCreate', [{{ $company->id }}])"
+                                                    <a title="Edit Warehouse"
+                                                        wire:click="$dispatch('openCreate', [{{ $warehouse->id }}])"
                                                         data-bs-toggle="modal" data-bs-target="#modal-large">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </td>
-                                                <td>{{ $company->company_code }}</td>
-                                                <td>{{ $company->company_name }}</td>
+                                                <td>{{ data_get($warehouse, 'company.company_name') }}</td>
+                                                <td>{{ data_get($warehouse, 'plant.plant_name') }}</td>
+                                                <td>{{ $warehouse->sloc_code }}</td>
+                                                <td>{{ $warehouse->sloc_name }}</td>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -87,14 +112,14 @@
                         {{-- </div> --}}
 
                         <div class="card-footer justify-content-between align-items-center">
-                            {{ $companies->links() }}
+                            {{ $warehouses->links() }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @livewire('company.company-create')
+    @livewire('warehouse.warehouse-create')
     @push('scripts')
         <script>
             document.addEventListener('livewire:init', function() {
@@ -111,14 +136,6 @@
                     @this.call('delete', id);
                 }
             }
-            // async function resetPassword(id) {
-            //     const isConfirmed = await sweetReset({
-            //         id: id
-            //     });
-            //     if (isConfirmed) {
-            //         @this.call('reset_password', id);
-            //     }
-            // }
         </script>
     @endpush
 </div>

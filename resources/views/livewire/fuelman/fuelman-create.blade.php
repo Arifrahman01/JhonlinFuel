@@ -24,19 +24,42 @@
                 <form wire:submit.prevent="store">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modal-largeLabel">
-                            {{ $statusModal }} Company</h5>
+                            {{ $statusModal }} Fuelman</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                             wire:click="closeModal" id="closeModalID"></button>
                     </div>
                     <div class="modal-body">
                         <div class="col-12 mb-3">
-                            <label for="" class="form-label required">Company Code</label>
-                            <input type="text" class="form-control" wire:model='companyCode' required
-                                @if ($companyCodeReadOnly) readonly disabled @endif>
+                            <label for="" class="form-label required">Company</label>
+                            <select wire:model.live="selectedCompany" class="form-select" required>
+                                <option value="">-Select Company-</option>
+                                @foreach ($companies as $company)
+                                    <option value="{{ $company->id }}">
+                                        {{ $company->company_name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-12 mb-3">
-                            <label for="" class="form-label required">Company Name</label>
-                            <input type="text" class="form-control" wire:model='companyName' required>
+                            <label for="" class="form-label required">Plant</label>
+                            <select wire:model="selectedPlant" wire:key="{{ $selectedCompany }}" class="form-select"
+                                required>
+                                <option value="">-Select Plant-</option>
+                                @foreach ($plants as $plant)
+                                    <option value="{{ $plant->id }}">
+                                        {{ $plant->plant_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="" class="form-label required">NIK</label>
+                            <input type="text" class="form-control" wire:model='fuelmanNIK'
+                                placeholder="NIK" required
+                                @if ($fuelmanNIKReadOnly) readonly disabled @endif>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label for="" class="form-label required">Name</label>
+                            <input type="text" class="form-control" wire:model='fuelmanName'
+                                placeholder="Name" required>
                         </div>
                     </div>
                     <div class="modal-footer">
