@@ -12,9 +12,6 @@ use App\Models\Plant;
 use App\Models\Sloc;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-
-use function PHPUnit\Framework\isEmpty;
-
 class AdjustmentCreate extends Component
 {
     public $adjDate;

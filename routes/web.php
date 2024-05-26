@@ -4,9 +4,12 @@
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Adjustment\AdjustmentList;
+use App\Livewire\Company\CompanyList;
 use App\Livewire\Dashboard;
+use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Issue\IssueList;
+use App\Livewire\Plant\PlantList;
 use App\Livewire\ReceiptPostingList;
 use App\Livewire\ReceiptTransferPostingList;
 use App\Livewire\SOHOverview;
@@ -18,7 +21,7 @@ use App\Livewire\Transaction\TransactionList;
 use App\Livewire\Transaction\TransferList;
 use App\Livewire\TransferPostingList;
 use App\Livewire\User\UserList;
-
+use App\Livewire\Warehouse\WarehouseList;
 use Illuminate\Support\Facades\Route;
 
 
@@ -50,6 +53,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/soh-overview', SOHOverview::class)->name('soh.index');
     Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');
+
+    Route::get('/company', CompanyList::class)->name('company.index');
+    Route::get('/plant', PlantList::class)->name('plant.index');
+    Route::get('/warehouse', WarehouseList::class)->name('warehouse.index');
+    Route::get('/fuelman', FuelmanList::class)->name('fuelman.index');
 
     Route::get('/', Dashboard::class)->name('home');
 });
