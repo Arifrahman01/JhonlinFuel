@@ -49,23 +49,23 @@
                             </form>
                         </div>
                         <div class="table-responsive">
-                            <table id="treegrid" role="treegrid" class="table table-sm table-striped" <colgroup>
+                            <table id="treegrid" role="treegrid" class="table table-sm table-striped" style="width: 100%" <colgroup>
                                 <col id="treegrid-col1">
                                 <col id="treegrid-col2">
                                 </colgroup>
                                 <thead>
                                     <tr>
-                                        <th class="text-center" style="width: 1%">Warehouse/Company</th>
-                                        <th class="text-center" style="width: 10%">Date/Type Trans</th>
-                                        <th class="text-center" style="width: 10%">Fuelman</th>
-                                        <th class="text-center" style="width: 10%">Equipment No</th>
-                                        <th class="text-center" style="width: 5%">Location</th>
-                                        <th class="text-center" style="width: 5%">Department</th>
-                                        <th class="text-center" style="width: 5%">Activity</th>
-                                        <th class="text-center" style="width: 5%">Fuel & Oil Type</th>
-                                        <th class="text-center" style="width: 10%">Litre Issued</th>
-                                        <th class="text-center" style="width: 5%">Statistic Type</th>
-                                        <th class="text-center" style="width: 10%">Meter Value</th>
+                                        <th class="text-center" >Warehouse/Company</th>
+                                        <th class="text-center" >Date/Type Trans</th>
+                                        <th class="text-center" >Fuelman</th>
+                                        <th class="text-center" >Equipment No</th>
+                                        <th class="text-center" >Location</th>
+                                        <th class="text-center" >Department</th>
+                                        <th class="text-center" >Activity</th>
+                                        <th class="text-center" >Fuel & Oil Type</th>
+                                        <th class="text-center" >Litre Issued</th>
+                                        <th class="text-center" >Statistic Type</th>
+                                        <th class="text-center" >Meter Value</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -83,6 +83,9 @@
                                                             <path
                                                                 d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
                                                         </svg>
+                                                    </a> &nbsp;
+                                                    <a id="btn-posting{{ 'a'.$idx }}" title="Deleted Transaction" onclick="deleteSumaryItem('{{ 'a'.$idx }}',  '{{ $trans['summary']->fuel_warehouse }}', '{{ $trans['summary']->trans_date }}')">
+                                                        <i class="fas fa-trash-alt"></i>
                                                     </a> &nbsp;
                                                     {{ $trans['summary']->fuel_warehouse }}
                                                 </td>
@@ -153,6 +156,14 @@
                 });
                 if (isConfirmed) {
                     @this.call('posting', id, warehouse, date);
+                }
+            }
+            async function deleteSumaryItem(id, warehouse, date) {
+                const isConfirmed = await sweetPosting({
+                    id: id
+                });
+                if (isConfirmed) {
+                    @this.call('deleteSumary',warehouse, date);
                 }
             }
 

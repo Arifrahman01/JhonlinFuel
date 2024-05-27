@@ -97,8 +97,8 @@ class ModalTransaction extends Component
             $this->selectedCompany = $this->dataTmp['company_code'];
             $this->trans_type = $this->dataTmp['trans_type'];
             $this->fuel_type = $this->dataTmp['fuel_type'];
-            $this->qty = $this->dataTmp['qty'];
-            $this->meter_value = $this->dataTmp['meter_value'];
+            $this->qty = intval($this->dataTmp['qty']);
+            $this->meter_value = intval($this->dataTmp['meter_value']);
             $this->fuel_warehouse = $this->dataTmp['fuel_warehouse'];
             $this->trans_date = $this->dataTmp['trans_date'];
             $this->fuelman = $this->dataTmp['fuelman'];
@@ -108,9 +108,9 @@ class ModalTransaction extends Component
             $this->activity = $this->dataTmp['activity'];
             $this->statistic_type = $this->dataTmp['statistic_type'];
             $this->plants = Plant::where('company_id', Company::where('company_code',  $this->dataTmp['company_code'])->value('id'))->get();
-            $this->slocs = Sloc::where('plant_id', $this->dataTmp['location'])->get();
+            $this->slocs = Sloc::where('plant_id', Plant::where('plant_code', $this->dataTmp['location'])->value('id'))->get();
             $this->departments = Department::where('company_id', Company::where('company_code',  $this->dataTmp['company_code'])->value('id'))->get();
-            $this->fuelmans = Fuelman::where('plant_id', $this->dataTmp['location'])->get();
+            $this->fuelmans = Fuelman::where('plant_id', Plant::where('plant_code', $this->dataTmp['location'])->value('id'))->get();
         }else{
             $this->dataTmp = null;
             $this->selectedCompany = null;
@@ -140,9 +140,8 @@ class ModalTransaction extends Component
     }
     public function updatedSelectedlocation($value)
     {
-        $this->slocs = Sloc::where('plant_id', $value)->get();
-        $this->fuelmans = Fuelman::where('plant_id', $value)->get();
-
+        $this->slocs = Sloc::where('plant_id', Plant::where('plant_code', $value)->value('id'))->get();
+        $this->fuelmans = Fuelman::where('plant_id', Plant::where('plant_code', $value)->value('id'))->get();
     }
 
     public function render()
