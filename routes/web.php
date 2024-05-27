@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Livewire\Adjustment\AdjustmentList;
 use App\Livewire\Company\CompanyList;
 use App\Livewire\Dashboard;
+use App\Livewire\Department\DepartmentList;
 use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Issue\IssueList;
@@ -58,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/plant', PlantList::class)->name('plant.index');
     Route::get('/warehouse', WarehouseList::class)->name('warehouse.index');
     Route::get('/fuelman', FuelmanList::class)->name('fuelman.index');
+    Route::get('/department', DepartmentList::class)->name('department.index');
 
     Route::get('/', Dashboard::class)->name('home');
 });

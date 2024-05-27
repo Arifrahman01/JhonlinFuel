@@ -75,7 +75,7 @@
 
                                     Receipt Transfer
                                 </a>
-                            
+
                                 <a class="dropdown-item {{ request()->is('issue') ? 'active' : '' }}"
                                     href="{{ route('issue.index') }}">
 
@@ -204,7 +204,8 @@
                         </div>
                     </div>
                 </li>
-                <li class="nav-item dropdown" style="display: none">
+                <li
+                    class="nav-item dropdown {{ request()->is('company') || request()->is('plant') || request()->is('warehouse') || request()->is('fuelman') || request()->is('department') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown"
                         data-bs-auto-close="outside" role="button" aria-expanded="false">
                         <span
@@ -224,29 +225,36 @@
                     <div class="dropdown-menu">
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
-                                <a class="dropdown-item" href="./empty.html">
-                                    Material
-                                </a>
-                                <a class="dropdown-item" href="./cookie-banner.html">
+                                <a class="dropdown-item {{ request()->is('company') ? 'active' : '' }}"
+                                    href="{{ route('company.index') }}">
                                     Company
-                                    <span class="badge badge-sm bg-green-lt text-uppercase ms-auto">New</span>
                                 </a>
-                                <a class="dropdown-item" href="./activity.html">
+                                <a class="dropdown-item {{ request()->is('plant') ? 'active' : '' }}"
+                                    href="{{ route('plant.index') }}">
                                     Plant
                                 </a>
-                                <a class="dropdown-item" href="./gallery.html">
-                                    Sloc
+                                <a class="dropdown-item {{ request()->is('warehouse') ? 'active' : '' }}"
+                                    href="{{ route('warehouse.index') }}">
+                                    Warehouse
                                 </a>
-                                <a class="dropdown-item" href="./invoice.html">
-                                    Periode
+                                <a class="dropdown-item {{ request()->is('fuelman') ? 'active' : '' }}"
+                                    href="{{ route('fuelman.index') }}">
+                                    Fuelman
                                 </a>
-                                <a class="dropdown-item" href="./search-results.html">
+                                <a class="dropdown-item {{ request()->is('department') ? 'active' : '' }}"
+                                    href="{{ route('department.index') }}">
+                                    Department
+                                </a>
+                                <a class="dropdown-item" href="">
                                     Activity
                                 </a>
-                                <a class="dropdown-item" href="./pricing.html">
+                                <a class="dropdown-item" href="">
                                     Equipment
                                 </a>
-                                <a class="dropdown-item" href="./pricing-table.html">
+                                <a class="dropdown-item" href="">
+                                    Material
+                                </a>
+                                <a class="dropdown-item" href="">
                                     Unit Of Measure
                                 </a>
                             </div>
