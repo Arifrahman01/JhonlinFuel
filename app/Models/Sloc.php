@@ -33,7 +33,10 @@ class Sloc extends BaseModel
         }
         $materialStock = MaterialStock::where('sloc_id', $this->id)
             ->first();
-        if ($materialStock->qty_soh > 0 || $materialStock->qty_intransit > 0) {
+        // if ($materialStock->qty_soh > 0 || $materialStock->qty_intransit > 0) {
+        //     return true;
+        // }
+        if ($materialStock && ($materialStock->qty_soh > 0 || $materialStock->qty_intransit > 0)) {
             return true;
         }
         return false;
