@@ -99,7 +99,7 @@ class TransactionList extends Component
                 $equipment = Equipment::where('equipment_no', $tmp->equipment_no)->first();
                 $location = Plant::where('id', $tmp->location)->first();
                 $activity = Activity::where('id', $tmp->activity)->first();
-                $fuelType = Material::find($tmp->fuel_type)->first();
+                $fuelType = Material::where('material_code', $tmp->fuel_type)->first();
                 $slocId = Sloc::where('sloc_code',  $tmp->fuel_warehouse)->value('id');
 
                 $saveTransaction = Transaction::create([

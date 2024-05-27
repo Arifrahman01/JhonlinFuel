@@ -153,7 +153,7 @@
                                     <select name="" id="" class="form-control" wire:model="fuel_type" required>
                                         <option value="">-Select Fuel Type-</option>
                                         @foreach ($material as $mat)
-                                            <option value="{{ $mat->id }}" {{ selected($mat->id, $dataTmp ? $dataTmp->fuel_type : '') }}>{{ $mat->material_description }}</option>
+                                            <option value="{{ $mat->material_code }}" {{ selected($mat->id, $dataTmp ? $dataTmp->fuel_type : '') }}>{{ $mat->material_description }}</option>
                                         @endforeach
                                     </select>
                                 </div>
