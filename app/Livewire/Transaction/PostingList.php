@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class PostingList extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $start_date;
     public $end_date;
     public $companies = [];
