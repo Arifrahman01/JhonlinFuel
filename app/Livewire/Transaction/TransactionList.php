@@ -4,6 +4,7 @@ namespace App\Livewire\Transaction;
 
 use App\Models\Activity;
 use App\Models\Company;
+use App\Models\Department;
 use App\Models\Equipment;
 use App\Models\Fuelman;
 use App\Models\Material\Material;
@@ -176,7 +177,7 @@ class TransactionList extends Component
         $fuelmanExist = Fuelman::where('nik', $val->fuelman)->exists();
         $equipmentExist = Equipment::where('equipment_no', $val->equipment_no)->exists();
         $locationExist = Plant::where('plant_code', $val->location)->exists();
-        $departmentExist = true;
+        $departmentExist = Department::where('department_code', $val->department)->exists();
         $activityExist = Activity::where('activity_code', $val->activity)->exists();
         $fuelTypeExist = Material::where('material_code',$val->fuel_type)->exists();
 
