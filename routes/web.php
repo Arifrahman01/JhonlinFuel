@@ -7,6 +7,7 @@ use App\Livewire\Activity\ActivityList;
 use App\Livewire\Adjustment\AdjustmentList;
 use App\Livewire\Company\CompanyList;
 use App\Livewire\Dashboard;
+use App\Livewire\Equipment\EquipmentList;
 use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Issue\IssueList;
@@ -55,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/soh-overview', SOHOverview::class)->name('soh.index');
     Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');
 
+    Route::get('/equipment', EquipmentList::class)->name('equipment.index');
     Route::get('/activity', ActivityList::class)->name('activity.index');
     Route::get('/company', CompanyList::class)->name('company.index');
     Route::get('/plant', PlantList::class)->name('plant.index');

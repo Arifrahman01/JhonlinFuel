@@ -5,7 +5,7 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6">
-                            Activity
+                            Equipment
                         </div>
                         <div class="col-6 d-flex justify-content-end">
                             <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
@@ -39,7 +39,19 @@
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="text" class="form-control form-control-sm" aria-label="Code, Name" placeholder="Code, Name" wire:model.live="q">
+                                            <select wire:model.live="p" wire:key="{{ $c }}"
+                                                class="form-select form-select-sm">
+                                                <option value="">-Select Plant-</option>
+                                                @foreach ($plants as $plant)
+                                                    <option value="{{ $plant->id }}">
+                                                        {{ $plant->plant_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <input type="text" class="form-control form-control-sm" aria-label="Code, Name" placeholder="Equipment" wire:model.live="q">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -60,31 +72,31 @@
                                         <th class="text-center" style="width: 5%">#</th>
                                         <th class="text-center" style="width: 6%">Action</th>
                                         <th class="text-center">Company</th>
-                                        <th class="text-center">Code</th>
-                                        <th class="text-center">Name</th>
-                                        <th class="text-center">Notes</th>
+                                        <th class="text-center">Plant</th>
+                                        <th class="text-center">Equipment No</th>
+                                        <th class="text-center">Equipment Desctiption</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($activitys->isEmpty())
+                                    @if ($equipments->isEmpty())
                                         {!! dataNotFond(4) !!}
                                     @else
-                                        @foreach ($activitys as $idx => $activity)
+                                        @foreach ($equipments as $idx => $equipment)
                                             <tr class="text-nowrap">
                                                 <td class="text-center">{{ ($idx+1) }}</td>
                                                 <td class="text-center">
-                                                    <a id="btn-delete{{ $activity->id }}" title="Delete activity" onclick="deleteItem({{ $activity->id }})">
+                                                    <a id="btn-delete{{ $equipment->id }}" title="Delete equipment" onclick="deleteItem({{ $equipment->id }})">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </a> &nbsp;
 
-                                                    <a title="Edit activity" wire:click="$dispatch('openCreate', [{{ $activity->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                    <a title="Edit equipment" wire:click="$dispatch('openCreate', [{{ $equipment->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </td>
-                                                <td>{{ $activity->company->company_name }}</td>
-                                                <td>{{ $activity->activity_code }}</td>
-                                                <td>{{ $activity->activity_name }}</td>
-                                                <td>{{ $activity->notes }}</td>
+                                                <td>{{ $equipment->company->company_name }}</td>
+                                                <td>{{ $equipment->plant->plant_name }}</td>
+                                                <td>{{ $equipment->equipment_no }}</td>
+                                                <td>{{ $equipment->equipment_description }}</td>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -94,14 +106,14 @@
                         {{-- </div> --}}
 
                         <div class="card-footer justify-content-between align-items-center">
-                            {{ $activitys->links() }}
+                            {{ $equipments->links() }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @livewire('activity.activity-create')
+    @livewire('equipment.equipment-create')
     @push('scripts')
         <script>
             async function deleteItem(id) {
