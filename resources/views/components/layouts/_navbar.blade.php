@@ -204,7 +204,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="nav-item dropdown" style="display: none">
+                <li class="nav-item dropdown" style="display: show">
                     <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown"
                         data-bs-auto-close="outside" role="button" aria-expanded="false">
                         <span
@@ -224,21 +224,20 @@
                     <div class="dropdown-menu">
                         <div class="dropdown-menu-columns">
                             <div class="dropdown-menu-column">
-                                <a class="dropdown-item" href="./empty.html">
-                                    Material
-                                </a>
                                 <a class="dropdown-item" href="./cookie-banner.html">
                                     Company
-                                    <span class="badge badge-sm bg-green-lt text-uppercase ms-auto">New</span>
                                 </a>
                                 <a class="dropdown-item" href="./activity.html">
                                     Plant
                                 </a>
                                 <a class="dropdown-item" href="./gallery.html">
-                                    Sloc
+                                    Warehouse
                                 </a>
-                                <a class="dropdown-item" href="./invoice.html">
-                                    Periode
+                                <a class="dropdown-item" href="./gallery.html">
+                                    Fuelman
+                                </a>
+                                <a class="dropdown-item" href="./gallery.html">
+                                    Department
                                 </a>
                                 <a class="dropdown-item" href="./search-results.html">
                                     Activity
@@ -246,6 +245,9 @@
                                 <a class="dropdown-item" href="./pricing.html">
                                     Equipment
                                 </a>
+                                <a class="dropdown-item" href="./empty.html">
+                                    Material
+                                </a>                               
                                 <a class="dropdown-item" href="./pricing-table.html">
                                     Unit Of Measure
                                 </a>
