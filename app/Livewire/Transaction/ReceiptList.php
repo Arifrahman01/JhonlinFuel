@@ -92,9 +92,9 @@ class ReceiptList extends Component
                 $company = Company::where('company_code', $tmp->company_code)->first();
                 // $fuelman = Fuelman::where('nik', $tmp->fuelman)->first();
                 // $equipment = Equipment::where('equipment_no', $tmp->equipment_no)->first();
-                // $location = Plant::where('id', $tmp->location)->first();
+                $location = Plant::where('plant_code', $tmp->location)->first();
                 // $activity = Activity::where('id', $tmp->activity)->first();
-                $fuelType = Material::where('id', $tmp->material_code)->first();
+                $fuelType = Material::where('material_code', $tmp->material_code)->first();
                 $slocId = Sloc::where('sloc_code',  $tmp->warehouse)->value('id');
                 $uomId = Uom::where('uom_code', $tmp->uom)->value('id');
                 Receipt::find($tmp->id)->update(['posting_no' => $newPostingNumber]);
@@ -112,14 +112,14 @@ class ReceiptList extends Component
                     'movement_date' => $tmp->trans_date,
                     // 'movement_date' => date('Y-m-d'),
                     'movement_type' => $tmp->trans_type,
-                    'plant_id'  => $tmp->location,
+                    'plant_id'  => $location->id,
                     'sloc_id'   =>  $slocId,
                     'uom_id'    =>  $uomId,
                     'qty'       => $tmp->qty,
                 ];
 
                 MaterialMovement::create($paramMovement);
-                $cekStok = MaterialStock::where('company_id', $company->id)->where('plant_id', $tmp->location)->where('sloc_id', $slocId)->first();
+                $cekStok = MaterialStock::where('company_id', $company->id)->where('plant_id', $location->id)->where('sloc_id', $slocId)->first();
                 if ($cekStok) {
                     $newStock = $cekStok->qty_soh + $tmp->qty;
                     $cekStok->qty_soh = $newStock;
@@ -146,10 +146,10 @@ class ReceiptList extends Component
         $message = false;
         $companyExists = Company::where('company_code', $data->company_code)->exists();
         $transTypeInvalid = in_array($data->trans_type, ['RCV']);
-        $locationExist = Plant::where('id', $data->location)->exists();
+        $locationExist = Plant::where('plant_code', $data->location)->exists();
         $fuelWarehouseExist = Sloc::where('sloc_code', $data->warehouse)->exists();
         $transportirExist = Equipment::where('equipment_no', $data->transportir)->exists();
-        $materialExist = Material::where('id', $data->material_code)->exists();
+        $materialExist = Material::where('material_code', $data->material_code)->exists();
 
 
         if (!$companyExists) {
