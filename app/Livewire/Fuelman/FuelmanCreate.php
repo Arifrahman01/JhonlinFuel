@@ -40,7 +40,7 @@ class FuelmanCreate extends Component
 
     public function openCreate($id = null)
     {
-        $this->dispatch('logData', $id);
+        $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
             $fuelman = Fuelman::find($id);

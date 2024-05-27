@@ -38,6 +38,7 @@ class DepartmentCreate extends Component
 
     public function openCreate($id = null)
     {
+        $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
             $department = Department::find($id);

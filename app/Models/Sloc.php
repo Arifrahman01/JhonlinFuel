@@ -31,7 +31,9 @@ class Sloc extends BaseModel
         if (MaterialMovement::where('sloc_id', $this->id)->exists()) {
             return true;
         }
-        if (MaterialStock::where('sloc_id', $this->id)->exists()) {
+        $materialStock = MaterialStock::where('sloc_id', $this->id)
+            ->first();
+        if ($materialStock->qty_soh > 0 || $materialStock->qty_intransit > 0) {
             return true;
         }
         return false;
