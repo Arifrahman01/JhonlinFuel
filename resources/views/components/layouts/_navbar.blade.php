@@ -38,7 +38,7 @@
                             </svg>
                         </span>
                         <span class="nav-link-title">
-                            Transaksi
+                            Data Transaksi
                         </span>
                     </a>
                     <div class="dropdown-menu">
