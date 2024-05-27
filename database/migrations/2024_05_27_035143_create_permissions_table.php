@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('permissions', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->string('role_code', 20);
-            $table->string('role_name', 100);
+            $table->smallInteger('menu_id');
+            $table->string('permission_code', 100);
+            $table->string('permission_name', 200);
             $table->longText('notes')->nullable();
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('permissions');
     }
 };
