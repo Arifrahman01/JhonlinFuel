@@ -3,10 +3,15 @@
 
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
+use App\Livewire\Activity\ActivityList;
 use App\Livewire\Adjustment\AdjustmentList;
 use App\Livewire\Company\CompanyList;
 use App\Livewire\Dashboard;
+<<<<<<< HEAD
+use App\Livewire\Equipment\EquipmentList;
+=======
 use App\Livewire\Department\DepartmentList;
+>>>>>>> f1c40b413d9ce299ceef61daa886ba14ddeef2ff
 use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Issue\IssueList;
@@ -55,6 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/soh-overview', SOHOverview::class)->name('soh.index');
     Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');
 
+    Route::get('/equipment', EquipmentList::class)->name('equipment.index');
+    Route::get('/activity', ActivityList::class)->name('activity.index');
     Route::get('/company', CompanyList::class)->name('company.index');
     Route::get('/plant', PlantList::class)->name('plant.index');
     Route::get('/warehouse', WarehouseList::class)->name('warehouse.index');
