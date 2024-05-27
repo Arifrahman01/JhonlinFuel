@@ -7,11 +7,8 @@ use App\Livewire\Activity\ActivityList;
 use App\Livewire\Adjustment\AdjustmentList;
 use App\Livewire\Company\CompanyList;
 use App\Livewire\Dashboard;
-<<<<<<< HEAD
-use App\Livewire\Equipment\EquipmentList;
-=======
 use App\Livewire\Department\DepartmentList;
->>>>>>> f1c40b413d9ce299ceef61daa886ba14ddeef2ff
+use App\Livewire\Equipment\EquipmentList;
 use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Issue\IssueList;
