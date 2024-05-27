@@ -31,12 +31,14 @@
                     <div class="modal-body">
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Company Code</label>
-                            <input type="text" class="form-control" wire:model='companyCode' required
+                            <input type="text" class="form-control" placeholder="Company Code"
+                                wire:model='companyCode' required
                                 @if ($companyCodeReadOnly) readonly disabled @endif>
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Company Name</label>
-                            <input type="text" class="form-control" wire:model='companyName' required>
+                            <input type="text" class="form-control" placeholder="Company Name"
+                                wire:model='companyName' required>
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -36,7 +36,9 @@ class Company extends BaseModel
         if (MaterialMovement::where('company_id', $this->id)->exists()) {
             return true;
         }
-        if (MaterialStock::where('company_id', $this->id)->exists()) {
+        $materialStock = MaterialStock::where('company_id', $this->id)
+            ->first();
+        if ($materialStock->qty_soh > 0 || $materialStock->qty_intransit > 0) {
             return true;
         }
         if (Transaction::where('company_id', $this->id)->exists()) {

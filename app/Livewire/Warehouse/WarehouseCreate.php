@@ -38,6 +38,7 @@ class WarehouseCreate extends Component
 
     public function openCreate($id = null)
     {
+        $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
             $warehouse = Sloc::find($id);

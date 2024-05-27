@@ -21,10 +21,6 @@ class CompanyCreate extends Component
         return view('livewire.company.company-create');
     }
 
-    public function openModal()
-    {
-    }
-
     public function closeModal()
     {
         $this->loading = false;
@@ -32,7 +28,7 @@ class CompanyCreate extends Component
 
     public function openCreate($id = null)
     {
-        $this->dispatch('logData', $id);
+        $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
             $company = Company::find($id);

@@ -52,14 +52,13 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">NIK</label>
-                            <input type="text" class="form-control" wire:model='fuelmanNIK'
-                                placeholder="NIK" required
-                                @if ($fuelmanNIKReadOnly) readonly disabled @endif>
+                            <input type="text" class="form-control" wire:model='fuelmanNIK' placeholder="NIK"
+                                required @if ($fuelmanNIKReadOnly) readonly disabled @endif>
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Name</label>
-                            <input type="text" class="form-control" wire:model='fuelmanName'
-                                placeholder="Name" required>
+                            <input type="text" class="form-control" wire:model='fuelmanName' placeholder="Name"
+                                required>
                         </div>
                     </div>
                     <div class="modal-footer">
