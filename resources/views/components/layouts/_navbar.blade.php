@@ -245,10 +245,12 @@
                                     href="{{ route('department.index') }}">
                                     Department
                                 </a>
-                                <a class="dropdown-item" href="">
+                                <a class="dropdown-item {{ request()->is('activity') ? 'active' : '' }}"
+                                    href="{{ route('activity.index') }}">
                                     Activity
                                 </a>
-                                <a class="dropdown-item" href="">
+                                <a class="dropdown-item {{ request()->is('equipment') ? 'active' : '' }}"
+                                    href="{{ route('equipment.index') }}">
                                     Equipment
                                 </a>
                                 <a class="dropdown-item" href="">
