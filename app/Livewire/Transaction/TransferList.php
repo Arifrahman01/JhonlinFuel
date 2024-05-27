@@ -72,7 +72,7 @@ class TransferList extends Component
         $toCompanyExists = Company::where('company_code', $data->to_company_code)->exists();
         $toWarehouseExists = Sloc::where('sloc_code', $data->to_warehouse)->exists();
         $transportirExist = Equipment::where('equipment_no', $data->transportir)->exists();
-        $materialExist = Material::where('id', $data->material_code)->exists();
+        $materialExist = Material::where('material_code', $data->material_code)->exists();
 
         if (!$fromCompanyExists) {
             $message = 'From Company code ' . $data->from_company_code . ' not registered in master';
@@ -113,7 +113,7 @@ class TransferList extends Component
             foreach ($data as $tmp) {
                 $fromCompany = Company::where('company_code', $tmp->from_company_code)->first();
                 $toCompany  = Company::where('company_code', $tmp->to_company_code)->first();
-                $fuelType = Material::where('id',$tmp->material_code)->first();
+                $fuelType = Material::where('material_code',$tmp->material_code)->first();
                 $slocIdFrom = Sloc::where('sloc_code',  $tmp->from_warehouse)->first();
                 $slocIdTo = Sloc::where('sloc_code', $tmp->to_warehouse)->value('id');
 
