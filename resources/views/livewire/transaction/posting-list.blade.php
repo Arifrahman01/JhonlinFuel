@@ -7,7 +7,7 @@
                         <div class="col-6">
                             Transaction Posting
                         </div>
-                        
+
                     </h2>
                 </div>
             </div>
@@ -23,9 +23,20 @@
                             <form wire:submit.prevent="search">
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
+                                        <div class="ms- d-inline-block">
+                                            <select wire:model.live="c" id="company" class="form-select form-select-sm">
+                                                <option value="">-Select Company-</option>
+                                                @foreach ($companies as $company)
+                                                    <option value="{{ $company->id }}">
+                                                        {{ $company->company_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="start_date" onchange="setEndDateMax()" wire:model="start_date" aria-label="Start Date" placeholder="Start Date"
-                                                value="{{ $start_date }}">
+                                            <input type="date" class="form-control form-control-sm" id="start_date" onchange="setEndDateMax()" wire:model="start_date" aria-label="Start Date"
+                                                placeholder="Start Date" value="{{ $start_date }}">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -35,7 +46,8 @@
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="end_date"  wire:model="end_date" aria-label="End Date" placeholder="End Date" value="{{ $end_date }}">
+                                            <input type="date" class="form-control form-control-sm" id="end_date" wire:model="end_date" aria-label="End Date" placeholder="End Date"
+                                                value="{{ $end_date }}">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -47,6 +59,11 @@
                                     </div>
                                 </div>
                             </form>
+                            <div class="ms-2 d-inline-block">
+                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="downloadExcel({{ -1 }})">
+                                    <i class="fas fa-file-excel"></i> &nbsp; Excel
+                                </button>
+                            </div>
                         </div>
                         <div class="table-responsive">
                             <div class="col-12">
@@ -114,7 +131,6 @@
     @livewire('transaction.modal-transaction')
     @push('scripts')
         <script>
-
             function setEndDateMax() {
                 var startDate = document.getElementById("start_date").value;
                 var endDateField = document.getElementById("end_date");
@@ -128,6 +144,21 @@
                 endDateField.setAttribute("max", maxDateString);
                 if (endDateField.value > maxDateString) {
                     endDateField.value = maxDateString;
+                }
+            }
+
+            async function downloadExcel(id) {
+                const isConfirmed = await sweetPosting({
+                    id: id,
+                    title: 'Download Report ? ',
+                    textLoadong: '  loading'
+                });
+                if (isConfirmed) {
+                    const company = document.getElementById("company").value;
+                    const startDate = document.getElementById("start_date").value;
+                    const endDate = document.getElementById("end_date").value;
+                    
+                    @this.call('report', company, startDate, endDate);
                 }
             }
         </script>

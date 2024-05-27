@@ -24,10 +24,6 @@ class PlantCreate extends Component
         return view('livewire.plant.plant-create', compact('companies'));
     }
 
-    public function openModal()
-    {
-    }
-
     public function closeModal()
     {
         $this->loading = false;
@@ -35,7 +31,7 @@ class PlantCreate extends Component
 
     public function openCreate($id = null)
     {
-        $this->dispatch('logData', $id);
+        $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
             $plant = Plant::find($id);
@@ -51,7 +47,6 @@ class PlantCreate extends Component
             $this->plantCode = null;
             $this->plantName = null;
         }
-
         $this->loading = false;
     }
 

@@ -24,7 +24,7 @@
                 <form wire:submit.prevent="store">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modal-largeLabel">
-                            {{ $statusModal }} Fuelman</h5>
+                            {{ $statusModal }} Department</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                             wire:click="closeModal" id="closeModalID"></button>
                     </div>
@@ -41,8 +41,7 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Plant</label>
-                            <select wire:model="selectedPlant" wire:key="{{ $selectedCompany }}" class="form-select"
-                                required>
+                            <select wire:model="selectedPlant" wire:key="{{ $selectedCompany}}" class="form-select" required>
                                 <option value="">-Select Plant-</option>
                                 @foreach ($plants as $plant)
                                     <option value="{{ $plant->id }}">
@@ -51,13 +50,13 @@
                             </select>
                         </div>
                         <div class="col-12 mb-3">
-                            <label for="" class="form-label required">NIK</label>
-                            <input type="text" class="form-control" wire:model='fuelmanNIK' placeholder="NIK"
-                                required @if ($fuelmanNIKReadOnly) readonly disabled @endif>
+                            <label for="" class="form-label required">Department Code</label>
+                            <input type="text" class="form-control" wire:model='departmentCode' placeholder="Department Code"
+                                required @if ($departmentCodeReadOnly) readonly disabled @endif>
                         </div>
                         <div class="col-12 mb-3">
-                            <label for="" class="form-label required">Name</label>
-                            <input type="text" class="form-control" wire:model='fuelmanName' placeholder="Name"
+                            <label for="" class="form-label required">Department Name</label>
+                            <input type="text" class="form-control" wire:model='departmentName' placeholder="Department Name"
                                 required>
                         </div>
                     </div>
