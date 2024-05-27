@@ -44,7 +44,7 @@
                 @else
                     <form wire:submit.prevent="storeData({{ $dataTmp->id ?? '' }})">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="modal-largeLabel">Edit Data</h5>
+                            <h5 class="modal-title" id="modal-largeLabel">{{ $dataTmp ? 'Edit' : 'Create' }} Data</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" wire:click="closeModal" id="closeModalID"></button>
                         </div>
                         <div class="modal-body">
@@ -54,7 +54,7 @@
                                     <select wire:model.live="selectedCompany" class="form-control" required>
                                         <option value="">-Select Company-</option>
                                         @foreach ($companiesModal as $comp)
-                                            <option value="{{ $comp->company_code }}" {{ selected($comp->company_code, $dataTmp ? $dataTmp->company_code : '') }}>{{ $comp->company_name }}</option>
+                                            <option value="{{ $comp->company_code }}">{{ $comp->company_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -67,8 +67,8 @@
                                     <select name="" id="" class="form-control" wire:model.live="selectedlocation" required>
                                         <option value="">-Select Location-</option>
                                         @foreach ($plants as $plant)
-                                            <option value="{{ $plant->id }}"  {{ selected($plant->id, $dataTmp ? $dataTmp->selectedlocation : '') }}>
-                                                {{ $plant->id . ' - ' . $plant->plant_name }}
+                                            <option value="{{ $plant->plant_code }}" >
+                                                {{ $plant->plant_name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -82,8 +82,8 @@
                                     <select name="" id="" class="form-control" wire:model="fuel_warehouse" required>
                                         <option value="">-Select Warehouse-</option>
                                         @foreach ($slocs as $sloc)
-                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code, $dataTmp ? $dataTmp->fuel_warehouse : '') }}>
-                                                {{ $sloc->sloc_code . ' - ' . $sloc->sloc_name }}</option>
+                                            <option value="{{ $sloc->sloc_code }}" >
+                                                {{ $sloc->sloc_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -96,7 +96,7 @@
                                     <select name="" id="" class="form-control" wire:model="department" required>
                                         <option value="">-Select Department-</option>
                                         @foreach ($departments as $dept)
-                                            <option value="{{ $dept->id }}" {{ selected($dept->id, $dataTmp ? $dataTmp->department : '') }}>{{ $dept->department_name }}</option>
+                                            <option value="{{ $dept->department_code }}" >{{ $dept->department_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -109,7 +109,7 @@
                                     <select name="" id="" class="form-control" wire:model="fuelman" required>
                                         <option value="">-Fuelman-</option>
                                         @foreach ($fuelmans as $fuelMan)
-                                        <option value="{{ $fuelMan->nik }}">{{ $fuelMan->nik.' - '.$fuelMan->name }}</option>
+                                        <option value="{{ $fuelMan->nik }}">{{ $fuelMan->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -124,7 +124,7 @@
                                 </div>
                                 <div class="col-3">
                                     <label for="" class="form-label">Issue Date</label>
-                                    <input type="date" class="form-control" wire:model='trans_date' value="{{ $dataTmp ? $dataTmp->trans_date : '' }}" required>
+                                    <input type="date" class="form-control" wire:model='trans_date'  required>
                                 </div>
                                
                                 <div class="col-3">
@@ -132,8 +132,8 @@
                                     <select name="" id="" class="form-control" wire:model="equipment_no" required>
                                         <option value="">-Equipment Number-</option>
                                         @foreach ($equipments as $equip)
-                                            <option value="{{ $equip->equipment_no }}" {{ selected($equip->equipment_no, $dataTmp ? $dataTmp->equipment_no : '') }}>
-                                                {{ $equip->equipment_no . ' - ' . $equip->equipment_description }}</option>
+                                            <option value="{{ $equip->equipment_no }}">
+                                                {{ $equip->equipment_description }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -144,7 +144,7 @@
                                     <select name="" id="" class="form-control" wire:model="activity" required>
                                         <option value="">-Select Activity-</option>
                                         @foreach ($activitys as $activity)
-                                            <option value="{{ $activity->id }}">{{ $activity->id . ' - ' . $activity->activity_name }}</option>
+                                            <option value="{{ $activity->activity_code }}">{{ $activity->activity_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -153,25 +153,25 @@
                                     <select name="" id="" class="form-control" wire:model="fuel_type" required>
                                         <option value="">-Select Fuel Type-</option>
                                         @foreach ($material as $mat)
-                                            <option value="{{ $mat->material_code }}" {{ selected($mat->id, $dataTmp ? $dataTmp->fuel_type : '') }}>{{ $mat->material_description }}</option>
+                                            <option value="{{ $mat->material_code }}">{{ $mat->material_description }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-3">
                                     <label for="" class="form-label">Quantity</label>
-                                    <input type="number" class="form-control" wire:model='qty' value="{{ $dataTmp ? $dataTmp->qty : '' }}" required>
+                                    <input type="number" class="form-control" wire:model='qty'  required>
                                 </div>
                                 <div class="col-3">
                                     <label for="" class="form-label">Statistic Type</label>
                                     <select name="" id="" class="form-control" wire:model="statistic_type" required>
                                         <option value="">-Select Type-</option>
-                                        <option value="HM" {{ selected('HM', $dataTmp ? $dataTmp->statistic_type : '') }}>HM</option>
-                                        <option value="KM" {{ selected('KM', $dataTmp ? $dataTmp->statistic_type : '') }}>KM</option>
+                                        <option value="HM">HM</option>
+                                        <option value="KM">KM</option>
                                     </select>
                                 </div>
                                 <div class="col-3">
                                     <label for="" class="form-label">Meter Value</label>
-                                    <input type="number" class="form-control" wire:model='meter_value' value="{{ $dataTmp ? $dataTmp->meter_value : '' }}" required>
+                                    <input type="number" class="form-control" wire:model='meter_value' equired>
                                 </div>
                             </div>
                         </div>

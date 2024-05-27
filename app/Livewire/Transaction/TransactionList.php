@@ -51,7 +51,15 @@ class TransactionList extends Component
             $this->dispatch('error', $th->getMessage());
         }
     }
-
+    public function deleteSumary($warehouse, $date)
+    {
+        try {
+            TmpTransaction::where('trans_date', $date)->where('fuel_warehouse', $warehouse)->delete();
+            $this->dispatch('success', 'Data has been deleted');
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
+        }
+    }
     public function posting($id, $warehouse, $date)
     {
         $message = false;
@@ -90,15 +98,14 @@ class TransactionList extends Component
         } else {
             $number = 0;
         }
-
         $newPostingNumber = date('Y') . '/' . $data[0]->company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
         try {
             foreach ($data as $tmp) {
                 $company = Company::where('company_code', $tmp->company_code)->first();
                 $fuelman = Fuelman::where('nik', $tmp->fuelman)->first();
                 $equipment = Equipment::where('equipment_no', $tmp->equipment_no)->first();
-                $location = Plant::where('id', $tmp->location)->first();
-                $activity = Activity::where('id', $tmp->activity)->first();
+                $location = Plant::where('plant_code', $tmp->location)->first();
+                $activity = Activity::where('activity_code', $tmp->activity)->first();
                 $fuelType = Material::where('material_code', $tmp->fuel_type)->first();
                 $slocId = Sloc::where('sloc_code',  $tmp->fuel_warehouse)->value('id');
 
@@ -133,13 +140,13 @@ class TransactionList extends Component
                     'material_description' => $fuelType->material_description,
                     'movement_date' => date('Y-m-d'),
                     'movement_type' => $tmp->trans_type,
-                    'plant_id'  => $tmp->location,
+                    'plant_id'  => $location->id,
                     'sloc_id'   =>  $slocId,
                     'uom_id'    => $fuelType->uom_id,
                     'qty'       => $tmp->qty,
                 ];
                 MaterialMovement::create($paramMovement);
-                $cekStok = MaterialStock::where('company_id', $company->id)->where('plant_id', $tmp->location)->where('sloc_id', $slocId)->first();
+                $cekStok = MaterialStock::where('company_id', $company->id)->where('plant_id', $location->id)->where('sloc_id', $slocId)->first();
                 if ($cekStok) {
                     $newStock = $cekStok->qty_soh - $tmp->qty;
                     if ($newStock < 0) {
@@ -168,9 +175,9 @@ class TransactionList extends Component
         $transTypeInvalid = in_array($val->trans_type, ['ISS']); /* Hanya untuk ISS/issued */
         $fuelmanExist = Fuelman::where('nik', $val->fuelman)->exists();
         $equipmentExist = Equipment::where('equipment_no', $val->equipment_no)->exists();
-        $locationExist = Plant::where('id', $val->location)->exists();
+        $locationExist = Plant::where('plant_code', $val->location)->exists();
         $departmentExist = true;
-        $activityExist = Activity::where('id', $val->activity)->exists();
+        $activityExist = Activity::where('activity_code', $val->activity)->exists();
         $fuelTypeExist = Material::where('material_code',$val->fuel_type)->exists();
 
         if (!$companyExists) {
