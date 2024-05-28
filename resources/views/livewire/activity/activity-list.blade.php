@@ -45,7 +45,7 @@
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             <button type="submit" class="btn btn-primary btn-sm">
-                                               <i class="fa fa-search"></i> &nbsp; Cari &nbsp;
+                                                <i class="fa fa-search"></i> &nbsp; Cari &nbsp;
                                             </button>
                                         </div>
                                     </div>
@@ -71,12 +71,13 @@
                                     @else
                                         @foreach ($activitys as $idx => $activity)
                                             <tr class="text-nowrap">
-                                                <td class="text-center">{{ ($idx+1) }}</td>
+                                                <td class="text-center">{{ $idx + 1 }}</td>
                                                 <td class="text-center">
-                                                    <a id="btn-delete{{ $activity->id }}" title="Delete activity" onclick="deleteItem({{ $activity->id }})">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </a> &nbsp;
-
+                                                    @if (!$activity->hasData())
+                                                        <a id="btn-delete{{ $activity->id }}" title="Delete activity" onclick="deleteItem({{ $activity->id }})">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a> &nbsp;
+                                                    @endif
                                                     <a title="Edit activity" wire:click="$dispatch('openCreate', [{{ $activity->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
                                                         <i class="fas fa-edit"></i>
                                                     </a>

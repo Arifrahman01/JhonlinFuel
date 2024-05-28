@@ -94,9 +94,9 @@
                                                         </td>
                                                         <td class="text-nowrap">
                                                             @if (!$val->posting_no)
-                                                                <a id="btn-delete{{ $val->id }}" title="Deleted User" onclick="deleteItem({{ $val->id }})">
+                                                                {{-- <a id="btn-delete{{ $val->id }}" title="Deleted User" onclick="deleteItem({{ $val->id }})">
                                                                     <i class="fas fa-trash-alt"></i>
-                                                                </a> &nbsp;
+                                                                </a> &nbsp; --}}
                                                                 <a title="Edit User" wire:click="$dispatch('openCreate', [{{ $val->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
                                                                     <i class="fas fa-edit"></i>
                                                                 </a>

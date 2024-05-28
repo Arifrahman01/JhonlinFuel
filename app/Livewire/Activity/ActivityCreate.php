@@ -14,7 +14,9 @@ class ActivityCreate extends Component
     public $statusModal = 'Create';
     public $company, $activityCode, $activityName, $notes;
     public $activityId;
+    public $codeReadOnly = false;
     protected $listeners = ['openCreate'];
+
     public Function mount()
     {
         $this->loading = true;
@@ -33,6 +35,7 @@ class ActivityCreate extends Component
         if ($id) {
             $this->statusModal = 'Edit';
             $activity = Activity::find($id);
+            $this->codeReadOnly = $activity->hasData();
             $this->company = $activity->company_id;
             $this->activityCode = $activity->activity_code;
             $this->activityName = $activity->activity_name;
@@ -40,6 +43,7 @@ class ActivityCreate extends Component
             $this->activityId = $id;
         }else{
             $this->activityId = null;
+            // $this->codeReadOnly = false;
             $this->statusModal = 'Create';
             $this->company = null;
             $this->activityCode = null;
