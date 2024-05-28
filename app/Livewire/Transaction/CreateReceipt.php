@@ -63,7 +63,7 @@ class CreateReceipt extends Component
             $this->material_code = $this->dataReceipt['material_code'];
             $this->qty = str_replace('.00', '', $this->dataReceipt['qty']); 
             $this->plants = Plant::where('company_id', Company::where('company_code',  $this->dataReceipt['company_code'])->value('id'))->get();
-            $this->slocs = Sloc::where('plant_id', $this->dataReceipt['location'])->get();
+            $this->slocs = Sloc::where('plant_id', Plant::where('plant_code',  $this->dataReceipt['location'])->value('id') )->get();
         } else {
             $this->dataReceipt = null;
             $this->selectedCompany = null;
@@ -89,7 +89,7 @@ class CreateReceipt extends Component
 
     public function updatedSelectedlocation($value)
     {
-        $this->slocs = Sloc::where('plant_id', $value)->get();
+        $this->slocs = Sloc::where('plant_id',  Plant::where('plant_code', $value)->value('id'))->get();
     }
 
     public function storeData($id = null)
