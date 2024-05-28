@@ -1,8 +1,8 @@
-/* TreeGrid */
+/* TreeGreed */
 #treegrid {
   width: 100%;
   white-space: nowrap;
-  border-collapse: collapse; /* This removes the space between table cells */
+  border-collapse: collapse;
   table-layout: auto;
 }
 
@@ -25,7 +25,7 @@
 
 #treegrid-col1,
 #treegrid-col3 {
-  width: 15%;
+  width: 30%;
 }
 
 #treegrid th {
@@ -47,7 +47,7 @@
 
 #treegrid tr > td:not(:first-child),
 #treegrid tr > th:not(:first-child) {
-  padding-left: 1ch;
+  padding-left: 3ch;
 }
 
 #treegrid a:focus {
@@ -61,19 +61,27 @@
 
 /* Indents */
 #treegrid tr[aria-level="2"] > td:first-child {
-  padding-left: 1.5ch; /* Reduced padding for less indentation */
+  padding-left: 2.5ch;
 }
 
 #treegrid tr[aria-level="3"] > td:first-child {
-  padding-left: 3ch; /* Reduced padding for less indentation */
+  padding-left: 5ch;
+}
+
+#treegrid tr[aria-level="4"] > td:first-child {
+  padding-left: 7.5ch;
+}
+
+#treegrid tr[aria-level="5"] > td:first-child {
+  padding-left: 10ch;
 }
 
 /* Collapse/expand icons */
 #treegrid tr > td:first-child::before {
   font-family: monospace;
-  content: "";
+  content: " ";
   display: inline-block;
-  width: 2ch; /* Reduced width for smaller icons */
+  width: 2ch;
   height: 11px;
   transition: transform 0.3s;
   transform-origin: 5px 5px;
@@ -82,6 +90,7 @@
 #treegrid tr[aria-expanded] > td:first-child::before,
 #treegrid td[aria-expanded]:first-child::before {
   cursor: pointer;
+
   /* Load both right away so there is no lag when we need the other */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='black' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='hsl(216, 94%25, 50%25)' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A");
@@ -99,4 +108,4 @@
 #treegrid tr > td[aria-expanded]:focus:first-child::before {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpolygon fill='hsl(216, 94%25, 50%25)' points='2,0 2,10 10,5'%3E%3C/polygon%3E%3C/svg%3E%0A");
 }
-/* TreeGrid */
+/* TreeGreed */
