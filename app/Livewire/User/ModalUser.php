@@ -2,6 +2,7 @@
 
 namespace App\Livewire\user;
 
+use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Livewire\Component;
@@ -12,7 +13,27 @@ class ModalUser extends Component
     public $userId;
     public $loading = false;
 
-    public $name, $email, $role, $username;
+    public $name, $username, $selectedRole;
+    public $selectedCompany = [];
+    public $datas = [];
+
+    public $roles_ = [
+        // [
+        //     'role' => 'Admin',
+        //     'company' => [
+        //         'PT. Jhonlin Group',
+        //         'PT. Jhonlin Agromandiri',
+        //         'PT. Jhonlin Baratama'
+        //     ],
+        // ],
+        // [
+        //     'role' => 'Entry',
+        //     'company' => [
+        //         'PT. Jhonlin Group',
+        //         'PT. Jhonlin Agromandiri'
+        //     ],
+        // ],
+    ];
 
     protected $listeners = ['openModal'];
 
@@ -22,16 +43,12 @@ class ModalUser extends Component
         if ($this->userId) {
             $this->user = User::find($this->userId);
             $this->name = $this->user['name'];
-            $this->email = $this->user['email'];
             $this->username = $this->user['username'];
-            $this->role = $this->user['role_id'];
         } else {
             $this->user = null;
             $this->userId = null;
             $this->name = null;
-            $this->email = null;
             $this->username = null;
-            $this->role = null;
         }
     }
     public function openModal($userId = null)
@@ -40,16 +57,12 @@ class ModalUser extends Component
         if ($userId) {
             $this->user = User::find($userId);
             $this->name = $this->user['name'];
-            $this->email = $this->user['email'];
             $this->username = $this->user['username'];
-            $this->role = $this->user['role_id'];
         } else {
             $this->user = null;
             $this->userId = null;
             $this->name = null;
-            $this->email = null;
             $this->username = null;
-            $this->role = null;
         }
         $this->loading = false;
     }
@@ -63,11 +76,27 @@ class ModalUser extends Component
 
     public function render()
     {
-        $rolesModal = Role::all();
-        return view('livewire.user.modal-user', compact('rolesModal'));
+        $companies = Company::all();
+        $roles = Role::all();
+        return view('livewire.user.modal-user', compact('companies', 'roles'));
     }
 
-    public function storeUser($userId=null)
+    public function addData()
+    {
+        $companies = [];
+        foreach ($this->selectedCompany as $company => $checkList) {
+            if ($checkList) {
+                $companies[] = $company;
+            }
+        }
+        $this->roles_[] = [
+            'role' => $this->selectedRole,
+            'company' => array_values($companies),
+        ];
+        // dd($this->roles_);
+    }
+
+    public function storeUser($userId = null)
     {
         try {
             $this->validate([
@@ -88,7 +117,7 @@ class ModalUser extends Component
                 $this->validate([
                     'username' => 'required|string|unique:users',
                 ]);
-                $user = User::create([  
+                $user = User::create([
                     'name' => $this->name,
                     'email' => $this->email,
                     'username' => $this->username,

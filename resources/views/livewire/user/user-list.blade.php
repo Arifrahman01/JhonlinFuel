@@ -8,8 +8,9 @@
                             Management User
                         </div>
                         <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                class="fa fa-plus-circle"></i>&nbsp; Create</button>
+                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
+                                data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                    class="fa fa-plus-circle"></i>&nbsp; Create</button>
                         </div>
                     </h2>
                 </div>
@@ -23,7 +24,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h3 class="card-title">Filter</h3>                         
+                            <h3 class="card-title">Filter</h3>
                         </div>
                         <div class="card-body">
                             <form wire:submit.prevent="search">
@@ -49,7 +50,8 @@
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <div class="d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> &nbsp; Filter</button>
+                                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i>
+                                                &nbsp; Filter</button>
                                         </div>
                                     </div>
                                 </div>
@@ -58,7 +60,7 @@
                     </div>
                 </div>
 
-                <div class="col-12">
+                {{-- <div class="col-12">
                     <div class="card">
                         <div class="table-responsive">
                             <table class="table table-vcenter card-table table-striped">
@@ -67,8 +69,9 @@
                                         <th class="text-center" style="width: 5%">#</th>
                                         <th class="text-center" style="width: 5%">Action</th>
                                         <th>Name</th>
-                                        <th>Email</th>
+                                        <th>Username</th>
                                         <th>Role</th>
+                                        <th>Company</th>
                                         <th class="w-1"></th>
                                     </tr>
                                 </thead>
@@ -76,25 +79,29 @@
                                     @if ($users->isEmpty())
                                         {!! dataNotFond(8) !!}
                                     @else
-                                        @foreach ($users as $idx => $user)
+                                        @foreach ($users => $user)
                                             <tr>
-                                                <td>{{ $idx + 1 }}</td>
+                                                <td>{{ $loop->index + 1 }}</td>
                                                 <td class="text-nowrap">
-                                                    <a id="btn-reset{{ $user->id }}" title="Reset Password User" onclick="resetPassword({{ $user->id }})">
+                                                    <a id="btn-reset{{ $user->id }}" title="Reset Password User"
+                                                        onclick="resetPassword({{ $user->id }})">
                                                         <i class="fa fa-lock"></i>
                                                     </a> &nbsp;
 
-                                                    <a id="btn-delete{{ $user->id }}" title="Deleted User" onclick="deleteItem({{ $user->id }})">
+                                                    <a id="btn-delete{{ $user->id }}" title="Deleted User"
+                                                        onclick="deleteItem({{ $user->id }})">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </a> &nbsp;
 
-                                                    <a title="Edit User" wire:click="$dispatch('openModal', [{{ $user->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                    <a title="Edit User"
+                                                        wire:click="$dispatch('openModal', [{{ $user->id }}])"
+                                                        data-bs-toggle="modal" data-bs-target="#modal-large">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </td>
                                                 <td>{{ $user->name }}</td>
-                                                <td>{{ $user->email }}</td>
-                                                <td>{{ $user->role->description ?? ''}}</td>
+                                                <td>{{ $user->username }}</td>
+                                                <td>{{ $user->role->description ?? '' }}</td>
                                             </tr>
                                         @endforeach
                                     @endif
@@ -105,7 +112,7 @@
                             {{ $users->links() }}
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

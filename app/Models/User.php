@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -49,10 +50,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    public function role()
+
+    public function roles(): BelongsToMany
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsToMany(Role::class, 'user_roles')->using(UserRole::class)->withPivot('id');
     }
+
     public function scopeSearch($query, $filters)
     {
         return $query->when($filters['name'], function ($query, $name) {
@@ -63,10 +66,10 @@ class User extends Authenticatable
             })
             ->when($filters['username'], function ($query, $username) {
                 $query->where('username', 'like', '%' . $username . '%');
-            })
-            ->when($filters['role'], function ($query, $role) {
-                $query->where('role_id', $role);
             });
+        // ->when($filters['role'], function ($query, $role) {
+        //     $query->where('role_id', $role);
+        // });
     }
 
     public function getActivitylogOptions(): LogOptions
