@@ -10,13 +10,22 @@ class RoleList extends Component
 {
     use WithPagination;
     protected $listeners = ['refreshPage'];
+    public $q;
     public function render()
     {
         $roles = Role::with(['permissions'])
+            ->when($this->q, function ($query, $q) {
+                $query->where('role_code', 'like', '%' . $q . '%')
+                    ->orWhere('role_name', 'like', '%' . $q . '%');
+            })
             ->latest()
             ->paginate(10);
-        // dd($roles);
         return view('livewire.role.role-list', compact('roles'));
+    }
+
+    public function search()
+    {
+        $this->resetPage();
     }
 
     public function delete($id)

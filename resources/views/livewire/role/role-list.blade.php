@@ -64,7 +64,7 @@
                                             <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1"
                                                 aria-expanded="false">
                                                 <td class="text-center align-top">
-                                                    @if (!$role->hasDataById() && !$role->hasDataByCode())
+                                                    @if (!$role->hasDataById())
                                                         <a id="btn-delete{{ $role->id }}" title="Delete Role"
                                                             onclick="deleteItem({{ $role->id }})">
                                                             <i class="fas fa-trash-alt"></i>

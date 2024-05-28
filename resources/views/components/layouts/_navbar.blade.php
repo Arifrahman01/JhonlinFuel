@@ -293,7 +293,7 @@
                         </a> --}}
                     </div>
                 </li>
-                <li class="nav-item dropdown {{ request()->is('users') ? 'active' : '' }}">
+                <li class="nav-item dropdown {{ request()->is('users') || request()->is('role') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" href="#navbar-help" data-bs-toggle="dropdown"
                         data-bs-auto-close="outside" role="button" aria-expanded="false">
                         <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -317,9 +317,10 @@
                             href="{{ route('users.index') }}" rel="noopener">
                             User
                         </a>
-                        {{-- <a class="dropdown-item" href="./changelog.html">
+                        <a class="dropdown-item {{ request()->is('role') ? 'active' : '' }}"
+                            href="{{ route('role.index') }}">
                             Role
-                        </a> --}}
+                        </a>
                     </div>
                 </li>
             </ul>
