@@ -5,6 +5,7 @@ namespace App\Livewire\Role;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class RoleCreate extends Component
@@ -56,6 +57,15 @@ class RoleCreate extends Component
         DB::beginTransaction();
         try {
             if ($this->roleId) {
+                $this->validate([
+                    'roleCode' => [
+                        'required',
+                        Rule::unique('roles', 'role_code')
+                            ->ignore($this->roleId)
+                            ->whereNull('deleted_at'),
+                    ],
+                    'roleName' => 'required',
+                ]);
                 $role = Role::find($this->roleId);
                 $role->update([
                     'role_code' => $this->roleCode,
@@ -68,6 +78,14 @@ class RoleCreate extends Component
                     }
                 }
             } else {
+                $this->validate([
+                    'roleCode' => [
+                        'required',
+                        Rule::unique('roles', 'role_code')
+                            ->whereNull('deleted_at'),
+                    ],
+                    'roleName' => 'required',
+                ]);
                 $role = Role::create([
                     'role_code' => $this->roleCode,
                     'role_name' => $this->roleName,
@@ -86,7 +104,6 @@ class RoleCreate extends Component
             $this->dispatch('refreshPage');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
             $this->dispatch('error', $th->getMessage());
         }
     }
