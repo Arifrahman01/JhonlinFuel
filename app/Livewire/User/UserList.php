@@ -11,11 +11,7 @@ use Livewire\WithPagination;
 class UserList extends Component
 {
 
-    public $data;
-    public $name;
-    public $email;
-    public $username;
-    public $role;
+    public $q;
 
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['refreshPage'];
@@ -25,13 +21,10 @@ class UserList extends Component
     public function render()
     {
         $roles = Role::all();
-        $users = User::with('role')
-        ->search([
-            'name' => $this->name,
-            'email' => $this->email,
-            'username' => $this->username,
-            'role' => $this->role,
-        ])->paginate(10);
+        $users = User::with('roles')
+            ->search([
+                'q' => $this->q,
+            ])->paginate(10);
 
         return view('livewire.user.user-list', compact('roles', 'users'));
     }
