@@ -19,8 +19,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ModalTransaction extends Component
 {
-    use WithFileUploads;    
-    
+    use WithFileUploads;
+
     public $loading = false;
     public $statusModal = 'uplaod';
     public $fileLoader;
@@ -39,10 +39,10 @@ class ModalTransaction extends Component
     public $selectedCompany;
     public $selectedlocation;
 
-    public $fuel_warehouse , $trans_date , $fuelman , $equipment_no , $department , $activity ,$trans_type , $fuel_type , $qty , $statistic_type , $meter_value;
-    protected $listeners = ['openUpload','openEdit'];
+    public $fuel_warehouse, $trans_date, $fuelman, $equipment_no, $department, $activity, $trans_type, $fuel_type, $qty, $statistic_type, $meter_value;
+    protected $listeners = ['openUpload', 'openEdit'];
 
-    
+
     public function mount()
     {
         $this->loading = true;
@@ -67,7 +67,7 @@ class ModalTransaction extends Component
             $this->department = $this->dataTmp['department'];
             $this->activity = $this->dataTmp['activity'];
             $this->statistic_type = $this->dataTmp['statistic_type'];
-        }else{
+        } else {
             $this->dataTmp = null;
             $this->selectedCompany = null;
             $this->trans_type = null;
@@ -89,7 +89,7 @@ class ModalTransaction extends Component
         $this->statusModal = 'upload';
         $this->loading = false;
     }
-    public function openEdit($id=null)
+    public function openEdit($id = null)
     {
         $this->loading = true;
         if ($id) {
@@ -110,8 +110,8 @@ class ModalTransaction extends Component
             $this->plants = Plant::where('company_id', Company::where('company_code',  $this->dataTmp['company_code'])->value('id'))->get();
             $this->slocs = Sloc::where('plant_id', Plant::where('plant_code', $this->dataTmp['location'])->value('id'))->get();
             $this->departments = Department::where('company_id', Company::where('company_code',  $this->dataTmp['company_code'])->value('id'))->get();
-            $this->fuelmans = Fuelman::where('plant_id', Plant::where('plant_code', $this->dataTmp['location'])->value('id'))->get();
-        }else{
+            $this->fuelmans = Fuelman::where('plant_id', $this->dataTmp['location'])->get();
+        } else {
             $this->dataTmp = null;
             $this->selectedCompany = null;
             $this->trans_type = null;
@@ -134,14 +134,11 @@ class ModalTransaction extends Component
     {
         $this->plants = Plant::where('company_id', Company::where('company_code', $value)->value('id'))->get();
         $this->departments = Department::where('company_id', Company::where('company_code', $value)->value('id'))->get();
-
-
-
     }
     public function updatedSelectedlocation($value)
     {
-        $this->slocs = Sloc::where('plant_id', Plant::where('plant_code', $value)->value('id'))->get();
-        $this->fuelmans = Fuelman::where('plant_id', Plant::where('plant_code', $value)->value('id'))->get();
+        $this->slocs = Sloc::where('plant_id', $value)->get();
+        $this->fuelmans = Fuelman::where('plant_id', $value)->get();
     }
 
     public function render()
@@ -167,7 +164,7 @@ class ModalTransaction extends Component
                 $this->closeModal();
                 $this->dispatch('closeModal');
                 $this->dispatch('refreshPage');
-            }else{
+            } else {
                 $this->dispatch('error', 'File not uploaded');
             }
         } catch (\Throwable $th) {
@@ -184,19 +181,19 @@ class ModalTransaction extends Component
                 'trans_date'    => 'required',
                 'fuelman'       => 'required',
                 'equipment_no'  => 'required',
-                'selectedlocation'=> 'required',
+                'selectedlocation' => 'required',
                 'department'    => 'required',
                 'activity'      => 'required',
                 'fuel_type'     => 'required',
                 'qty'           => 'required',
-                'statistic_type'=> 'required',
+                'statistic_type' => 'required',
                 'meter_value'   => 'required'
             ]);
             if ($id) {
                 $tmpTrans = TmpTransaction::find($id);
                 $tmpTrans->update([
                     'company_code'  => $this->selectedCompany,
-                    'fuel_warehouse'=> $this->fuel_warehouse,
+                    'fuel_warehouse' => $this->fuel_warehouse,
                     'trans_type'    => $this->trans_type,
                     'trans_date'    => $this->trans_date,
                     'fuelman'       => $this->fuelman,
@@ -206,15 +203,15 @@ class ModalTransaction extends Component
                     'activity'      => $this->activity,
                     'fuel_type'     => $this->fuel_type,
                     'qty'           => $this->qty,
-                    'statistic_type'=> $this->statistic_type,
+                    'statistic_type' => $this->statistic_type,
                     'meter_value'   => $this->meter_value,
-                    'status_error'  => null,          
+                    'status_error'  => null,
                 ]);
                 $this->dispatch('success', 'Data has been updated');
             } else {
                 TmpTransaction::create([
                     'company_code'  => $this->selectedCompany,
-                    'fuel_warehouse'=> $this->fuel_warehouse,
+                    'fuel_warehouse' => $this->fuel_warehouse,
                     'trans_type'    => $this->trans_type,
                     'trans_date'    => $this->trans_date,
                     'fuelman'       => $this->fuelman,
@@ -224,7 +221,7 @@ class ModalTransaction extends Component
                     'activity'      => $this->activity,
                     'fuel_type'     => $this->fuel_type,
                     'qty'           => $this->qty,
-                    'statistic_type'=> $this->statistic_type,
+                    'statistic_type' => $this->statistic_type,
                     'meter_value'   => $this->meter_value,
                     'status_error'  => null,
                 ]);

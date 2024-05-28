@@ -15,6 +15,7 @@ use App\Livewire\Issue\IssueList;
 use App\Livewire\Plant\PlantList;
 use App\Livewire\ReceiptPostingList;
 use App\Livewire\ReceiptTransferPostingList;
+use App\Livewire\Role\RoleList;
 use App\Livewire\SOHOverview;
 use App\Livewire\Transaction\PostingList;
 use App\Livewire\Transaction\ReceiptList;
@@ -64,6 +65,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/warehouse', WarehouseList::class)->name('warehouse.index');
     Route::get('/fuelman', FuelmanList::class)->name('fuelman.index');
     Route::get('/department', DepartmentList::class)->name('department.index');
+
+    Route::get('/role', RoleList::class)->name('role.index');
 
     Route::get('/', Dashboard::class)->name('home');
 });
