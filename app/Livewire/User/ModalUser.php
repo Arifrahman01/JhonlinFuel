@@ -13,6 +13,8 @@ class ModalUser extends Component
     public $userId;
     public $loading = false;
 
+    public $companiesTmp = [];
+    public $rolesTmp = [];
     public $name, $username, $selectedRole;
     public $selectedCompany = [];
     public $datas = [];
@@ -36,7 +38,6 @@ class ModalUser extends Component
     ];
 
     protected $listeners = ['openModal'];
-
     public function mount()
     {
         $this->loading = true;
@@ -78,6 +79,11 @@ class ModalUser extends Component
     {
         $companies = Company::all();
         $roles = Role::all();
+
+        $companiesTmp = $companies->toArray();
+        $rolesTmp = $roles->toArray();
+        dd($companiesTmp);
+
         return view('livewire.user.modal-user', compact('companies', 'roles'));
     }
 
@@ -89,8 +95,9 @@ class ModalUser extends Component
                 $companies[] = $company;
             }
         }
+        $sRole = explode('-', $this->selectedRole)[1];
         $this->roles_[] = [
-            'role' => $this->selectedRole,
+            'role' => $sRole,
             'company' => array_values($companies),
         ];
         // dd($this->roles_);

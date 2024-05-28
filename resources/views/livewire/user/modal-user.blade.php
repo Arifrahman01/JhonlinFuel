@@ -50,10 +50,10 @@
                             <div class="card-body row">
                                 <div class="col-6 mb-3">
                                     <label class="form-label required">Role</label>
-                                    <select wire:model.live="selectedRole" class="form-select" required>
+                                    <select wire:model.live="selectedRole" id="selectRole" class="form-select" required>
                                         <option value="">-Select Role-</option>
                                         @foreach ($roles as $role)
-                                            <option value="{{ $role->id }}">
+                                            <option value="{{ $role->id . '-' . $role->role_name }}">
                                                 {{ $role->role_name }}</option>
                                         @endforeach
                                     </select>
@@ -120,7 +120,8 @@
                     <div class="modal-footer">
                         <button type="button" class="btn me-auto" data-bs-dismiss="modal"
                             wire:click="closeModal">Close</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp; Save</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;
+                            Save</button>
                     </div>
                 </form>
             @endif
