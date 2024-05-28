@@ -100,8 +100,7 @@ class ReceiptTransferCreate extends Component
         $this->companies = Company::all();
         $this->materials = Material::all();
         $userCompanyId = auth()->user()->company_id;
-        $this->fromSlocs = Sloc::where('company_id', $userCompanyId)
-            ->get();
+        $this->fromSlocs = Sloc::all();
         return view('livewire.transaction.receipt-transfer-create');
     }
 
