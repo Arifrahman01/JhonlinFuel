@@ -61,7 +61,7 @@
                                     <select name="" id="" class="form-control" wire:model='material_code' required>
                                         <option value="">-Select Material-</option>
                                         @foreach ($materials as $mat)
-                                            <option value="{{ $mat->id }}" {{ selected($mat->id, $dataTransfer ?  $dataTransfer->material_code :'') }}>{{ $mat->material_description }}</option>
+                                            <option value="{{ $mat->material_code }}">{{ $mat->material_description }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -79,7 +79,7 @@
                                                     <select wire:model.live="selectedFromCompany" class="form-control" required>
                                                         <option value="">-Select Company-</option>
                                                         @foreach ($companiesFrom as $comp)
-                                                            <option value="{{ $comp->company_code }}" {{ selected($comp->company_code, $dataTransfer ? $dataTransfer->selectedFromCompany : '') }}>
+                                                            <option value="{{ $comp->company_code }}">
                                                                 {{ $comp->company_name }}</option>
                                                         @endforeach
                                                     </select>
@@ -93,8 +93,8 @@
                                                     <select name="" id="" class="form-control" wire:model="from_warehouse" required>
                                                         <option value="">-Select Warehouse-</option>
                                                         @foreach ($slocsFrom as $sloc)
-                                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code, $dataTransfer ? $dataTransfer->from_warehouse : '') }}>
-                                                                {{ $sloc->sloc_code . ' - ' . $sloc->sloc_name }}
+                                                            <option value="{{ $sloc->sloc_code }}">
+                                                                {{ $sloc->sloc_name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -105,7 +105,7 @@
                                                     <select wire:model.live="selectedToCompany" class="form-control" required>
                                                         <option value="">-Select Company-</option>
                                                         @foreach ($companiesTo as $comp)
-                                                            <option value="{{ $comp->company_code }}" {{ selected($comp->company_code, $dataTransfer ? $dataTransfer->selectedToCompany : '') }}>
+                                                            <option value="{{ $comp->company_code }}">
                                                                 {{ $comp->company_name }}</option>
                                                         @endforeach
                                                     </select>
@@ -119,8 +119,8 @@
                                                     <select name="" id="" class="form-control" wire:model.live="to_warehouse" required>
                                                         <option value="">-Select Location-</option>
                                                         @foreach ($slocsTo as $sloc)
-                                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code, $dataTransfer ? $dataTransfer->to_warehouse : '') }}>
-                                                                {{ $sloc->sloc_code . ' - ' . $sloc->sloc_name }}
+                                                            <option value="{{ $sloc->sloc_code }}">
+                                                                {{ $sloc->sloc_name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
