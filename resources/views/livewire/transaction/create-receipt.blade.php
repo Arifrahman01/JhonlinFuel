@@ -66,8 +66,8 @@
                                     <select name="" id="" class="form-control" wire:model.live="selectedlocation" required>
                                         <option value="">-Select Location-</option>
                                         @foreach ($plants as $plant)
-                                            <option value="{{ $plant->id }}"  {{ selected($plant->id, $dataReceipt ? $dataReceipt->selectedlocation : '') }}>
-                                                {{ $plant->id . ' - ' . $plant->plant_name }}
+                                            <option value="{{ $plant->plant_code }}">
+                                                {{ $plant->plant_name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -81,8 +81,8 @@
                                     <select name="" id="" class="form-control" wire:model="warehouse" required>
                                         <option value="">-Select Warehouse-</option>
                                         @foreach ($slocs as $sloc)
-                                            <option value="{{ $sloc->sloc_code }}" {{ selected($sloc->sloc_code, $dataReceipt ? $dataReceipt->fuel_warehouse : '') }}>
-                                                {{ $sloc->sloc_code . ' - ' . $sloc->sloc_name }}</option>
+                                            <option value="{{ $sloc->sloc_code }}">
+                                                {{  $sloc->sloc_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -107,7 +107,7 @@
                                     <select name="" id="" class="form-control"  wire:model='material_code' required>
                                         <option value="">-Select Material-</option>
                                         @foreach ($materials as $mat)
-                                        <option value="{{ $mat->id }}">{{ $mat->material_description }}</option>
+                                        <option value="{{ $mat->material_code }}">{{ $mat->material_description }}</option>
                                             
                                         @endforeach
                                     </select>
