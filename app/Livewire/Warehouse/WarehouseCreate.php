@@ -44,12 +44,15 @@ class WarehouseCreate extends Component
             $warehouse = Sloc::find($id);
             $this->warehouseCodeReadOnly = $warehouse->hasDataByCode();
             $this->selectedCompany = $warehouse->company_id;
+            $this->plants = Plant::where('company_id', $this->selectedCompany)->get();
+            $this->selectedPlant = $warehouse->plant_id;
             $this->warehouseId = $id;
             $this->warehouseCode = $warehouse->sloc_code;
             $this->warehouseName = $warehouse->sloc_name;
         } else {
             $this->statusModal = 'Create';
             $this->selectedCompany = null;
+            $this->selectedPlant = null;
             $this->warehouseId = null;
             $this->warehouseCode = null;
             $this->warehouseName = null;
@@ -88,6 +91,12 @@ class WarehouseCreate extends Component
                     'plant_id' => $this->selectedPlant,
                     'sloc_code' => $this->warehouseCode,
                     'sloc_name' => $this->warehouseName,
+                ]);
+
+                $materialStock = MaterialStock::where('sloc_id', $this->warehouseId)->first();
+                $materialStock->update([
+                    'company_id' => $this->selectedCompany,
+                    'plant_id' => $this->selectedPlant,
                 ]);
             } else {
                 $this->validate([
