@@ -33,7 +33,10 @@ class SOHOverview extends Component
             DB::raw('SUM(IFNULL(material_stocks.qty_soh, 0)) as oh_qty'),
             DB::raw('SUM(IFNULL(material_stocks.qty_intransit, 0)) as intransit_qty')
         ])
-            ->leftJoin('plants', 'material_stocks.plant_id', '=', 'plants.id')
+            ->join('plants', function ($join) {
+                $join->on('material_stocks.plant_id', '=', 'plants.id')
+                    ->whereNull('plants.deleted_at');
+            })
             ->groupBy('material_stocks.company_id')
             ->groupBy('material_stocks.plant_id')
             ->groupBy('plants.plant_name')
@@ -47,7 +50,10 @@ class SOHOverview extends Component
             DB::raw('SUM(IFNULL(material_stocks.qty_soh, 0)) as oh_qty'),
             DB::raw('SUM(IFNULL(material_stocks.qty_intransit, 0)) as intransit_qty')
         ])
-            ->leftJoin('storage_locations', 'material_stocks.sloc_id', '=', 'storage_locations.id')
+            ->join('storage_locations', function ($join) {
+                $join->on('material_stocks.sloc_id', '=', 'storage_locations.id')
+                    ->whereNull('storage_locations.deleted_at');
+            })
             ->groupBy('material_stocks.company_id')
             ->groupBy('material_stocks.plant_id')
             ->groupBy('material_stocks.sloc_id')
