@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Role;
 
-use App\Models\Company;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +12,7 @@ class RoleCreate extends Component
     public $loading;
     public $statusModal = 'Create';
     public $otorisasi = [];
+    public $roleId;
     public $roleCode;
     public $roleName;
     protected $listeners = ['openCreate'];
@@ -27,18 +27,20 @@ class RoleCreate extends Component
     {
         if ($id) {
             $this->statusModal = 'Edit';
-            // $plant = Plant::find($id);
-            // $this->plantCodeReadOnly = $plant->hasDataByCode();
-            // $this->selectedCompany = $plant->company_id;
-            // $this->plantId = $id;
-            // $this->plantCode = $plant->plant_code;
-            // $this->plantName = $plant->plant_name;
+            $role = Role::with(['permissions'])->find($id);
+            $this->roleId = $id;
+            $this->roleCode = $role->role_code;
+            $this->roleName = $role->role_name;
+            $this->otorisasi = [];
+            foreach ($role->permissions as $permission) {
+                $this->otorisasi[$permission->id] = true;
+            }
         } else {
             $this->statusModal = 'Create';
-            // $this->selectedCompany = null;
-            // $this->plantId = null;
-            // $this->plantCode = null;
-            // $this->plantName = null;
+            $this->roleId = null;
+            $this->roleCode = null;
+            $this->roleName = null;
+            $this->otorisasi = [];
         }
         $this->loading = false;
     }
@@ -46,24 +48,46 @@ class RoleCreate extends Component
     public function closeModal()
     {
         // dd($this->permissions);
-        $this->loading = false;
+        $this->loading = true;
     }
 
     public function store()
     {
         DB::beginTransaction();
         try {
-            Role::create([
-                'role_code' => $this->roleCode,
-                'role_name' => $this->roleName,
-            ]);
+            if ($this->roleId) {
+                $role = Role::find($this->roleId);
+                $role->update([
+                    'role_code' => $this->roleCode,
+                    'role_name' => $this->roleName,
+                ]);
+                $role->permissions()->detach();
+                foreach ($this->otorisasi as $permissionId => $checkList) {
+                    if ($checkList) {
+                        $role->permissions()->attach($permissionId);
+                    }
+                }
+            } else {
+                $role = Role::create([
+                    'role_code' => $this->roleCode,
+                    'role_name' => $this->roleName,
+                ]);
+                foreach ($this->otorisasi as $permissionId => $checkList) {
+                    if ($checkList) {
+                        $role->permissions()->attach($permissionId);
+                    }
+                }
+            }
+
             DB::commit();
+            $this->dispatch('success', $this->roleId ? 'Data has been updated' : 'Data has been created');
+            $this->closeModal();
+            $this->dispatch('closeModal');
+            $this->dispatch('refreshPage');
         } catch (\Throwable $th) {
             DB::rollBack();
+            dd($th);
             $this->dispatch('error', $th->getMessage());
-        }
-
-        foreach ($this->otorisasi as $permissionId => $checkList) {
         }
     }
 }

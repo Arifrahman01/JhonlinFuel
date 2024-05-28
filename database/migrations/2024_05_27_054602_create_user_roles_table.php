@@ -21,6 +21,11 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('user_role_companies', function (Blueprint $table) {
+            $table->smallInteger('user_role_id');
+            $table->smallInteger('company_id');
+        });
     }
 
     /**
@@ -29,5 +34,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('user_roles');
+        Schema::dropIfExists('user_role_companies');
     }
 };

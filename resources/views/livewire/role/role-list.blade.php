@@ -53,6 +53,7 @@
                                         {{-- <th class="text-center" style="width: 5%">Action</th> --}}
                                         <th class="text-center">Role Code</th>
                                         <th class="text-center">Role Name</th>
+                                        <th class="text-center">Otorisasi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -62,7 +63,7 @@
                                         @foreach ($roles as $role)
                                             <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1"
                                                 aria-expanded="false">
-                                                <td class="text-center">
+                                                <td class="text-center align-top">
                                                     @if (!$role->hasDataById() && !$role->hasDataByCode())
                                                         <a id="btn-delete{{ $role->id }}" title="Delete Role"
                                                             onclick="deleteItem({{ $role->id }})">
@@ -76,8 +77,20 @@
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                 </td>
-                                                <td>{{ $role->role_code }}</td>
-                                                <td>{{ $role->role_name }}</td>
+                                                <td class="align-top">{{ $role->role_code }}</td>
+                                                <td class="align-top">{{ $role->role_name }}</td>
+                                                <td class="align-top">
+                                                    <ul>
+                                                        @foreach ($role->permissions as $otorisasi)
+                                                            <li>
+                                                                {{ $otorisasi->permission_name }}
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+
+                                                </td>
+                                                {{-- <td>{{ implode(',', data_get($role, 'permissions.*.permission_name')) }}
+                                                </td> --}}
                                             </tr>
                                         @endforeach
                                     @endif
