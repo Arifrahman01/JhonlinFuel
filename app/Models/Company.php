@@ -38,7 +38,7 @@ class Company extends BaseModel
         }
         $materialStock = MaterialStock::where('company_id', $this->id)
             ->first();
-        if ($materialStock->qty_soh > 0 || $materialStock->qty_intransit > 0) {
+        if  ($materialStock && ($materialStock->qty_soh > 0 || $materialStock->qty_intransit > 0)) {
             return true;
         }
         if (Transaction::where('company_id', $this->id)->exists()) {
