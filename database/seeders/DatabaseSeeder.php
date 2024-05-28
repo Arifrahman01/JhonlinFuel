@@ -15,6 +15,7 @@ use App\Models\Menu;
 use App\Models\Period;
 use App\Models\Permission;
 use App\Models\Plant;
+use App\Models\Role;
 use App\Models\Sloc;
 use App\Models\Uom;
 use App\Models\User;
@@ -51,12 +52,19 @@ class DatabaseSeeder extends Seeder
             'company_name' => 'PT. Jhonlin Baratama',
         ]);
 
-        User::create([
-            'name' => 'Admin JB',
-            'username' => 'jb-admin',
-            'password' => Hash::make('Jhonlin@123'),
-            'company_id' => $jb->id,
+        $role = Role::create([
+            'role_code' => 'sa',
+            'role_name' => 'Super Administrator',
+            'notes' => 'JANGAN DIEDIT MAUPUN DIHAPUS, INI ROLE PALING SAKTI'
         ]);
+
+        $user = User::create([
+            'name' => 'Super Administrator',
+            'username' => 'sa',
+            'password' => Hash::make('Jhonlin@123'),
+        ]);
+
+        $user->roles()->attach($role->id);
 
         $kam = Company::create([
             'company_code' => 'KAM',

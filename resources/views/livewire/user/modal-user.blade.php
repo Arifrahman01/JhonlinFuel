@@ -21,10 +21,10 @@
                         wire:click="closeModal">Close</button>
                 </div>
             @else
-                <form wire:submit.prevent="storeUser({{ $user->id ?? '' }})">
+                <form wire:submit.prevent="store">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modal-largeLabel">
-                            {{ $user ? 'Edit ' . $user->name ?? '' : 'Tambah User' }} </h5>
+                            {{ $statusModal }} User </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                             wire:click="closeModal" id="closeModalID"></button>
                     </div>
@@ -50,10 +50,10 @@
                             <div class="card-body row">
                                 <div class="col-6 mb-3">
                                     <label class="form-label required">Role</label>
-                                    <select wire:model.live="selectedRole" id="selectRole" class="form-select" required>
+                                    <select wire:model.live="selectedRole" id="selectRole" class="form-select">
                                         <option value="">-Select Role-</option>
                                         @foreach ($roles as $role)
-                                            <option value="{{ $role->id . '-' . $role->role_name }}">
+                                            <option value="{{ $role->id }}">
                                                 {{ $role->role_name }}</option>
                                         @endforeach
                                     </select>
@@ -61,11 +61,18 @@
                                 <div class="col-6"></div>
                                 <div class="row">
                                     <label class="form-label required">Company</label>
+                                    <div class="col-6">
+                                        <label class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" onchange="checkAll(this)"
+                                                aria-label="Select all company">
+                                            <span class="form-check-label"><strong>All</strong></span>
+                                        </label>
+                                    </div>
                                     @foreach ($companies as $company)
                                         <div class="col-6">
                                             <label class="form-check form-check-inline">
                                                 <input wire:model="selectedCompany.{{ $company->id }}"
-                                                    class="form-check-input" type="checkbox">
+                                                    class="form-check-input check-company" type="checkbox">
                                                 <span class="form-check-label">{{ $company->company_name }}</span>
                                             </label>
                                         </div>
@@ -97,10 +104,10 @@
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a>
                                                     </td>
-                                                    <td class="align-top">{{ $role_['role'] }}</td>
+                                                    <td class="align-top">{{ $role_['role_text'] }}</td>
                                                     <td class="align-top">
                                                         <ul>
-                                                            @foreach ($role_['company'] as $rCompany)
+                                                            @foreach ($role_['company_text'] as $rCompany)
                                                                 <li>
                                                                     {{ $rCompany }}
                                                                 </li>

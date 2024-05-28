@@ -63,31 +63,38 @@
                                         @foreach ($roles as $role)
                                             <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1"
                                                 aria-expanded="false">
-                                                <td class="text-center align-top">
-                                                    @if (!$role->hasDataById())
-                                                        <a id="btn-delete{{ $role->id }}" title="Delete Role"
-                                                            onclick="deleteItem({{ $role->id }})">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp;
-                                                    @endif
+                                                @if ($role->role_code == 'sa')
+                                                    <td></td>
+                                                @else
+                                                    <td class="text-center align-top">
+                                                        @if (!$role->hasDataById())
+                                                            <a id="btn-delete{{ $role->id }}" title="Delete Role"
+                                                                onclick="deleteItem({{ $role->id }})">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </a> &nbsp;
+                                                        @endif
 
-                                                    <a title="Edit Role"
-                                                        wire:click="$dispatch('openCreate', [{{ $role->id }}])"
-                                                        data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                </td>
+                                                        <a title="Edit Role"
+                                                            wire:click="$dispatch('openCreate', [{{ $role->id }}])"
+                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    </td>
+                                                @endif
                                                 <td class="align-top">{{ $role->role_code }}</td>
                                                 <td class="align-top">{{ $role->role_name }}</td>
                                                 <td class="align-top">
-                                                    <ul>
-                                                        @foreach ($role->permissions as $otorisasi)
-                                                            <li>
-                                                                {{ $otorisasi->permission_name }}
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-
+                                                    @if ($role->role_code == 'sa')
+                                                        All
+                                                    @else
+                                                        <ul>
+                                                            @foreach ($role->permissions as $otorisasi)
+                                                                <li>
+                                                                    {{ $otorisasi->permission_name }}
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
                                                 </td>
                                                 {{-- <td>{{ implode(',', data_get($role, 'permissions.*.permission_name')) }}
                                                 </td> --}}

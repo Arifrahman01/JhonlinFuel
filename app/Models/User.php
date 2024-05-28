@@ -58,18 +58,10 @@ class User extends Authenticatable
 
     public function scopeSearch($query, $filters)
     {
-        return $query->when($filters['name'], function ($query, $name) {
-            $query->where('name', 'like', '%' . $name . '%');
-        })
-            ->when($filters['email'], function ($query, $email) {
-                $query->where('email', 'like', '%' . $email . '%');
-            })
-            ->when($filters['username'], function ($query, $username) {
-                $query->where('username', 'like', '%' . $username . '%');
-            });
-        // ->when($filters['role'], function ($query, $role) {
-        //     $query->where('role_id', $role);
-        // });
+        return $query->when($filters['q'], function ($query, $q) {
+            $query->where('name', 'like', '%' . $q . '%')
+                ->orWhere('username', 'like', '%' . $q . '%');
+        });
     }
 
     public function getActivitylogOptions(): LogOptions
