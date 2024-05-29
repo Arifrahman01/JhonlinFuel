@@ -69,23 +69,23 @@
                             <div class="col-12">
                                 <div class="card">
                                     <div class="table-responsive">
-                                        <table class="table table-vcenter card-table table-striped">
+                                        <table class="table table-vcenter card-table table-striped table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th class="text-center" style="width: 5%">#</th>
-                                                    <th>Company</th>
+                                                    <th class="text-center">Company</th>
                                                     <th class="text-nowrap">Posting No</th>
-                                                    <th>Location</th>
-                                                    <th>Warehouse</th>
-                                                    <th>Type</th>
+                                                    <th class="text-center">Location</th>
+                                                    <th class="text-center">Warehouse</th>
+                                                    <th class="text-center">Type</th>
                                                     <th class="text-center">Date</th>
-                                                    <th>Fuelman</th>
-                                                    <th>Equipment</th>
-                                                    <th>Department</th>
-                                                    <th>Activity</th>
+                                                    <th class="text-center">Fuelman</th>
+                                                    <th class="text-center">Equipment</th>
+                                                    <th class="text-center">Department</th>
+                                                    <th class="text-center">Activity</th>
                                                     <th class="text-center">Fuel Type</th>
                                                     <th class="text-center">Quantity</th>
-                                                    <th>Satistic</th>
+                                                    <th class="text-center">Satistic</th>
                                                     <th class="text-center">Meter Value</th>
                                                 </tr>
                                             </thead>
@@ -97,10 +97,10 @@
                                                         <tr>
                                                             <td>{{ $idx + 1 }}</td>
                                                             <td>{{ $trans->company->company_name }}</td>
-                                                            <td>{{ $trans->posting_no }}</td>
+                                                            <td class="text-center">{{ $trans->posting_no }}</td>
                                                             <td>{{ $trans->plants->plant_name ?? '' }}</td>
                                                             <td>{{ $trans->slocs->sloc_name ?? '' }}</td>
-                                                            <td>{{ $trans->trans_type }}</td>
+                                                            <td  class="text-center">{{ $trans->trans_type }}</td>
                                                             <td class="text-center">{{ $trans->trans_date }}</td>
                                                             <td>{{ $trans->fuelmans->name }}</td>
                                                             <td>{{ $trans->equipments->equipment_description ?? '' }}</td>
@@ -108,7 +108,7 @@
                                                             <td>{{ $trans->activitys->activity_name }}</td>
                                                             <td class="text-center">{{ $trans->materials->material_description }}</td>
                                                             <td class="text-end">{{ number_format($trans->qty) }}</td>
-                                                            <td>{{ $trans->statistic_type }}</td>
+                                                            <td  class="text-center">{{ $trans->statistic_type }}</td>
                                                             <td class="text-end">{{ number_format($trans->meter_value) }}</td>
                                                         </tr>
                                                     @endforeach
@@ -130,7 +130,6 @@
             </div>
         </div>
     </div>
-    @livewire('transaction.modal-transaction')
     @push('scripts')
         <script>
             function setEndDateMax() {

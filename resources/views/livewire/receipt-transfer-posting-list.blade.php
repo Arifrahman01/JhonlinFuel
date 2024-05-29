@@ -23,9 +23,35 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="start_date"
-                                                wire:model="dateFilter" aria-label="Start Date"
-                                                placeholder="Start Date">
+                                            <input type="text" id="search" class="form-control form-control-sm" wire:model.live="q" placeholder="Posting">
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <select wire:model.live="c" id="company" class="form-select form-select-sm">
+                                                <option value="">-Select Company-</option>
+                                                @foreach ($companies as $company)
+                                                    <option value="{{ $company->company_code }}">
+                                                        {{ $company->company_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <input type="date" class="form-control form-control-sm" id="start_date" onchange="setEndDateMax()" wire:model="start_date" aria-label="Start Date"
+                                                placeholder="Start Date" value="{{ $start_date }}">
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            s/d
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <input type="date" class="form-control form-control-sm" id="end_date" wire:model="end_date" aria-label="End Date" placeholder="End Date"
+                                                value="{{ $end_date }}">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -37,6 +63,11 @@
                                     </div>
                                 </div>
                             </form>
+                            <div class="ms-2 d-inline-block">
+                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="downloadExcel({{ -1 }})">
+                                    <i class="fas fa-file-excel"></i> &nbsp; Excel
+                                </button>
+                            </div>
                         </div>
 
                         <div class="table-responsive">
@@ -69,12 +100,12 @@
                                                 <td class="text-center">{{ $rcv->posting_no }}</td>
                                                 <td class="text-center">{{ $rcv->trans_type }}</td>
                                                 <td class="text-center">{{ $rcv->trans_date }}</td>
-                                                <td class="text-center">{{ $rcv->from_company_code }}</td>
-                                                <td class="text-center">{{ $rcv->from_warehouse }}</td>
-                                                <td class="text-center">{{ $rcv->to_company_code }}</td>
-                                                <td class="text-center">{{ $rcv->to_warehouse }}</td>
-                                                <td class="text-center">{{ $rcv->transportir }}</td>
-                                                <td class="text-center">{{ $rcv->material_code }}</td>
+                                                <td class="text-left">{{ $rcv->fromCompany->company_name ?? '' }}</td>
+                                                <td class="text-left">{{ $rcv->fromWarehouse->sloc_name ?? '' }}</td>
+                                                <td class="text-left">{{ $rcv->toCompany->company_name ?? '' }}</td>
+                                                <td class="text-left">{{ $rcv->toWarehouse->sloc_name ?? '' }}</td>
+                                                <td class="text-left">{{ $rcv->equipments->equipment_description ?? '' }}</td>
+                                                <td class="text-center">{{ $rcv->materials->material_description }}</td>
                                                 <td style="text-align: right;">
                                                     {{ number_format($rcv->qty, 0, ',', '.') }}</td>
                                             </tr>
@@ -93,15 +124,39 @@
         </div>
     </div>
 
-    {{-- @push('scripts')
-        <script>
-            function checkAll(mainCheckbox) {
-                const checkboxes = document.querySelectorAll('.detailCheckbox');
-
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = mainCheckbox.checked;
-                });
+    @push('scripts')
+    <script>
+        function setEndDateMax() {
+            var startDate = document.getElementById("start_date").value;
+            var endDateField = document.getElementById("end_date");
+            if (!startDate) {
+                endDateField.removeAttribute("max");
+                return;
             }
-        </script>
-    @endpush --}}
+            var maxDate = new Date(startDate);
+            maxDate.setDate(maxDate.getDate() + 30);
+            var maxDateString = maxDate.toISOString().split('T')[0];
+            endDateField.setAttribute("max", maxDateString);
+            if (endDateField.value > maxDateString) {
+                endDateField.value = maxDateString;
+            }
+        }
+
+        async function downloadExcel(id) {
+            const isConfirmed = await sweetPosting({
+                id: id,
+                title: 'Download Report ? ',
+                textLoadong: '  loading'
+            });
+            if (isConfirmed) {
+                const search = document.getElementById('search').value;
+                const company = document.getElementById("company").value;
+                const startDate = document.getElementById("start_date").value;
+                const endDate = document.getElementById("end_date").value;
+                
+                @this.call('report', search, company, startDate, endDate);
+            }
+        }
+    </script>
+@endpush
 </div>

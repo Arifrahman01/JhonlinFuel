@@ -3,12 +3,13 @@
 namespace App\Exports;
 
 use App\Models\Issue;
+use App\Models\ReceiptTransfer;
 use App\Models\Transfer;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class TransferExport implements FromCollection, WithHeadings
+class ReceiptTransferExport implements FromCollection, WithHeadings
 {
     protected $search;
     protected $company;
@@ -28,20 +29,19 @@ class TransferExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $transfers = Transfer::search($this->search)->with(['fromCompany','toCompany','fromSloc','toSloc','materials','equipments'])
+        $rcvTransfers = ReceiptTransfer::search($this->search)->with(['fromCompany','toCompany','fromWarehouse','toWarehouse','materials','equipments'])
         ->when($this->company, function ($query, $c) {
             $query->where(function ($query) use ($c) {
                 $query->where('from_company_code', $c)
                       ->orWhere('to_company_code', $c);
             });
-        })
-        ->whereBetween('trans_date', [$this->start, $this->end])->orderBy('id','desc')->latest()->get();
+        })->whereBetween('trans_date', [$this->start, $this->end])->orderBy('id','desc')->latest()->paginate(10);
 
-        $data = $transfers->map(function ($trans) {
+        $data = $rcvTransfers->map(function ($trans) {
             return [
                 $trans->posting_no,
-                $trans->trans_date, 
                 $trans->trans_type,
+                $trans->trans_date, 
                 $trans->fromCompany->company_name ?? '' ,
                 $trans->fromSloc->sloc_name ?? '' ,
                 $trans->toCompany->company_name ?? '' ,
@@ -65,7 +65,7 @@ class TransferExport implements FromCollection, WithHeadings
             'From Sloc',
             'To Company',
             'To Sloc',
-            'Equipment',
+            'Transportir',
             'Material',
             'UOM',
             'Quantity'
