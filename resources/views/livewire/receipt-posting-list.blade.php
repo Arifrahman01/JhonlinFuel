@@ -31,7 +31,7 @@
                                             <select wire:model.live="c" id="company" class="form-select form-select-sm">
                                                 <option value="">-Select Company-</option>
                                                 @foreach ($companies as $company)
-                                                    <option value="{{ $company->company_code }}">
+                                                    <option value="{{ $company->id }}">
                                                         {{ $company->company_name }}</option>
                                                 @endforeach
                                             </select>
