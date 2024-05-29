@@ -21,24 +21,53 @@
                         <div class="card-header">
                             <form wire:submit.prevent="search">
                                 <div class="d-flex">
-                                    <div class="ms-auto">
-                                        <div class="d-inline-flex">
-                                            <input type="text" class="form-control form-control-sm me-2" wire:model="filter_search" aria-label="Search Label" placeholder="Search:Posting">
-                                            <input type="month" class="form-control form-control-sm" id="start_date" wire:model="filter_date" aria-label="Start Date" placeholder="Start Date"
-                                            value="{{ date('Y-m') }}"> &nbsp;
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <input type="text" id="search" class="form-control form-control-sm" wire:model.live="q" placeholder="Posting">
                                         </div>
                                     </div>
-                                    <div class="ms-auto">
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <select wire:model.live="c" id="company" class="form-select form-select-sm">
+                                                <option value="">-Select Company-</option>
+                                                @foreach ($companies as $company)
+                                                    <option value="{{ $company->company_code }}">
+                                                        {{ $company->company_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <input type="date" class="form-control form-control-sm" id="start_date" onchange="setEndDateMax()" wire:model="start_date" aria-label="Start Date"
+                                                placeholder="Start Date" value="{{ $start_date }}">
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            s/d
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <input type="date" class="form-control form-control-sm" id="end_date" wire:model="end_date" aria-label="End Date" placeholder="End Date"
+                                                value="{{ $end_date }}">
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             <button type="submit" class="btn btn-primary btn-sm">
                                                 <i class="fa fa-search"></i> &nbsp; Cari &nbsp;
                                             </button>
                                         </div>
-
-
                                     </div>
                                 </div>
                             </form>
+                            <div class="ms-2 d-inline-block">
+                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="downloadExcel({{ -1 }})">
+                                    <i class="fas fa-file-excel"></i> &nbsp; Excel
+                                </button>
+                            </div>
                         </div>
                         <div class="col-12">
                             <div class="card">
@@ -70,12 +99,12 @@
                                                         <td>{{ $val->posting_no }}</td>
                                                         <td>{{ $val->trans_date }}</td>
                                                         <td>{{ $val->trans_type }}</td>
-                                                        <td>{{ $val->from_company_code }}</td>
-                                                        <td>{{ $val->from_warehouse }}</td>
-                                                        <td>{{ $val->to_company_code }}</td>
-                                                        <td>{{ $val->to_warehouse }}</td>
-                                                        <td>{{ $val->transportir }}</td>
-                                                        <td>{{ $val->material_code }}</td>
+                                                        <td>{{ $val->fromCompany->company_name ?? '' }}</td>
+                                                        <td>{{ $val->fromSloc->sloc_name ?? '' }}</td>
+                                                        <td>{{ $val->toCompany->company_name ?? '' }}</td>
+                                                        <td>{{ $val->toSloc->sloc_name ?? '' }}</td>
+                                                        <td>{{ $val->equipments->equipment_description ?? ''}}</td>
+                                                        <td>{{ $val->materials->material_description ?? ''}}</td>
                                                         <td class="text-center">{{ $val->uom }}</td>
                                                         <td class="text-end">{{ number_format($val->qty) }}</td>
                                                     </tr>
@@ -159,6 +188,20 @@
                         text: "Not have data selected",
                         icon: "error"
                     });
+                }
+            }
+            async function downloadExcel(id) {
+                const isConfirmed = await sweetPosting({
+                    id: id,
+                    title: 'Download Report ? ',
+                    textLoadong: '  loading'
+                });
+                if (isConfirmed) {
+                    const search = document.getElementById('search').value;
+                    const company = document.getElementById("company").value;
+                    const startDate = document.getElementById("start_date").value;
+                    const endDate = document.getElementById("end_date").value;
+                    @this.call('report',search , company, startDate, endDate);
                 }
             }
         </script>
