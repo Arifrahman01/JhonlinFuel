@@ -29,18 +29,33 @@
                             wire:click="closeModal" id="closeModalID"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="col-4 mb-3">
-                            <label for="" class="form-label required">Adjustment Date</label>
-                            <input type="date" class="form-control" wire:model='adjDate' required>
+                        <div class="row">
+                            <div class="col-4 mb-3">
+                                <label for="" class="form-label required">Adjustment Date</label>
+                                <input type="date" class="form-control" wire:model='adjDate' required>
+                            </div>
+                            <div class="col-4 mb-3">
+                                <label class="form-label required">Company</label>
+                                <select wire:model.live="selectedCompany" class="form-select" required>
+                                    <option value="">-Select Company-</option>
+                                    @foreach ($companies as $company)
+                                        <option value="{{ $company->id }}">
+                                            {{ $company->company_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
+
                         <div class="card mb-3">
                             <div class="card-header card-header-light">
                                 <h3 class="card-title form-label required">Item</h3>
                             </div>
                             <div class="card-body row">
+
                                 <div class="col-4 mb-3">
                                     <label class="form-label required">Plant</label>
-                                    <select wire:model.live="selectedPlant" class="form-select" required>
+                                    <select wire:model.live="selectedPlant" wire:key="{{ $selectedCompany }}"
+                                        class="form-select" required>
                                         <option value="">-Select Plant-</option>
                                         @foreach ($plants as $plant)
                                             <option value="{{ $plant->id }}">
@@ -113,7 +128,7 @@
 
 
                                 <div class="table-responsive">
-                                    <table class="table table-vcenter card-table table-bordered">
+                                    <table class="table table-vcenter table-bordered">
                                         <thead>
                                             <tr>
                                                 <th class="w-1"></th>

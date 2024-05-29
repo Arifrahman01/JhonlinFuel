@@ -10,12 +10,16 @@ use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
 use App\Models\Plant;
 use App\Models\Sloc;
+use App\Models\Uom;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+
 class AdjustmentCreate extends Component
 {
     public $adjDate;
     public $plants = [];
+    public $selectedCompany;
     public $selectedPlant;
     public $slocs = [];
     public $selectedSloc;
@@ -32,17 +36,21 @@ class AdjustmentCreate extends Component
     public $isLoadingSoh = false;
     public $loading = false;
 
-    protected $listeners = ['openModal'];
-
     public function render()
     {
-        $userCompanyId = auth()->user()->company_id;
-        $this->plants = Plant::where('company_id', $userCompanyId)->get();
-        return view('livewire.adjustment.adjustment-create');
+        $companies = Company::all();
+        return view('livewire.adjustment.adjustment-create', compact('companies'));
     }
 
-    public function openModal()
+    public function updatedSelectedCompany($value)
     {
+        $this->plants = Plant::where('company_id', $value)->get();
+        $this->selectedPlant = null;
+        $this->selectedSloc = null;
+        $this->soh = 0;
+        $this->sohAdjustment = 0;
+        $this->sohAfter = 0;
+        $this->datas = [];
     }
 
     public function updatedSelectedPlant($value)
@@ -169,26 +177,35 @@ class AdjustmentCreate extends Component
             if (count($this->datas) == 0) {
                 throw new \Exception('Item tidak boleh kosong');
             }
-            $currentYear = date('Y');
-            $plant = Plant::find($this->datas[0]->plant_id);
-            $company = Company::find($plant->company_id);
-            $runningNumber = AdjustmentHeader::select(DB::raw("IFNULL(MAX(CAST(SUBSTR(adjustment_no, 1, 4) AS UNSIGNED)), 0) + 1 AS running_number"))
-                ->where('company_id', $company->id)
-                ->where(DB::raw("RIGHT(adjustment_no, 4)"), $currentYear)
-                ->value('running_number');
-            $adjustmentNo = str_pad($runningNumber, 4, '0', STR_PAD_LEFT) . '/ADJ/' . $company->company_code . '/' . $currentYear;
+
+            $company = Company::find($this->selectedCompany);
+
+            $date = new DateTime($this->adjDate);
+            $year = $date->format('Y');
+            $lastPosting = AdjustmentHeader::where('company_id', $this->selectedCompany)
+                ->max('adjustment_no');
+            $number = 0;
+            if (isset($lastPosting)) {
+                $explod = explode('/', $lastPosting);
+                if ($explod[0] == $year) {
+                    $number = $explod[2];
+                }
+            }
+            $adjustmentNo = $year . '/' . $company->company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
+
             $header = AdjustmentHeader::create([
-                'company_id' => $plant->company_id,
+                'company_id' => $this->selectedCompany,
                 'adjustment_no' => $adjustmentNo,
                 'adjustment_date' => $this->adjDate,
             ]);
 
-            $material = Material::find(1);
+            $material = Material::first();
+            $uom = Uom::first();
 
             foreach ($this->datas as $data) {
                 $detail = AdjustmentDetail::create([
                     'header_id' => $header->id,
-                    'company_id' => $plant->company_id,
+                    'company_id' => $this->selectedCompany,
                     'plant_id' => $data->plant_id,
                     'sloc_id' => $data->sloc_id,
                     'material_id' => 1,
@@ -203,26 +220,26 @@ class AdjustmentCreate extends Component
                 ]);
 
                 MaterialMovement::create([
-                    'company_id' => $plant->company_id,
+                    'company_id' => $this->selectedCompany,
                     'doc_header_id' => $header->id,
                     'doc_no' => $adjustmentNo,
                     'doc_detail_id' => $detail->id,
-                    'material_id' => 1,
+                    'material_id' => $material->id,
                     'material_code' => $material->material_code,
                     'part_no' => $material->part_no,
                     'material_mnemonic' => $material->material_mnemonic,
                     'material_description' => $material->material_description,
                     'movement_date' => $this->adjDate,
-                    'movement_type' => 'adj',
+                    'movement_type' => 'ADJ',
                     'plant_id' => $data->plant_id,
                     'sloc_id' => $data->sloc_id,
-                    'uom_id' => 1,
+                    'uom_id' => $uom->id,
                     'qty' => $data->soh_adjust,
                 ]);
 
                 $qtyUpdate = toNumber($data->soh_before) + toNumber($data->soh_adjust);
 
-                MaterialStock::where('company_id', $plant->company_id)
+                MaterialStock::where('company_id', $this->selectedCompany)
                     ->where('plant_id', $data->plant_id)
                     ->where('sloc_id', $data->sloc_id)
                     ->update([
@@ -242,7 +259,9 @@ class AdjustmentCreate extends Component
 
     public function closeModal()
     {
+        $this->adjDate = null;
         $this->plants = [];
+        $this->selectedCompany = null;
         $this->selectedPlant = null;
         $this->slocs = [];
         $this->selectedSloc = null;

@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Material\Material;
 use App\Models\ReceiptTransfer;
 use App\Models\Sloc;
+use App\Models\Uom;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -24,6 +25,7 @@ class ReceiptTransferCreate extends Component
     public $transDate;
 
     public $fromSlocs = [];
+    public $selectedFromCompany;
     public $selectedFromWarehouse;
     public $companies = [];
     public $selectedToCompany;
@@ -99,9 +101,17 @@ class ReceiptTransferCreate extends Component
     {
         $this->companies = Company::all();
         $this->materials = Material::all();
-        $userCompanyId = auth()->user()->company_id;
-        $this->fromSlocs = Sloc::all();
         return view('livewire.transaction.receipt-transfer-create');
+    }
+
+    public function updatedSelectedFromCompany($value)
+    {
+        $this->isLoadingFromWarehouse = true;
+        $companyId = Company::where('company_code', $value)
+            ->value('id');
+        $this->fromSlocs = Sloc::where('company_id', $companyId)
+            ->get();
+        $this->isLoadingFromWarehouse = false;
     }
 
     public function updatedSelectedToCompany($value)
@@ -136,9 +146,9 @@ class ReceiptTransferCreate extends Component
     public function storeData($id = null)
     {
         try {
-            $userCompanyCode = Company::find(auth()->user()->company_id)->company_code;
             $this->validate([
                 'transDate'      => 'required',
+                'selectedFromCompany'  => 'required',
                 'selectedFromWarehouse'  => 'required',
                 'selectedToCompany' => 'required',
                 'selectedToWarehouse'    => 'required',
@@ -146,18 +156,19 @@ class ReceiptTransferCreate extends Component
                 'selectedMaterial'   => 'required',
                 'qty'             => 'required|int'
             ]);
+            $uom = Uom::first();
             if ($this->rcvId) {
                 ReceiptTransfer::find($this->rcvId)
                     ->update([
                         'trans_type'    => 'RCT',
                         'trans_date'    => $this->transDate,
-                        'from_company_code' => $userCompanyCode,
+                        'from_company_code' => $this->selectedFromCompany,
                         'from_warehouse' => $this->selectedFromWarehouse,
                         'to_company_code' => $this->selectedToCompany,
                         'to_warehouse'     => $this->selectedToWarehouse,
                         'transportir'    => $this->transportir,
                         'material_code' => $this->selectedMaterial,
-                        'uom'           => 'L',
+                        'uom'           => $uom->uom_code,
                         'qty'           => $this->qty,
                     ]);
                 $this->dispatch('success', 'Data has been updated');
@@ -165,13 +176,13 @@ class ReceiptTransferCreate extends Component
                 ReceiptTransfer::create([
                     'trans_type'    => 'RCT',
                     'trans_date'    => $this->transDate,
-                    'from_company_code' => $userCompanyCode,
+                    'from_company_code' => $this->selectedFromCompany,
                     'from_warehouse' => $this->selectedFromWarehouse,
                     'to_company_code' => $this->selectedToCompany,
                     'to_warehouse'     => $this->selectedToWarehouse,
                     'transportir'    => $this->transportir,
                     'material_code' => $this->selectedMaterial,
-                    'uom'           => 'L',
+                    'uom'           => $uom->uom_code,
                     'qty'           => $this->qty,
                 ]);
                 $this->dispatch('success', 'Data has been created');
