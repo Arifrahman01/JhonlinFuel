@@ -11,6 +11,8 @@ use App\Livewire\Department\DepartmentList;
 use App\Livewire\Equipment\EquipmentList;
 use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\IssuePosting;
+use App\Livewire\Material\MaterialList;
+use App\Livewire\UOM\UOMList;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Plant\PlantList;
 use App\Livewire\ReceiptPostingList;
@@ -47,20 +49,25 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', UserList::class)->name('users.index');
     Route::get('/qouta', QuotaList::class)->name('qouta.index');
 
+    /* data transaction */
     Route::get('/receipt', ReceiptPostingList::class)->name('receipt.index');
     Route::get('/transfer', TransferPostingList::class)->name('transfer.index');
     Route::get('/receipt-transfer', ReceiptTransferPostingList::class)->name('receipt-transfer.index');
     // Route::get('/issue', PostingList::class)->name('issue.index');
     Route::get('/issue', IssuePosting::class)->name('issue.index');
+
+    /* Loadder */
     // Route::get('/loader/issue', TransactionList::class)->name('issue.loader');
     Route::get('/loader/issue', TransactionIssueList::class)->name('issue.loader');
     Route::get('/loader/transfer', TransferList::class)->name('transfer.loader');
     Route::get('/loader/receipt', ReceiptList::class)->name('received.loader');
     Route::get('/loader/receipt-transfer', ReceiptTransferList::class)->name('receipt-transfer.loader');
 
+    /* Report */
     Route::get('/soh-overview', SOHOverview::class)->name('soh.index');
     Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');
 
+    /* Master */
     Route::get('/equipment', EquipmentList::class)->name('equipment.index');
     Route::get('/activity', ActivityList::class)->name('activity.index');
     Route::get('/company', CompanyList::class)->name('company.index');
@@ -68,7 +75,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/warehouse', WarehouseList::class)->name('warehouse.index');
     Route::get('/fuelman', FuelmanList::class)->name('fuelman.index');
     Route::get('/department', DepartmentList::class)->name('department.index');
+    Route::get('/material', MaterialList::class)->name('material.index');
+    Route::get('/uom', UOMList::class)->name('uom.index');
 
+    /* Manajement User */
     Route::get('/role', RoleList::class)->name('role.index');
 
     Route::get('/', Dashboard::class)->name('home');
