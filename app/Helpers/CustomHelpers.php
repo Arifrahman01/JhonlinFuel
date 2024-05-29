@@ -2,6 +2,7 @@
 
 use App\Helpers\ApiResponse;
 use App\Models\Company;
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Response;
 
@@ -30,16 +31,39 @@ if (!function_exists('toNumber')) {
         }
     }
 }
-// if (!function_exists('allowedCompanyId')) {
-//     function allowedCompanyId()
-//     {
-//         $user = auth()->user();
-//         $roleCode = data_get($user, 'roles.*.code');
-//         $companyIds = data_get(Company::all(), '*.id');
-//         if (!in_array('sa', $roleCode)) {
-
-//             $companyIds = data_get($user, 'roles.*.pivot.companies.*.id');
-//         }
-//         return $companyIds;
-//     }
-// }
+if (!function_exists('allowedCompanyId')) {
+    function allowedCompanyId($otorisasi)
+    {
+        $user = User::find(auth()->id());
+        $roleCode = data_get($user, 'roles.*.code');
+        $companyIds = data_get(Company::all(), '*.id');
+        if (!in_array('sa', $roleCode)) {
+            $companyIds = [];
+            foreach ($user->roles as $role) {
+                if (in_array($otorisasi, data_get($role, 'permissions.*.permission_code'))) {
+                    $companyIds = data_get($role, 'pivot.companies.*.id');
+                    break;
+                }
+            }
+        }
+        return $companyIds;
+    }
+}
+if (!function_exists('allowedCompanyCode')) {
+    function allowedCompanyCode($otorisasi)
+    {
+        $user = User::with(['roles'])->find(auth()->id());
+        $roleCode = data_get($user, 'roles.*.code');
+        $companyCodes = data_get(Company::all(), '*.company_code');
+        if (!in_array('sa', $roleCode)) {
+            $companyCodes = [];
+            foreach ($user->roles as $role) {
+                if (in_array($otorisasi, data_get($role, 'permissions.*.permission_code'))) {
+                    $companyCodes = data_get($role, 'pivot.companies.*.company_code');
+                    break;
+                }
+            }
+        }
+        return $companyCodes;
+    }
+}

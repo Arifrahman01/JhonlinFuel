@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'user_roles')->using(UserRole::class)->withPivot('id');
     }
 
+    public function isSuperAdmin(): bool
+    {
+        return in_array('sa', data_get($this, 'roles.*.role_code'));
+    }
+
     public function scopeSearch($query, $filters)
     {
         return $query->when($filters['q'], function ($query, $q) {
