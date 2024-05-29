@@ -53,7 +53,7 @@
                                         {{-- <th class="text-center" style="width: 5%">Action</th> --}}
                                         <th class="text-center">Company</th>
                                         <th class="text-center">Adj. Date</th>
-                                        <th class="text-center" colspan="4">Adj. No</th>
+                                        <th colspan="4">Adj. No</th>
                                         {{-- <th class="text-center">Origin Qty</th>
                                         <th class="text-center">Adjust Qty</th>
                                         <th class="text-center">Qty After</th>
