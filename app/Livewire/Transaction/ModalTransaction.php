@@ -137,8 +137,8 @@ class ModalTransaction extends Component
     }
     public function updatedSelectedlocation($value)
     {
-        $this->slocs = Sloc::where('plant_id', Plant::where('plant_id', $value)->value('id'))->get();
-        $this->fuelmans = Fuelman::where('plant_id', Plant::where('plant_id', $value)->value('id'))->get();
+        $this->slocs = Sloc::where('plant_id', Plant::where('plant_code', $value)->value('id'))->get();
+        $this->fuelmans = Fuelman::where('plant_id', Plant::where('plant_code', $value)->value('id'))->get();
     }
 
     public function render()
