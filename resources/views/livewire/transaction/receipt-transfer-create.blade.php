@@ -57,11 +57,22 @@
                         </div>
                         <div class="modal-body">
                             <div class="row row-cards">
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label for="" class="form-label required">Trans Date</label>
                                     <input type="date" class="form-control" wire:model='transDate' required>
                                 </div>
-                                <div class="col-3">
+
+
+                                <div class="col-4">
+                                    <label class="form-label required">From Company</label>
+                                    <select wire:model.live="selectedFromCompany" class="form-select" required>
+                                        <option value="">-Select Company-</option>
+                                        @foreach ($companies as $comp)
+                                            <option value="{{ $comp->company_code }}">{{ $comp->company_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-4">
                                     <label class="form-label required">From Warehouse</label>
                                     @if ($isLoadingFromWarehouse)
                                         <div class="input-icon mb-3">
@@ -73,7 +84,8 @@
                                             </span>
                                         </div>
                                     @else
-                                        <select wire:model.live="selectedFromWarehouse" class="form-select" required>
+                                        <select wire:model.live="selectedFromWarehouse"
+                                            wire:key="{{ $selectedFromCompany }}" class="form-select" required>
                                             <option value="">-Select Warehouse-</option>
                                             @foreach ($fromSlocs as $fromSloc)
                                                 <option value="{{ $fromSloc->sloc_code }}">
@@ -82,16 +94,17 @@
                                         </select>
                                     @endif
                                 </div>
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="form-label required">To Company</label>
                                     <select wire:model.live="selectedToCompany" class="form-select" required>
                                         <option value="">-Select Company-</option>
                                         @foreach ($companies as $comp)
-                                            <option value="{{ $comp->company_code }}">{{ $comp->company_name }}</option>
+                                            <option value="{{ $comp->company_code }}">{{ $comp->company_name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="form-label required">To Warehouse</label>
                                     @if ($isLoadingToWarehouse)
                                         <div class="input-icon mb-3">
@@ -114,24 +127,26 @@
                                         </select>
                                     @endif
                                 </div>
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="form-label required">Transportir</label>
-                                    <input type="text" class="form-control" wire:model="transportir" required>
+                                    <input type="text" class="form-control" wire:model="transportir"
+                                        placeholder="Transportir" required>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="form-label required">Material</label>
                                     <select wire:model="selectedMaterial" class="form-select" required>
                                         <option value="">-Select Material-</option>
                                         @foreach ($materials as $material)
                                             <option value="{{ $material->material_code }}">
-                                                {{ $material->material_code . ' - ' . $material->material_description }}
+                                                {{ $material->material_description }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-4">
                                     <label class="form-label required">Qty</label>
-                                    <input type="number" wire:model="qty" class="form-control" required>
+                                    <input type="number" wire:model="qty" class="form-control" placeholder="Qty"
+                                        required>
                                 </div>
                             </div>
                         </div>

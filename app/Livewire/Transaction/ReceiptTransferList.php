@@ -11,6 +11,7 @@ use App\Models\Plant;
 use App\Models\Receipt;
 use App\Models\ReceiptTransfer;
 use App\Models\Sloc;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -23,14 +24,14 @@ class ReceiptTransferList extends Component
     protected $listeners = ['refreshPage'];
     public function render()
     {
-        $userCompanyCode = Company::find(auth()->user()->company_id)->company_code;
+        // $userCompanyCode = Company::find(auth()->user()->company_id)->company_code;
         $rcvTransfers = ReceiptTransfer::with([
             'fromCompany',
             'toCompany',
             'fromWarehouse',
             'toWarehouse',
         ])
-            ->where('from_company_code', $userCompanyCode)
+            // ->where('from_company_code', $userCompanyCode)
             ->whereNull('posting_no')
             // if (!isset($this->adjDate)) {
             //     throw new \Exception('Adjustment Date tidak boleh kosong');
@@ -38,6 +39,7 @@ class ReceiptTransferList extends Component
             ->when($this->dateFilter, function ($query, $dateFilter) {
                 $query->where('trans_date', $dateFilter);
             })
+            ->latest()
             ->paginate(10);
 
         return view('livewire.transaction.receipt-transfer-list', compact('rcvTransfers'));
@@ -124,30 +126,23 @@ class ReceiptTransferList extends Component
         DB::beginTransaction();
         try {
             foreach ($ids as $id) {
-                $lastPosting = ReceiptTransfer::max('posting_no');
+                $receiptTransfer = ReceiptTransfer::findOrFail($id);
+                $date = new DateTime($this->adjDate);
+                $year = $date->format('Y');
+                $lastPosting = ReceiptTransfer::where('company_code', $receiptTransfer->company_code)
+                    ->max('posting_no');
                 $number = 0;
                 if (isset($lastPosting)) {
                     $explod = explode('/', $lastPosting);
-                    if ($explod[1] == date('Y')) {
-                        $number = $explod[0];
+                    if ($explod[0] == $year) {
+                        $number = $explod[2];
                     }
                 }
+                $newPostingNumber = $year . '/' . $receiptTransfer->company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
 
-                $receiptTransfer = ReceiptTransfer::findOrFail($id);
-                // dd($receiptTransfer);
-                $newPostingNumber = str_pad($number + 1, 6, '0', STR_PAD_LEFT) . '/' . $receiptTransfer->value('to_company_code') . '/' . date('Y');
                 $receiptTransfer->update([
                     'posting_no' => $newPostingNumber,
                 ]);
-
-                // $fromWarehouse = MaterialStock::where('sloc_id', Sloc::where('sloc_code', $receiptTransfer->value('from_warehouse'))
-                //     ->value('id'));
-                // $qtySoh = $fromWarehouse->value('qty_soh');
-                // $qtyIntransit = $fromWarehouse->value('qty_intransit');
-                // $fromWarehouse->update([
-                //     'qty_soh' => $qtySoh - $receiptTransfer->value('qty'),
-                //     'qty_intransit' => $qtyIntransit + $receiptTransfer->value('qty'),
-                // ]);
 
                 $stokFrom = MaterialStock::where('sloc_id', Sloc::where('sloc_code', $receiptTransfer->from_warehouse)->value('id'));
 
