@@ -30,3 +30,16 @@ if (!function_exists('toNumber')) {
         }
     }
 }
+// if (!function_exists('allowedCompanyId')) {
+//     function allowedCompanyId()
+//     {
+//         $user = auth()->user();
+//         $roleCode = data_get($user, 'roles.*.code');
+//         $companyIds = data_get(Company::all(), '*.id');
+//         if (!in_array('sa', $roleCode)) {
+
+//             $companyIds = data_get($user, 'roles.*.pivot.companies.*.id');
+//         }
+//         return $companyIds;
+//     }
+// }

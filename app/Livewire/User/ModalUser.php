@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class ModalUser extends Component
@@ -21,10 +22,11 @@ class ModalUser extends Component
     public $username;
     public $selectedRole;
     public $selectedCompany = [];
+    public $allCompany;
 
     public $roles_ = [];
 
-    protected $listeners = ['openModal'];
+    protected $listeners = ['openModal', 'toggleAllCompanies'];
 
     // public function mount()
     // {
@@ -53,8 +55,8 @@ class ModalUser extends Component
                 $this->roles_[] = [
                     'role_value' => $role->id,
                     'role_text' => $role->role_name,
-                    'company_value' => $role->pivot->companies,
-                    'company_text' => '',
+                    'company_value' => data_get($role, 'pivot.companies.*.id'),
+                    'company_text' => data_get($role, 'pivot.companies.*.company_name'),
                 ];
             }
         } else {
@@ -120,33 +122,77 @@ class ModalUser extends Component
         }
     }
 
+    public function updatedAllCompany($value)
+    {
+        $this->selectedCompany = [];
+        if ($value) {
+            foreach ($this->companiesTmp as $record) {
+                $this->selectedCompany[$record['id']] = true;
+            }
+        }
+    }
+
+    public function updatedSelectedCompany()
+    {
+        $this->allCompany = count($this->selectedCompany) == count($this->companiesTmp);
+    }
+
     public function store()
     {
         DB::beginTransaction();
         try {
-            // $this->validate([
-            //     'name' => 'required|string',
-            //     'email' => 'required|email',
-            // ]);
+
             if ($this->userId) {
-                $user = User::find($this->userId);
-                $user->update([
-                    'name' => $this->name,
-                    'email' => $this->email,
-                    'username' => $this->username,
-                    'role_id' => $this->role,
-                ]);
-                $this->dispatch('success', 'Data has been updated');
-            } else {
                 $this->validate([
                     'name' => 'required|string',
-                    'username' => 'required|string|unique:users',
+                    'username' => [
+                        'required',
+                        Rule::unique('users')
+                            ->ignore($this->userId)
+                            ->whereNull('deleted_at'),
+                    ],
                     'roles_' => 'required|array',
                 ], [
                     'name.required' => 'Name harus diisi',
                     'username.required' => 'Username harus diisi',
+                    'username.unique' => 'Username tidak boleh sama',
                     'roles_.required' => 'Role belum ditambahkan',
                 ]);
+                $user = User::find($this->userId);
+                $user->update([
+                    'name' => $this->name,
+                    'username' => $this->username,
+                ]);
+                $roleIds = array_map(function ($entry) {
+                    return $entry['role_value'];
+                }, $this->roles_);
+
+                $user->roles()->sync($roleIds);
+
+                foreach ($user->roles as $role) {
+                    foreach ($this->roles_ as $entry) {
+                        if ($entry['role_value'] == $role->id) {
+                            $role->pivot->companies()->sync($entry['company_value']);
+                        }
+                    }
+                }
+                $this->dispatch('success', 'Data has been updated');
+            } else {
+                $this->validate([
+                    'name' => 'required|string',
+                    'username' => [
+                        'required',
+                        Rule::unique('users')
+                            ->whereNull('deleted_at'),
+                    ],
+                    'roles_' => 'required|array',
+                ], [
+                    'name.required' => 'Name harus diisi',
+                    'username.required' => 'Username harus diisi',
+                    'username.unique' => 'Username tidak boleh sama',
+                    'roles_.required' => 'Role belum ditambahkan',
+                ]);
+
                 $user = User::create([
                     'name' => $this->name,
                     'username' => $this->username,
@@ -176,5 +222,11 @@ class ModalUser extends Component
             DB::rollBack();
             $this->dispatch('error', $th->getMessage());
         }
+    }
+
+    public function deleteItem($index)
+    {
+        unset($this->roles_[$index]);
+        $this->roles_ = array_values($this->roles_);
     }
 }

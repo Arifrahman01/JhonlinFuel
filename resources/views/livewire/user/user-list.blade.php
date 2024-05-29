@@ -194,14 +194,6 @@
     @livewire('user.modal-user')
     @push('scripts')
         <script>
-            function checkAll(mainCheckbox) {
-                const checkboxes = document.querySelectorAll('.check-company');
-
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = mainCheckbox.checked;
-                });
-            }
-
             async function deleteItem(id) {
                 const isConfirmed = await sweetDeleted({
                     id: id
