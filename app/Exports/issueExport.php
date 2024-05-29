@@ -56,8 +56,8 @@ class IssueExport implements FromCollection, WithHeadings
         return [
             'Company',
             'Posting',
-            'plant',
-            'sloc',
+            'Location',
+            'Warehouse',
             'Type',
             'Date',
             'Fuelman',

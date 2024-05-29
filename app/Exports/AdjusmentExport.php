@@ -64,8 +64,8 @@ class AdjusmentExport implements FromCollection, WithHeadings
             'Company',
             'Date',
             'Adjustment No',
-            'plant',
-            'sloc',
+            'Location',
+            'Warehouse',
             'Origin Quantity',
             'Adjus Quantity',
             'Quantity After'
