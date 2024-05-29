@@ -49,9 +49,10 @@
                             </form>
                         </div>
                         <div class="table-responsive">
-                            <table id="treegrid" role="treegrid" class="table table-sm table-striped" style="width: 100%" <colgroup>
-                                <col id="treegrid-col1">
-                                <col id="treegrid-col2">
+                            <table id="treegrid" role="treegrid" class="table table-sm table-striped table-bordered"
+                                <colgroup>
+                                    <col id="treegrid-col1">
+                                    <col id="treegrid-col2">
                                 </colgroup>
                                 <thead>
                                     <tr>
