@@ -13,6 +13,14 @@ class Company extends BaseModel
 {
     protected $table = 'companies';
 
+    // public function scopeAllowed($query)
+    // {
+    //     if (in_array('sa', data_get(auth()->user(), 'roles.*.code'))) {
+    //         return $query;
+    //     }
+    //     return $query->whereIn('id', allowedCompanyId());
+    // }
+
     public function hasDataById(): bool
     {
         if (Activity::where('company_id', $this->id)->exists()) {
@@ -38,7 +46,7 @@ class Company extends BaseModel
         }
         $materialStock = MaterialStock::where('company_id', $this->id)
             ->first();
-        if  ($materialStock && ($materialStock->qty_soh > 0 || $materialStock->qty_intransit > 0)) {
+        if ($materialStock && ($materialStock->qty_soh > 0 || $materialStock->qty_intransit > 0)) {
             return true;
         }
         if (Transaction::where('company_id', $this->id)->exists()) {

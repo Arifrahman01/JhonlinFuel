@@ -63,16 +63,17 @@
                                     <label class="form-label required">Company</label>
                                     <div class="col-6">
                                         <label class="form-check form-check-inline">
-                                            <input class="form-check-input" type="checkbox" onchange="checkAll(this)"
-                                                aria-label="Select all company">
+                                            <input class="form-check-input" type="checkbox"
+                                                aria-label="Select all company" wire:model.live="allCompany">
                                             <span class="form-check-label"><strong>All</strong></span>
                                         </label>
                                     </div>
                                     @foreach ($companies as $company)
                                         <div class="col-6">
                                             <label class="form-check form-check-inline">
-                                                <input wire:model="selectedCompany.{{ $company->id }}"
-                                                    class="form-check-input check-company" type="checkbox">
+                                                <input wire:model.live="selectedCompany.{{ $company->id }}"
+                                                    class="form-check-input check-company" type="checkbox"
+                                                    value="{{ $company->id }}">
                                                 <span class="form-check-label">{{ $company->company_name }}</span>
                                             </label>
                                         </div>
@@ -96,7 +97,6 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($roles_ as $role_)
-                                                {{-- {{ dd($role_) }} --}}
                                                 <tr>
                                                     <td class="align-top">
                                                         <a title="Delete Item"
