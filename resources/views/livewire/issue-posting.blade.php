@@ -75,10 +75,10 @@
                                                     <th class="text-center" style="width: 5%">#</th>
                                                     <th class="text-center">Company</th>
                                                     <th class="text-nowrap">Posting No</th>
+                                                    <th class="text-center">Date</th>
                                                     <th class="text-center">Location</th>
                                                     <th class="text-center">Warehouse</th>
                                                     <th class="text-center">Type</th>
-                                                    <th class="text-center">Date</th>
                                                     <th class="text-center">Fuelman</th>
                                                     <th class="text-center">Equipment</th>
                                                     <th class="text-center">Department</th>
@@ -98,10 +98,10 @@
                                                             <td>{{ $idx + 1 }}</td>
                                                             <td>{{ $trans->company->company_name }}</td>
                                                             <td class="text-center">{{ $trans->posting_no }}</td>
+                                                            <td class="text-center">{{ $trans->trans_date }}</td>
                                                             <td>{{ $trans->plants->plant_name ?? '' }}</td>
                                                             <td>{{ $trans->slocs->sloc_name ?? '' }}</td>
                                                             <td  class="text-center">{{ $trans->trans_type }}</td>
-                                                            <td class="text-center">{{ $trans->trans_date }}</td>
                                                             <td>{{ $trans->fuelmans->name }}</td>
                                                             <td>{{ $trans->equipments->equipment_description ?? '' }}</td>
                                                             <td>{{ $trans->departments->department_name ?? '' }}</td>
