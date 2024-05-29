@@ -29,21 +29,54 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="text" class="form-control form-control-sm"
+                                            <input type="text" id="search" class="form-control form-control-sm"
                                                 aria-label="Adjustment No" placeholder="Adjustment No"
                                                 wire:model="adjNo">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
+                                            <select wire:model.live="c" id="company" class="form-select form-select-sm">
+                                                <option value="">-Select Company-</option>
+                                                @foreach ($companies as $company)
+                                                    <option value="{{ $company->company_code }}">
+                                                        {{ $company->company_name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <input type="date" class="form-control form-control-sm" id="start_date" wire:model="start_date" aria-label="Start Date"
+                                                placeholder="Start Date" value="{{ $start_date }}">
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            s/d
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <input type="date" class="form-control form-control-sm" id="end_date" wire:model="end_date" aria-label="End Date" placeholder="End Date"
+                                                value="{{ $end_date }}">
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
                                             <button type="submit" class="btn btn-primary btn-sm">
-                                                &nbsp; Cari &nbsp;
+                                                &nbsp; <i class="fa fa-search"></i>   &nbsp;  Cari &nbsp;
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
                             </form>
+                            <div class="ms-2 d-inline-block">
+                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="downloadExcel({{ -1 }})">
+                                    <i class="fas fa-file-excel"></i> &nbsp; Excel
+                                </button>
+                            </div>
                         </div>
                         <div class="table-responsive">
                             <table id="treegrid" class="table table-vcenter card-table table-striped table-bordered">
@@ -125,22 +158,20 @@
                 });
             });
 
-            // async function deleteItem(id) {
-            //     const isConfirmed = await sweetDeleted({
-            //         id: id
-            //     });
-            //     if (isConfirmed) {
-            //         @this.call('delete', id);
-            //     }
-            // }
-            // async function resetPassword(id) {
-            //     const isConfirmed = await sweetReset({
-            //         id: id
-            //     });
-            //     if (isConfirmed) {
-            //         @this.call('reset_password', id);
-            //     }
-            // }
+            async function downloadExcel(id) {
+                const isConfirmed = await sweetPosting({
+                    id: id,
+                    title: 'Download Report ? ',
+                    textLoadong: '  loading'
+                });
+                if (isConfirmed) {
+                    const search = document.getElementById('search').value;
+                    const company = document.getElementById("company").value;
+                    const startDate = document.getElementById("start_date").value;
+                    const endDate = document.getElementById("end_date").value;
+                    @this.call('report', search, company, startDate, endDate);
+                }
+            }
         </script>
     @endpush
 </div>
