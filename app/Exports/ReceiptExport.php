@@ -3,12 +3,14 @@
 namespace App\Exports;
 
 use App\Models\Issue;
+use App\Models\Receipt;
+use App\Models\ReceiptTransfer;
 use App\Models\Transfer;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 
-class TransferExport implements FromCollection, WithHeadings
+class ReceiptExport implements FromCollection, WithHeadings
 {
     protected $search;
     protected $company;
@@ -28,28 +30,25 @@ class TransferExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $transfers = Transfer::search($this->search)->with(['fromCompany','toCompany','fromSloc','toSloc','materials','equipments'])
-        ->when($this->company, function ($query, $c) {
-            $query->where(function ($query) use ($c) {
-                $query->where('from_company_code', $c)
-                      ->orWhere('to_company_code', $c);
-            });
-        })
-        ->whereBetween('trans_date', [$this->start, $this->end])->orderBy('id','desc')->latest()->get();
+        $receipts = Receipt::search($this->search)->with(['company','plants','slocs','materials','equipments'])
+        ->when($this->company, fn ($query, $c) => $query->where('company_code', $c))
+        ->whereNotNull('posting_no')
+        ->whereBetween('trans_date', [$this->start, $this->end])->latest()->get();
 
-        $data = $transfers->map(function ($trans) {
+        $data = $receipts->map(function ($rcv) {
             return [
-                $trans->posting_no,
-                $trans->trans_date, 
-                $trans->trans_type,
-                $trans->fromCompany->company_name ?? '' ,
-                $trans->fromSloc->sloc_name ?? '' ,
-                $trans->toCompany->company_name ?? '' ,
-                $trans->toSloc->sloc_name ?? '' ,
-                $trans->equipments->equipment_description ?? '',
-                $trans->materials->material_description ?? '',
-                $trans->uom,
-                $trans->qty
+                $rcv->posting_no ,
+                $rcv->company->company_name ?? '' ,
+                $rcv->trans_type ,
+                $rcv->trans_date ,
+                $rcv->po_no ,
+                $rcv->do_no ,
+                $rcv->plants->plant_name ?? '' ,
+                $rcv->slocs->sloc_name ?? '' ,
+                $rcv->equipments->equipment_description ,
+                $rcv->materials->material_description ,
+                $rcv->uom ,
+                $rcv->qty,
             ];
         });
 
@@ -59,13 +58,14 @@ class TransferExport implements FromCollection, WithHeadings
     {
         return [
             'Posting',
-            'Date',
+            'Company',
             'Type',
-            'From Company',
-            'From Sloc',
-            'To Company',
-            'To Sloc',
-            'Equipment',
+            'Date',
+            'PO',
+            'DO',
+            'Location',
+            'Warehouse',
+            'Transportir',
             'Material',
             'UOM',
             'Quantity'

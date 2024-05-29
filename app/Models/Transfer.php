@@ -18,22 +18,27 @@ class Transfer extends BaseModel
     {
         return $this->belongsTo(Company::class, 'from_company_code', 'company_code');
     }
+    
     public function toCompany()
     {
         return $this->belongsTo(Company::class, 'to_company_code', 'company_code');
     }
+
     public function fromSloc()
     {
         return $this->belongsTo(Sloc::class, 'from_warehouse', 'sloc_code');
     }
+
     public function toSloc()
     {
         return $this->belongsTo(Sloc::class, 'to_warehouse', 'sloc_code');
     }
+
     public function equipments()
     {
         return $this->belongsTo(Equipment::class, 'transportir', 'equipment_no');
     }
+
     public function materials()
     {
         return $this->belongsTo(Material::class, 'material_code', 'material_code');
