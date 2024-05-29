@@ -32,38 +32,40 @@ if (!function_exists('toNumber')) {
     }
 }
 if (!function_exists('allowedCompanyId')) {
-    function allowedCompanyId($otorisasi)
+    function allowedCompanyId($otorisasi): array
     {
-        $user = User::find(auth()->id());
+        $user = User::with('roles.permissions')->find(auth()->id());
         $roleCode = data_get($user, 'roles.*.code');
-        $companyIds = data_get(Company::all(), '*.id');
-        if (!in_array('sa', $roleCode)) {
-            $companyIds = [];
-            foreach ($user->roles as $role) {
-                if (in_array($otorisasi, data_get($role, 'permissions.*.permission_code'))) {
-                    $companyIds = data_get($role, 'pivot.companies.*.id');
-                    break;
-                }
+
+        if (in_array('sa', $roleCode)) {
+            return data_get(Company::all(), '*.id');
+        }
+
+        foreach ($user->roles as $role) {
+            if (in_array($otorisasi, data_get($role, 'permissions.*.permission_code'))) {
+                return data_get($role, 'pivot.companies.*.id');
             }
         }
-        return $companyIds;
+
+        return [];
     }
 }
 if (!function_exists('allowedCompanyCode')) {
-    function allowedCompanyCode($otorisasi)
+    function allowedCompanyCode($otorisasi): array
     {
-        $user = User::with(['roles'])->find(auth()->id());
+        $user = User::with('roles.permissions')->find(auth()->id());
         $roleCode = data_get($user, 'roles.*.code');
-        $companyCodes = data_get(Company::all(), '*.company_code');
-        if (!in_array('sa', $roleCode)) {
-            $companyCodes = [];
-            foreach ($user->roles as $role) {
-                if (in_array($otorisasi, data_get($role, 'permissions.*.permission_code'))) {
-                    $companyCodes = data_get($role, 'pivot.companies.*.company_code');
-                    break;
-                }
+
+        if (in_array('sa', $roleCode)) {
+            return data_get(Company::all(), '*.company_code');
+        }
+
+        foreach ($user->roles as $role) {
+            if (in_array($otorisasi, data_get($role, 'permissions.*.permission_code'))) {
+                return data_get($role, 'pivot.companies.*.company_code');
             }
         }
-        return $companyCodes;
+
+        return [];
     }
 }
