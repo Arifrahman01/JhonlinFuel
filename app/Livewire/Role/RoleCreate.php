@@ -66,6 +66,9 @@ class RoleCreate extends Component
                     ],
                     'roleName' => 'required',
                 ]);
+                if (!in_array(true, $this->otorisasi, true)) {
+                    throw new \Exception('Otorisasi harus dipilih');
+                }
                 $role = Role::find($this->roleId);
                 $role->update([
                     'role_code' => $this->roleCode,
@@ -86,6 +89,9 @@ class RoleCreate extends Component
                     ],
                     'roleName' => 'required',
                 ]);
+                if (!in_array(true, $this->otorisasi, true)) {
+                    throw new \Exception('Otorisasi harus dipilih');
+                }
                 $role = Role::create([
                     'role_code' => $this->roleCode,
                     'role_name' => $this->roleName,
