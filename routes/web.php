@@ -10,6 +10,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\Department\DepartmentList;
 use App\Livewire\Equipment\EquipmentList;
 use App\Livewire\Fuelman\FuelmanList;
+use App\Livewire\IssuePosting;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Plant\PlantList;
 use App\Livewire\ReceiptPostingList;
@@ -49,7 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/receipt', ReceiptPostingList::class)->name('receipt.index');
     Route::get('/transfer', TransferPostingList::class)->name('transfer.index');
     Route::get('/receipt-transfer', ReceiptTransferPostingList::class)->name('receipt-transfer.index');
-    Route::get('/issue', PostingList::class)->name('issue.index');
+    // Route::get('/issue', PostingList::class)->name('issue.index');
+    Route::get('/issue', IssuePosting::class)->name('issue.index');
     // Route::get('/loader/issue', TransactionList::class)->name('issue.loader');
     Route::get('/loader/issue', TransactionIssueList::class)->name('issue.loader');
     Route::get('/loader/transfer', TransferList::class)->name('transfer.loader');

@@ -4,10 +4,15 @@ namespace App\Livewire;
 
 use App\Models\Receipt;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ReceiptPostingList extends Component
 {
+    use WithPagination;
     public $dateFilter;
+
+    protected $paginationTheme = 'bootstrap';
+    
     public function render()
     {
         $receipts = Receipt::whereNotNull('posting_no')

@@ -2,8 +2,8 @@
 
 namespace App\Exports;
 
+use App\Models\Issue;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use App\Models\Transaction\Transaction;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Events\AfterSheet;
 
@@ -25,23 +25,27 @@ class IssueExport implements FromCollection, WithHeadings
      */
     public function collection()
     {
-        $transactions = Transaction::with('company')->when($this->company, fn ($query, $c) => $query->where('company_id', $c))
-            ->whereBetween('trans_date', [$this->start, $this->end])->latest()->get();
+        $issues = Issue::with(['company','departments','fuelmans','plants','slocs','equipments','activitys','materials'])->whereBetween('trans_date', [$this->start, $this->end])
+        ->when($this->company, fn ($query, $c) => $query->where('company_code', $c))
+        ->whereNotNull('posting_no')
+        ->latest()->get();
 
-        $data = $transactions->map(function ($transaction) {
+        $data = $issues->map(function ($issue) {
             return [
-                $transaction->company->company_name,
-                $transaction->posting_no,
-                $transaction->trans_type,
-                $transaction->fuelman_name,
-                $transaction->equipment_no,
-                $transaction->location_name,
-                $transaction->department,
-                $transaction->activity_name,
-                $transaction->fuel_type,
-                $transaction->qty,
-                $transaction->statistic_type,
-                $transaction->meter_value,
+                $issue->company->company_name ?? '',
+                $issue->posting_no,
+                $issue->plants->plant_name ?? '',
+                $issue->slocs->sloc_name ?? '' ,
+                $issue->trans_type,
+                $issue->trans_date,
+                $issue->fuelmans->name ?? '',
+                $issue->equipments->equipment_description ?? '',
+                $issue->departments->department_name,
+                $issue->activitys->activity_name ?? '',
+                $issue->materials->material_description ?? '',
+                $issue->qty,
+                $issue->statistic_type,
+                $issue->meter_value,
             ];
         });
 
@@ -52,13 +56,15 @@ class IssueExport implements FromCollection, WithHeadings
         return [
             'Company',
             'Posting',
+            'plant',
+            'sloc',
             'Type',
+            'Date',
             'Fuelman',
             'Equipment',
-            'Plant',
             'Department',
             'Activity',
-            'Fuel Type',
+            'Material',
             'Quantity',
             'Statistic',
             'Meter Value',
