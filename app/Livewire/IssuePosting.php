@@ -46,4 +46,8 @@ class IssuePosting extends Component
         }
        
     }
+    public function search()
+    {
+        $this->resetPage();
+    }
 }
