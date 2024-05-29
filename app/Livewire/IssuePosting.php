@@ -16,7 +16,7 @@ class IssuePosting extends Component
     public $start_date;
     public $end_date;
     public $companies = [];
-    public $c;
+    public $c , $q;
 
     public function mount()
     {
@@ -45,5 +45,9 @@ class IssuePosting extends Component
             $this->dispatch('error', $th->getMessage());
         }
        
+    }
+    public function search()
+    {
+        $this->resetPage();
     }
 }
