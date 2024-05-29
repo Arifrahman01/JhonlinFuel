@@ -205,7 +205,7 @@
                     </div>
                 </li>
                 <li
-                    class="nav-item dropdown {{ request()->is('company') || request()->is('plant') || request()->is('warehouse') || request()->is('fuelman') || request()->is('department') ? 'active' : '' }}">
+                    class="nav-item dropdown {{ request()->is('company') || request()->is('plant') || request()->is('warehouse') || request()->is('fuelman') || request()->is('department') || request()->is('equipment') || request()->is('material') || request()->is('uom') ? 'active' : '' }}">
                     <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown"
                         data-bs-auto-close="outside" role="button" aria-expanded="false">
                         <span
@@ -253,10 +253,12 @@
                                     href="{{ route('equipment.index') }}">
                                     Equipment
                                 </a>
-                                <a class="dropdown-item" href="">
+                                <a class="dropdown-item {{ request()->is('material') ? 'active' : '' }}"
+                                    href="{{ route('material.index') }}">
                                     Material
                                 </a>
-                                <a class="dropdown-item" href="">
+                                <a class="dropdown-item {{ request()->is('uom') ? 'active' : '' }}"
+                                    href="{{ route('uom.index') }}">
                                     Unit Of Measure
                                 </a>
                             </div>

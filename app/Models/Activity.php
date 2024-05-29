@@ -25,4 +25,15 @@ class Activity extends BaseModel
         }
         return false;
     }
+
+    public function scopeSearch($query, $filters)
+    {
+        return $query->when($filters, function ($query, $value) {
+            $query->where(function ($query) use ($value) {
+                $query->where('activity_code', 'like', '%' . $value . '%')
+                      ->orWhere('activity_name', 'like', '%' . $value . '%')
+                      ->orWhere('notes', 'like', '%' . $value . '%');
+            });
+        });
+    }
 }

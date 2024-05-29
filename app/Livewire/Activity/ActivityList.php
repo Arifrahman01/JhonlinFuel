@@ -17,11 +17,7 @@ class ActivityList extends Component
     public function render()
     {
         $companies = Company::all();
-        $activitys = Activity::with(['company'])
-        ->when($this->c, fn ($query, $c) => $query->where('company_id', $c))
-        ->when($this->q, fn ($query, $q) => $query->where(fn ($query) =>
-        $query->where('activity_code', 'like', '%' . $q . '%')
-            ->orWhere('activity_name', 'like', '%' . $q . '%')))
+        $activitys = Activity::with(['company'])->search($this->q)
         ->latest()
         ->paginate(10);
         return view('livewire.activity.activity-list', ['activitys' => $activitys,'companies' => $companies]);
