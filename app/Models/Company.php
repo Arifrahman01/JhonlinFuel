@@ -49,9 +49,9 @@ class Company extends BaseModel
         if ($materialStock && ($materialStock->qty_soh > 0 || $materialStock->qty_intransit > 0)) {
             return true;
         }
-        if (Transaction::where('company_id', $this->id)->exists()) {
-            return true;
-        }
+        // if (Transaction::where('company_id', $this->id)->exists()) {
+        //     return true;
+        // }
         if (Plant::where('company_id', $this->id)->exists()) {
             return true;
         }
@@ -80,9 +80,9 @@ class Company extends BaseModel
         ) {
             return true;
         }
-        if (TmpTransaction::where('company_code', $this->company_code)->exists()) {
-            return true;
-        }
+        // if (TmpTransaction::where('company_code', $this->company_code)->exists()) {
+        //     return true;
+        // }
         return false;
     }
 }

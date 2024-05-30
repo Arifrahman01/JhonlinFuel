@@ -27,12 +27,12 @@ class Department extends BaseModel
 
     public function hasDataByCode(): bool
     {
-        if (TmpTransaction::where('department', $this->department_code)->exists()) {
-            return true;
-        }
-        if (Transaction::where('department', $this->department_code)->exists()) {
-            return true;
-        }
+        // if (TmpTransaction::where('department', $this->department_code)->exists()) {
+        //     return true;
+        // }
+        // if (Transaction::where('department', $this->department_code)->exists()) {
+        //     return true;
+        // }
         return false;
     }
 }

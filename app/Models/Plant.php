@@ -38,9 +38,9 @@ class Plant extends BaseModel
         if (MaterialStock::where('plant_id', $this->id)->exists()) {
             return true;
         }
-        if (Transaction::where('location_id', $this->id)->exists()) {
-            return true;
-        }
+        // if (Transaction::where('location_id', $this->id)->exists()) {
+        //     return true;
+        // }
         if (Sloc::where('plant_id', $this->id)->exists()) {
             return true;
         }
@@ -52,9 +52,9 @@ class Plant extends BaseModel
         if (Receipt::where('location', $this->plant_code)->exists()) {
             return true;
         }
-        if (TmpTransaction::where('location', $this->plant_code)->exists()) {
-            return true;
-        }
+        // if (TmpTransaction::where('location', $this->plant_code)->exists()) {
+        //     return true;
+        // }
         return false;
     }
 }

@@ -29,6 +29,7 @@ return new class extends Migration
             $table->decimal('meter_value', 8, 2)->comment('diisi dengan nilai hm/km');
             $table->string('posting_no')->nullable();
             $table->string('error_status')->nullable();
+            $table->longText('notes')->nullable();
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();
