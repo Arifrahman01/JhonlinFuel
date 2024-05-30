@@ -17,9 +17,9 @@ class Activity extends BaseModel
 
     public function hasData(): bool
     {
-        // if (TmpTransaction::where('activity', $this->activity_code)->exists()) {
-        //     return true;
-        // }
+        if (Issue::where('activity', $this->activity_code)->exists()) {
+            return true;
+        }
         // if (Transaction::where('activity_id', $this->id)->exists()) {
         //     return true;
         // }

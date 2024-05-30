@@ -7,12 +7,14 @@
                         <div class="col-6">
                             Company
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
-                                data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp;
-                                Create</button>
-                        </div>
+                        @can('create-master-company')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
+                                    data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-plus-circle"></i>&nbsp;
+                                    Create</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -60,21 +62,23 @@
                                         {!! dataNotFond(2) !!}
                                     @else
                                         @foreach ($companies as $company)
-                                            <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1"
-                                                aria-expanded="false">
+                                            <tr>
                                                 <td class="text-center">
-                                                    @if (!$company->hasDataById() && !$company->hasDataByCode())
-                                                        <a id="btn-delete{{ $company->id }}" title="Delete Company"
-                                                            onclick="deleteItem({{ $company->id }})">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp;
-                                                    @endif
-
-                                                    <a title="Edit Company"
-                                                        wire:click="$dispatch('openCreate', [{{ $company->id }}])"
-                                                        data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
+                                                    @can('delete-master-company')
+                                                        @if (!$company->hasDataById() && !$company->hasDataByCode())
+                                                            <a id="btn-delete{{ $company->id }}" title="Delete Company"
+                                                                onclick="deleteItem({{ $company->id }})">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </a> &nbsp;
+                                                        @endif
+                                                    @endcan
+                                                    @can('edit-master-company')
+                                                        <a title="Edit Company"
+                                                            wire:click="$dispatch('openCreate', [{{ $company->id }}])"
+                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    @endcan
                                                 </td>
                                                 <td>{{ $company->company_code }}</td>
                                                 <td>{{ $company->company_name }}</td>

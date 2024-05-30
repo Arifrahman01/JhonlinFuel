@@ -16,4 +16,16 @@ class Equipment extends BaseModel
     {
         return $this->belongsTo(Plant::class);
     }
+    public function hasDataById(): bool
+    {
+        return false;
+    }
+
+    public function hasDataByNo(): bool
+    {
+        if (Issue::where('equipment_no', $this->equipment_no)->exists()) {
+            return true;
+        }
+        return false;
+    }
 }

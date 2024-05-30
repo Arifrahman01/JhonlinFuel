@@ -5,8 +5,10 @@ namespace App\Livewire\Plant;
 use App\Models\Company;
 use App\Models\Plant;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlantCreate extends Component
 {
@@ -20,6 +22,13 @@ class PlantCreate extends Component
     protected $listeners = ['openCreate'];
     public function render()
     {
+        $permissions = [
+            'view-master-plant',
+            'create-master-plant',
+            'edit-master-plant',
+            'delete-master-plant',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         return view('livewire.plant.plant-create', compact('companies'));
     }
@@ -31,6 +40,12 @@ class PlantCreate extends Component
 
     public function openCreate($id = null)
     {
+        $permissions = [
+            'create-master-plant',
+            'edit-master-plant',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
@@ -52,6 +67,11 @@ class PlantCreate extends Component
 
     public function store()
     {
+        $permissions = [
+            'create-master-plant',
+            'edit-master-plant',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         DB::beginTransaction();
         try {
 

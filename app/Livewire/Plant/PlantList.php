@@ -6,6 +6,8 @@ use App\Models\Company;
 use App\Models\Plant;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class PlantList extends Component
 {
@@ -18,6 +20,13 @@ class PlantList extends Component
 
     public function render()
     {
+        $permissions = [
+            'view-master-plant',
+            'create-master-plant',
+            'edit-master-plant',
+            'delete-master-plant',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         $plants = Plant::when($this->c, fn ($query, $c) => $query->where('company_id', $c))
             ->when($this->q, fn ($query, $q) => $query->where(fn ($query) =>
@@ -35,6 +44,10 @@ class PlantList extends Component
 
     public function delete($id)
     {
+        $permissions = [
+            'delete-master-plant',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $plant = Plant::find($id);
             if ($plant->hasDataById() || $plant->hasDataByCode()) {

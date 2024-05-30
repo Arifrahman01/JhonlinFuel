@@ -9,8 +9,10 @@ use App\Models\Plant;
 use App\Models\Sloc;
 use App\Models\Uom;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\Response;
 
 class WarehouseCreate extends Component
 {
@@ -27,6 +29,13 @@ class WarehouseCreate extends Component
 
     public function render()
     {
+        $permissions = [
+            'view-master-warehouse',
+            'create-master-warehouse',
+            'edit-master-warehouse',
+            'delete-master-warehouse',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         return view('livewire.warehouse.warehouse-create', compact('companies'));
     }
@@ -38,6 +47,11 @@ class WarehouseCreate extends Component
 
     public function openCreate($id = null)
     {
+        $permissions = [
+            'create-master-warehouse',
+            'edit-master-warehouse',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
@@ -69,6 +83,12 @@ class WarehouseCreate extends Component
 
     public function store()
     {
+        $permissions = [
+            'create-master-warehouse',
+            'edit-master-warehouse',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         DB::beginTransaction();
         try {
 

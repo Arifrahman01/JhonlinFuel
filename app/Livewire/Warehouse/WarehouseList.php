@@ -5,8 +5,10 @@ namespace App\Livewire\Warehouse;
 use App\Models\Company;
 use App\Models\Plant;
 use App\Models\Sloc;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Symfony\Component\HttpFoundation\Response;
 
 class WarehouseList extends Component
 {
@@ -19,6 +21,13 @@ class WarehouseList extends Component
     public $c, $p, $q;
     public function render()
     {
+        $permissions = [
+            'view-master-warehouse',
+            'create-master-warehouse',
+            'edit-master-warehouse',
+            'delete-master-warehouse',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         $warehouses = Sloc::with(['company', 'plant'])
             ->when($this->c, fn ($query, $c) => $query->where('company_id', $c))
@@ -44,6 +53,10 @@ class WarehouseList extends Component
 
     public function delete($id)
     {
+        $permissions = [
+            'delete-master-warehouse',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $sloc = Sloc::find($id);
             if ($sloc->hasDataById() || $sloc->hasDataByCode()) {

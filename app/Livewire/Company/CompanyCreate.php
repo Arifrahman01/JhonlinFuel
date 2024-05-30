@@ -4,8 +4,10 @@ namespace App\Livewire\Company;
 
 use App\Models\Company;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\Response;
 
 class CompanyCreate extends Component
 {
@@ -18,6 +20,13 @@ class CompanyCreate extends Component
     protected $listeners = ['openCreate'];
     public function render()
     {
+        $permissions = [
+            'view-master-company',
+            'create-master-company',
+            'edit-master-company',
+            'delete-master-company',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         return view('livewire.company.company-create');
     }
 
@@ -28,6 +37,12 @@ class CompanyCreate extends Component
 
     public function openCreate($id = null)
     {
+        $permissions = [
+            'create-master-company',
+            'edit-master-company',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
@@ -48,6 +63,12 @@ class CompanyCreate extends Component
 
     public function store()
     {
+        $permissions = [
+            'create-master-company',
+            'edit-master-company',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         DB::beginTransaction();
         try {
 

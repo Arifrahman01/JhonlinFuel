@@ -25,6 +25,9 @@ class Fuelman extends BaseModel
 
     public function hasDataByNik(): bool
     {
+        if (Issue::where('fuelman', $this->nik)->exists()) {
+            return true;
+        }
         return false;
     }
 }
