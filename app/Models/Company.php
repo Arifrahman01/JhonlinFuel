@@ -13,13 +13,13 @@ class Company extends BaseModel
 {
     protected $table = 'companies';
 
-    // public function scopeAllowed($query)
-    // {
-    //     if (in_array('sa', data_get(auth()->user(), 'roles.*.code'))) {
-    //         return $query;
-    //     }
-    //     return $query->whereIn('id', allowedCompanyId());
-    // }
+    public function scopeAllowed($query, $otorisasi)
+    {
+        if (in_array('sa', data_get(auth()->user(), 'roles.*.code'))) {
+            return $query;
+        }
+        return $query->whereIn('id', allowedCompanyId($otorisasi));
+    }
 
     public function hasDataById(): bool
     {
