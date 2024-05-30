@@ -6,8 +6,10 @@ use App\Models\Company;
 use App\Models\Fuelman;
 use App\Models\Plant;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\Response;
 
 class FuelmanCreate extends Component
 {
@@ -23,13 +25,20 @@ class FuelmanCreate extends Component
     protected $listeners = ['openCreate'];
     public function render()
     {
+        $permissions = [
+            'view-master-fuelman',
+            'create-master-fuelman',
+            'edit-master-fuelman',
+            'delete-master-fuelman',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         return view('livewire.fuelman.fuelman-create', compact('companies'));
     }
 
     public function closeModal()
     {
-        $this->loading = false;
+        $this->loading = true;
     }
 
     public function updatedSelectedCompany($value)
@@ -40,6 +49,12 @@ class FuelmanCreate extends Component
 
     public function openCreate($id = null)
     {
+        $permissions = [
+            'create-master-fuelman',
+            'edit-master-fuelman',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
@@ -66,6 +81,12 @@ class FuelmanCreate extends Component
 
     public function store()
     {
+        $permissions = [
+            'create-master-fuelman',
+            'edit-master-fuelman',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         DB::beginTransaction();
         try {
 

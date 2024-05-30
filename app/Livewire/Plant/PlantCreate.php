@@ -35,7 +35,7 @@ class PlantCreate extends Component
 
     public function closeModal()
     {
-        $this->loading = false;
+        $this->loading = true;
     }
 
     public function openCreate($id = null)

@@ -41,7 +41,8 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Plant</label>
-                            <select wire:model="selectedPlant" wire:key="{{ $selectedCompany}}" class="form-select" required>
+                            <select wire:model="selectedPlant" wire:key="{{ $selectedCompany }}" class="form-select"
+                                required>
                                 <option value="">-Select Plant-</option>
                                 @foreach ($plants as $plant)
                                     <option value="{{ $plant->id }}">
@@ -51,19 +52,22 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Department Code</label>
-                            <input type="text" class="form-control" wire:model='departmentCode' placeholder="Department Code"
-                                required @if ($departmentCodeReadOnly) readonly disabled @endif>
+                            <input type="text" class="form-control" wire:model='departmentCode'
+                                placeholder="Department Code" required
+                                @if ($departmentCodeReadOnly) readonly disabled @endif>
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Department Name</label>
-                            <input type="text" class="form-control" wire:model='departmentName' placeholder="Department Name"
-                                required>
+                            <input type="text" class="form-control" wire:model='departmentName'
+                                placeholder="Department Name" required>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn me-auto" data-bs-dismiss="modal"
                             wire:click="closeModal">Close</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp; Save</button>
+                        @canany(['create-master-department', 'edit-master-department'])
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp; Save</button>
+                        @endcanany
                     </div>
                 </form>
             @endif

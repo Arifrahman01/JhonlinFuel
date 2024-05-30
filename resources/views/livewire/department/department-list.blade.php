@@ -7,12 +7,14 @@
                         <div class="col-6">
                             Department
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
-                                data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp;
-                                Create</button>
-                        </div>
+                        @can('create-master-department')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
+                                    data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-plus-circle"></i>&nbsp;
+                                    Create</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -87,19 +89,22 @@
                                         @foreach ($departments as $department)
                                             <tr>
                                                 <td class="text-center">
-                                                    @if (!$department->hasDataById() && !$department->hasDataByCode())
-                                                        <a id="btn-delete{{ $department->id }}"
-                                                            title="Delete department"
-                                                            onclick="deleteItem({{ $department->id }})">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp;
-                                                    @endif
-
-                                                    <a title="Edit Department"
-                                                        wire:click="$dispatch('openCreate', [{{ $department->id }}])"
-                                                        data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
+                                                    @can('delete-master-department')
+                                                        @if (!$department->hasDataById() && !$department->hasDataByCode())
+                                                            <a id="btn-delete{{ $department->id }}"
+                                                                title="Delete department"
+                                                                onclick="deleteItem({{ $department->id }})">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </a> &nbsp;
+                                                        @endif
+                                                    @endcan
+                                                    @can('edit-master-department')
+                                                        <a title="Edit Department"
+                                                            wire:click="$dispatch('openCreate', [{{ $department->id }}])"
+                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    @endcan
                                                 </td>
                                                 <td>{{ data_get($department, 'company.company_name') }}</td>
                                                 <td>{{ data_get($department, 'plant.plant_name') }}</td>

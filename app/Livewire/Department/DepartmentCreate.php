@@ -6,8 +6,10 @@ use App\Models\Company;
 use App\Models\Department;
 use App\Models\Plant;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\Response;
 
 class DepartmentCreate extends Component
 {
@@ -23,6 +25,13 @@ class DepartmentCreate extends Component
     protected $listeners = ['openCreate'];
     public function render()
     {
+        $permissions = [
+            'view-master-department',
+            'create-master-department',
+            'edit-master-department',
+            'delete-master-department',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         return view('livewire.department.department-create', compact('companies'));
     }
@@ -34,10 +43,17 @@ class DepartmentCreate extends Component
 
     public function closeModal()
     {
+        $this->loading = true;
     }
 
     public function openCreate($id = null)
     {
+        $permissions = [
+            'create-master-department',
+            'edit-master-department',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
@@ -63,6 +79,12 @@ class DepartmentCreate extends Component
 
     public function store()
     {
+        $permissions = [
+            'create-master-department',
+            'edit-master-department',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         DB::beginTransaction();
         try {
 
