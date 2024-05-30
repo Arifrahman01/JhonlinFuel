@@ -31,7 +31,7 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <select wire:model.live="c" class="form-select form-select-sm">
+                                            <select wire:model="c" class="form-select form-select-sm">
                                                 <option value="">-Select Company-</option>
                                                 @foreach ($companies as $company)
                                                     <option value="{{ $company->id }}">
@@ -40,7 +40,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="ms-auto text-muted">
+                                    {{-- <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             <select wire:model="p" wire:key="{{ $c }}"
                                                 class="form-select form-select-sm">
@@ -51,7 +51,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             <input type="text" class="form-control form-control-sm"
@@ -77,7 +77,6 @@
                                         <th class="text-center" style="width: 6%">Action</th>
                                         {{-- <th class="text-center" style="width: 5%">Action</th> --}}
                                         <th class="text-center">Company</th>
-                                        <th class="text-center">Plant</th>
                                         <th class="text-center">Department Code</th>
                                         <th class="text-center">Department Name</th>
                                     </tr>
@@ -107,7 +106,6 @@
                                                     @endcan
                                                 </td>
                                                 <td>{{ data_get($department, 'company.company_name') }}</td>
-                                                <td>{{ data_get($department, 'plant.plant_name') }}</td>
                                                 <td>{{ $department->department_code }}</td>
                                                 <td>{{ $department->department_name }}</td>
                                             </tr>
