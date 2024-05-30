@@ -5,9 +5,11 @@ namespace App\Livewire;
 use App\Exports\ReceiptExport;
 use App\Models\Company;
 use App\Models\Receipt;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReceiptPostingList extends Component
 {
@@ -28,6 +30,10 @@ class ReceiptPostingList extends Component
 
     public function render()
     {
+        $permissions = [
+            'view-transaksi-receipt-po'
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $receipts = Receipt::search($this->q)->with(['company','plants','slocs','materials','equipments'])
         ->when($this->c, fn ($query, $c) => $query->where('company_code', $c))
         ->whereNotNull('posting_no')

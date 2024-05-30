@@ -5,9 +5,11 @@ namespace App\Livewire\Adjustment;
 use App\Exports\AdjusmentExport;
 use App\Models\Adjustment\AdjustmentHeader;
 use App\Models\Company;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 class AdjustmentList extends Component
 {
@@ -33,6 +35,10 @@ class AdjustmentList extends Component
 
     public function render()
     {
+        $permissions = [
+            'view-transaksi-adjustment'
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $adjusts = AdjustmentHeader::with([
             'details.plant',
             'details.sloc',

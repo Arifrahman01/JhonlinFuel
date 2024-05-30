@@ -5,9 +5,11 @@ namespace App\Livewire;
 use App\Exports\IssueExport;
 use App\Models\Company;
 use App\Models\Issue;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 class IssuePosting extends Component
 {
@@ -27,6 +29,10 @@ class IssuePosting extends Component
 
     public function render()
     {
+        $permissions = [
+            'view-transaksi-issue'
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $issues = Issue::with(['company','departments','fuelmans','plants','slocs','equipments','activitys','materials'])->whereBetween('trans_date', [$this->start_date, $this->end_date])
         ->when($this->c, fn ($query, $c) => $query->where('company_code', $c))
         ->whereNotNull('posting_no')

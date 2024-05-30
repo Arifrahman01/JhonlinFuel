@@ -5,9 +5,11 @@ namespace App\Livewire;
 use App\Exports\ReceiptTransferExport;
 use App\Models\Company;
 use App\Models\ReceiptTransfer;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReceiptTransferPostingList extends Component
 {
@@ -27,14 +29,17 @@ class ReceiptTransferPostingList extends Component
 
     public function render()
     {
-        // $userCompanyCode = Company::find(auth()->user()->company_id)->company_code;
+        $permissions = [
+            'view-transaksi-receipt-transfer'
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $rcvTransfers = ReceiptTransfer::search($this->q)->with(['fromCompany','toCompany','fromWarehouse','toWarehouse','materials','equipments'])
         ->when($this->c, function ($query, $c) {
             $query->where(function ($query) use ($c) {
                 $query->where('from_company_code', $c)
                       ->orWhere('to_company_code', $c);
             });
-        })
+        })->whereNotnull('posting_no')
         ->whereBetween('trans_date', [$this->start_date, $this->end_date])->orderBy('id','desc')->latest()->paginate(10);
         return view('livewire.receipt-transfer-posting-list', compact('rcvTransfers'));
     }
