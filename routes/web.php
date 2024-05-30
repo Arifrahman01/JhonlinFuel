@@ -47,7 +47,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/users', UserList::class)->name('users.index');
-    Route::get('/qouta', QuotaList::class)->name('qouta.index');
 
     /* data transaction */
     Route::get('/receipt', ReceiptPostingList::class)->name('receipt.index');
