@@ -7,14 +7,14 @@ use App\Models\Equipment;
 use App\Models\Material\Material;
 use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
-use App\Models\Plant;
-use App\Models\Receipt;
 use App\Models\ReceiptTransfer;
 use App\Models\Sloc;
 use DateTime;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReceiptTransferList extends Component
 {
@@ -24,18 +24,17 @@ class ReceiptTransferList extends Component
     protected $listeners = ['refreshPage'];
     public function render()
     {
-        // $userCompanyCode = Company::find(auth()->user()->company_id)->company_code;
+        $permissions = [
+            'view-loader-receipt-transfer'
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $rcvTransfers = ReceiptTransfer::with([
             'fromCompany',
             'toCompany',
             'fromWarehouse',
             'toWarehouse',
         ])
-            // ->where('from_company_code', $userCompanyCode)
             ->whereNull('posting_no')
-            // if (!isset($this->adjDate)) {
-            //     throw new \Exception('Adjustment Date tidak boleh kosong');
-            // }
             ->when($this->dateFilter, function ($query, $dateFilter) {
                 $query->where('trans_date', $dateFilter);
             })

@@ -28,7 +28,7 @@
                             <div class="row">
                                 <div class="row-cards">
                                     <div class="mb-3">
-                                        <label for="fileLoader" class="form-label">File Loader</label>
+                                        <label for="fileLoader" class="form-label required">File Loader</label>
                                         <input wire:model="fileLoader" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                             id="fileLoader" name="fileLoader" onchange="loadFile()" type="file" required>
                                     </div>
@@ -49,7 +49,7 @@
                         <div class="modal-body">
                             <div class="row row-cards">
                                 <div class="col-4">
-                                    <label class="form-label">Company</label>
+                                    <label class="form-label required">Company</label>
                                     <select wire:model.live="selectedCompany" class="form-control" required>
                                         <option value="">-Select Company-</option>
                                         @foreach ($companies as $comp)
@@ -58,7 +58,7 @@
                                     </select>
                                 </div>
                                 <div class="col-4">
-                                    <label for="" class="form-label">Location/Plant
+                                    <label for="" class="form-label required">Location/Plant
                                         <div wire:loading wire:target="selectedCompany">
                                             <i class="fa fa-spinner fa-spin"></i>
                                         </div>
@@ -73,7 +73,7 @@
                                     </select>
                                 </div>
                                 <div class="col-4">
-                                    <label for="" class="form-label">Fuel Warehouse
+                                    <label for="" class="form-label required">Fuel Warehouse
                                         <div wire:loading wire:target="selectedlocation">
                                             <i class="fa fa-spinner fa-spin"></i>
                                         </div>
@@ -87,23 +87,23 @@
                                     </select>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">Issue Date</label>
+                                    <label for="" class="form-label required">Issue Date</label>
                                     <input type="date" class="form-control" wire:model='trans_date' value="{{ $dataReceipt ? $dataReceipt->trans_date : '' }}" required>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">PO NO</label>
+                                    <label for="" class="form-label required">PO NO</label>
                                     <input type="text" class="form-control" wire:model='po_no' value="{{ $dataReceipt ? $dataReceipt->qty : '' }}" required>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">DO NO</label>
+                                    <label for="" class="form-label required">DO NO</label>
                                     <input type="text" class="form-control" wire:model='do_no' value="{{ $dataReceipt ? $dataReceipt->qty : '' }}" required>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">Transportir</label>
+                                    <label for="" class="form-label required">Transportir</label>
                                     <input type="text" class="form-control" wire:model='transportir' value="{{ $dataReceipt ? $dataReceipt->qty : '' }}" required>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">Material Code</label>
+                                    <label for="" class="form-label required">Material Code</label>
                                     <select name="" id="" class="form-control"  wire:model='material_code' required>
                                         <option value="">-Select Material-</option>
                                         @foreach ($materials as $mat)
@@ -113,7 +113,7 @@
                                     </select>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">Quantity</label>
+                                    <label for="" class="form-label required">Quantity</label>
                                     <input type="number" class="form-control" wire:model='qty' value="" required>
                                 </div>
                             </div>

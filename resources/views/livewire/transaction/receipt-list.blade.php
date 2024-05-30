@@ -8,10 +8,12 @@
                             <h1>Loader Receipt</h1>
                         </div>
                         <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary me-2" wire:click="$dispatch('openCreate')" data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus"></i>&nbsp;
-                                Create</button>
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openUpload')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-file-excel"></i>&nbsp; Upload</button>
+                            @can('create-loader-receipt-po')
+                                <button type="button" class="btn btn-primary me-2" wire:click="$dispatch('openCreate')" data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus"></i>&nbsp;
+                                    Create</button>
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openUpload')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-file-excel"></i>&nbsp; Upload</button>
+                            @endcan
                         </div>
                     </h2>
                 </div>
@@ -32,7 +34,6 @@
                                             <input type="text" class="form-control form-control-sm me-2" wire:model="filter_search" aria-label="Search Label" placeholder="Search:Number PO and DO">
                                             <input type="date" class="form-control form-control-sm" id="start_date" wire:model="filter_date" aria-label="Start Date" placeholder="Start Date"
                                                 value="{{ date('Y-m-d') }}"> &nbsp;
-
                                         </div>
                                     </div>
                                     <div class="ms-auto">
@@ -46,21 +47,25 @@
                                     </div>
                                 </div>
                             </form>
-                            <div class="ms-2 d-inline-block">
-                                <button id="btn-delete{{ -1 }}" class="btn btn-danger btn-sm" onclick="deleteItem({{ -1 }})">
-                                    <i class="fa fa-trash"></i> &nbsp; Delete &nbsp;
-                                </button>
-                            </div>
-                            <div class="ms-2 d-inline-block">
-                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="postingItem({{ -1 }})">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                        <path
-                                            d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z">
-                                        </path>
-                                    </svg>
-                                    &nbsp; Posting &nbsp;
-                                </button>
-                            </div>
+                            @can('delete-loader-receipt-po')
+                                <div class="ms-2 d-inline-block">
+                                    <button id="btn-delete{{ -1 }}" class="btn btn-danger btn-sm" onclick="deleteItem({{ -1 }})">
+                                        <i class="fa fa-trash"></i> &nbsp; Delete &nbsp;
+                                    </button>
+                                </div>
+                            @endcan
+                            @can('posting-loader-receipt-po')
+                                <div class="ms-2 d-inline-block">
+                                    <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="postingItem({{ -1 }})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                            <path
+                                                d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z">
+                                            </path>
+                                        </svg>
+                                        &nbsp; Posting &nbsp;
+                                    </button>
+                                </div>
+                            @endcan
                         </div>
                         <div class="col-12">
                             <div class="card">
@@ -72,7 +77,6 @@
                                                     <input class="form-check-input m-0 align-middle" type="checkbox" onchange="checkAll(this)" aria-label="Select all invoices">
                                                 </th>
                                                 <th class="text-center" style="width: 5%">Action</th>
-                                                <th>Posting</th>
                                                 <th>Company</th>
                                                 <th>Trans Type</th>
                                                 <th>Trans Date</th>
@@ -95,17 +99,15 @@
                                                         <td class="text-center">
                                                             <input class="form-check-input m-0 align-middle detailCheckbox" value="{{ $val->id }}" type="checkbox">
                                                         </td>
-                                                        <td class="text-nowrap">
-                                                            @if (!$val->posting_no)
-                                                                <a id="btn-delete{{ $val->id }}" title="Deleted User" onclick="deleteItem({{ $val->id }})">
-                                                                    <i class="fas fa-trash-alt"></i>
-                                                                </a> &nbsp;
-                                                                <a title="Edit User" wire:click="$dispatch('openCreate', [{{ $val->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                                    <i class="fas fa-edit"></i>
-                                                                </a>
-                                                            @endif
+                                                        <td class="text-nowrap text-center">
+                                                            @can('edit-loader-receipt-po')
+                                                                @if (!$val->posting_no)
+                                                                    <a title="Edit User" wire:click="$dispatch('openCreate', [{{ $val->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
+                                                                @endif
+                                                            @endcan
                                                         </td>
-                                                        <td>{{ $val->posting_no }}</td>
                                                         <td>{{ $val->company_code }}</td>
                                                         <td>{{ $val->trans_type }}</td>
                                                         <td>{{ $val->trans_date }}</td>

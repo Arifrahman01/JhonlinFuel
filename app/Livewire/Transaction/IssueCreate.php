@@ -12,7 +12,6 @@ use App\Models\Plant;
 use App\Models\Sloc;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Maatwebsite\Excel\Facades\Excel;
 
 class IssueCreate extends Component
 {
