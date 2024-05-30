@@ -41,12 +41,14 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Activity Code</label>
-                            <input type="text" class="form-control" @if ($codeReadOnly) readonly disabled @endif wire:model="activityCode" placeholder="Code" required oninput="this.value = this.value.toUpperCase()">
+                            <input type="text" class="form-control"
+                                @if ($codeReadOnly) readonly disabled @endif wire:model="activityCode"
+                                placeholder="Code" required oninput="this.value = this.value.toUpperCase()">
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Activity Name</label>
-                            <input type="text" class="form-control" wire:model='activityName'
-                                placeholder="Name" required>
+                            <input type="text" class="form-control" wire:model='activityName' placeholder="Name"
+                                required>
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Notes</label>
@@ -58,7 +60,9 @@
                     <div class="modal-footer">
                         <button type="button" class="btn me-auto" data-bs-dismiss="modal"
                             wire:click="closeModal">Close</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp; Save</button>
+                        @canany(['create-master-activity', 'edit-master-activity'])
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp; Save</button>
+                        @endcanany
                     </div>
                 </form>
             @endif
