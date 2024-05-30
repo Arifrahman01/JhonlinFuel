@@ -7,12 +7,14 @@
                         <div class="col-6">
                             Fuelman
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
-                                data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp;
-                                Create</button>
-                        </div>
+                        @can('create-master-fuelman')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
+                                    data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-plus-circle"></i>&nbsp;
+                                    Create</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -86,18 +88,22 @@
                                         @foreach ($fuelmans as $fuelman)
                                             <tr>
                                                 <td class="text-center">
-                                                    @if (!$fuelman->hasDataById() && !$fuelman->hasDataByNik())
-                                                        <a id="btn-delete{{ $fuelman->id }}" title="Delete Fuelman"
-                                                            onclick="deleteItem({{ $fuelman->id }})">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp;
-                                                    @endif
+                                                    @can('delete-master-fuelman')
+                                                        @if (!$fuelman->hasDataById() && !$fuelman->hasDataByNik())
+                                                            <a id="btn-delete{{ $fuelman->id }}" title="Delete Fuelman"
+                                                                onclick="deleteItem({{ $fuelman->id }})">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </a> &nbsp;
+                                                        @endif
+                                                    @endcan
 
-                                                    <a title="Edit Fuelman"
-                                                        wire:click="$dispatch('openCreate', [{{ $fuelman->id }}])"
-                                                        data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
+                                                    @can('edit-master-fuelman')
+                                                        <a title="Edit Fuelman"
+                                                            wire:click="$dispatch('openCreate', [{{ $fuelman->id }}])"
+                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    @endcan
                                                 </td>
                                                 <td>{{ data_get($fuelman, 'company.company_name') }}</td>
                                                 <td>{{ data_get($fuelman, 'plant.plant_name') }}</td>
@@ -109,7 +115,6 @@
                                 </tbody>
                             </table>
                         </div>
-                        {{-- </div> --}}
 
                         <div class="card-footer justify-content-between align-items-center">
                             {{ $fuelmans->links() }}

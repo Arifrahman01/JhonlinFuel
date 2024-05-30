@@ -65,7 +65,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn me-auto" data-bs-dismiss="modal"
                             wire:click="closeModal">Close</button>
-                        @canany(['create-master-plant', 'edit-master-plant'])
+                        @canany(['create-master-warehouse', 'edit-master-warehouse'])
                             <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp; Save</button>
                         @endcanany
                     </div>

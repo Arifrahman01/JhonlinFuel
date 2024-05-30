@@ -5,8 +5,10 @@ namespace App\Livewire\Department;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Plant;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Symfony\Component\HttpFoundation\Response;
 
 class DepartmentList extends Component
 {
@@ -17,6 +19,13 @@ class DepartmentList extends Component
     public $c, $p, $q;
     public function render()
     {
+        $permissions = [
+            'view-master-department',
+            'create-master-department',
+            'edit-master-department',
+            'delete-master-department',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         $departments = Department::with(['company', 'plant'])
             ->when($this->c, fn ($query, $c) => $query->where('company_id', $c))
@@ -41,6 +50,11 @@ class DepartmentList extends Component
 
     public function delete($id)
     {
+        $permissions = [
+            'delete-master-department',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         try {
             $department = Department::find($id);
             if ($department->hasDataById() || $department->hasDataByCode()) {
