@@ -5,14 +5,16 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6 d-flex justify-content-start">
-                            <h1>Loader Transfer</h1>  
+                            <h1>Loader Transfer</h1>
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary me-2" wire:click="$dispatch('openCreate')" data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus"></i>&nbsp;
-                                Create</button>
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openUpload')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-file-excel"></i>&nbsp; Upload</button>
-                        </div>
+                        @can('create-loader-transfer')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary me-2" wire:click="$dispatch('openCreate')" data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus"></i>&nbsp;
+                                    Create</button>
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openUpload')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-file-excel"></i>&nbsp; Upload</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -29,10 +31,10 @@
                                 <div class="d-flex">
                                     <div class="ms-auto">
                                         <div class="d-inline-flex">
-                                            <input type="text" class="form-control form-control-sm me-2" wire:model="filter_search" aria-label="Search Label" placeholder="Search:Posting">
+                                            <input type="text" class="form-control form-control-sm me-2" style="display: none" wire:model="filter_search" aria-label="Search Label"
+                                                placeholder="Search:Posting">
                                             <input type="date" class="form-control form-control-sm" id="start_date" wire:model="filter_date" aria-label="Start Date" placeholder="Start Date"
                                                 value="{{ date('Y-m-d') }}"> &nbsp;
-
                                         </div>
                                     </div>
                                     <div class="ms-auto">
@@ -41,26 +43,28 @@
                                                 <i class="fa fa-search"></i> &nbsp; Cari &nbsp;
                                             </button>
                                         </div>
-
-
                                     </div>
                                 </div>
                             </form>
-                            <div class="ms-2 d-inline-block">
-                                <button id="btn-delete{{ -1 }}" class="btn btn-danger btn-sm" onclick="deleteItem({{ -1 }})">
-                                    <i class="fa fa-trash"></i> &nbsp; Delete &nbsp;
-                                </button>
-                            </div>
-                            <div class="ms-2 d-inline-block">
-                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="postingItem({{ -1 }})">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                        <path
-                                            d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z">
-                                        </path>
-                                    </svg>
-                                    &nbsp; Posting &nbsp;
-                                </button>
-                            </div>
+                            @can('delete-loader-transfer')
+                                <div class="ms-2 d-inline-block">
+                                    <button id="btn-delete{{ -1 }}" class="btn btn-danger btn-sm" onclick="deleteItem({{ -1 }})">
+                                        <i class="fa fa-trash"></i> &nbsp; Delete &nbsp;
+                                    </button>
+                                </div>
+                            @endcan
+                            @can('posting-loader-transfer')
+                                <div class="ms-2 d-inline-block">
+                                    <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="postingItem({{ -1 }})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                            <path
+                                                d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z">
+                                            </path>
+                                        </svg>
+                                        &nbsp; Posting &nbsp;
+                                    </button>
+                                </div>
+                            @endcan
                         </div>
                         <div class="col-12">
                             <div class="card">
@@ -93,15 +97,13 @@
                                                             <input class="form-check-input m-0 align-middle detailCheckbox" value="{{ $val->id }}" type="checkbox">
                                                         </td>
                                                         <td class="text-nowrap">
-                                                            @if (!$val->posting_no)
-                                                                {{-- <a id="btn-delete{{ $val->id }}" title="Deleted User" onclick="deleteItem({{ $val->id }})">
-                                                                    <i class="fas fa-trash-alt"></i>
-                                                                </a> &nbsp; --}}
-                                                                <a title="Edit User" wire:click="$dispatch('openCreate', [{{ $val->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                                    <i class="fas fa-edit"></i>
-                                                                </a>
-                                                            @else
-                                                            @endif
+                                                            @can('edit-loader-transfer')
+                                                                @if (!$val->posting_no)
+                                                                    <a title="Edit User" wire:click="$dispatch('openCreate', [{{ $val->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                                        <i class="fas fa-edit"></i>
+                                                                    </a>
+                                                                @endif
+                                                            @endcan
                                                         </td>
                                                         <td>{{ $val->trans_type }}</td>
                                                         <td>{{ $val->from_company_code }}</td>
@@ -135,70 +137,70 @@
     @livewire('transaction.create-transfer')
 
     @push('scripts')
-    <script>
-        function checkAll(mainCheckbox) {
-            const checkboxes = document.querySelectorAll('.detailCheckbox');
+        <script>
+            function checkAll(mainCheckbox) {
+                const checkboxes = document.querySelectorAll('.detailCheckbox');
 
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = mainCheckbox.checked;
-            });
-        }
-
-        async function deleteItem(id) {
-            const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
-            const selectedIds = [];
-            checkboxes.forEach(checkbox => {
-                selectedIds.push(checkbox.value);
-            });
-            if (selectedIds.length > 0) {
-                const isConfirmed = await sweetDeleted({
-                    id: id,
-                    title: 'Delete all data selected ? ',
-                    textLoadong: '  loading'
-                });
-                if (isConfirmed) {
-                    @this.call('delete', selectedIds);
-                    const checkboxes = document.querySelectorAll('.detailCheckbox');
-                    checkboxes.forEach(checkbox => {
-                        checkbox.checked = false;
-                    });
-                }
-            } else {
-                Swal.fire({
-                    title: "Error",
-                    text: "Not have data selected",
-                    icon: "error"
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = mainCheckbox.checked;
                 });
             }
-        }
 
-        async function postingItem(id) {
-            const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
-            const selectedIds = [];
-            checkboxes.forEach(checkbox => {
-                selectedIds.push(checkbox.value);
-            });
-            if (selectedIds.length > 0) {
-                const isConfirmed = await sweetPosting({
-                    id: id,
-                    title: 'Posting all data selected ? ',
-                    textLoadong: '  loading'
+            async function deleteItem(id) {
+                const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
+                const selectedIds = [];
+                checkboxes.forEach(checkbox => {
+                    selectedIds.push(checkbox.value);
                 });
-                if (isConfirmed) {
-                    @this.call('posting', selectedIds);
-                    const checkboxes = document.querySelectorAll('.detailCheckbox');
-                    checkboxes.forEach(checkbox => {
-                        checkbox.checked = false;
+                if (selectedIds.length > 0) {
+                    const isConfirmed = await sweetDeleted({
+                        id: id,
+                        title: 'Delete all data selected ? ',
+                        textLoadong: '  loading'
+                    });
+                    if (isConfirmed) {
+                        @this.call('delete', selectedIds);
+                        const checkboxes = document.querySelectorAll('.detailCheckbox');
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = false;
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Not have data selected",
+                        icon: "error"
                     });
                 }
-            } else {
-                Swal.fire({
-                    title: "Error",
-                    text: "Not have data selected",
-                    icon: "error"
-                });
             }
-        }
-    </script>
-@endpush
+
+            async function postingItem(id) {
+                const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
+                const selectedIds = [];
+                checkboxes.forEach(checkbox => {
+                    selectedIds.push(checkbox.value);
+                });
+                if (selectedIds.length > 0) {
+                    const isConfirmed = await sweetPosting({
+                        id: id,
+                        title: 'Posting all data selected ? ',
+                        textLoadong: '  loading'
+                    });
+                    if (isConfirmed) {
+                        @this.call('posting', selectedIds);
+                        const checkboxes = document.querySelectorAll('.detailCheckbox');
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = false;
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Not have data selected",
+                        icon: "error"
+                    });
+                }
+            }
+        </script>
+    @endpush
 </div>

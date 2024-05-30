@@ -49,15 +49,15 @@
                         <div class="modal-body">
                             <div class="row row-cards">
                                 <div class="col-3">
-                                    <label for="" class="form-label">Transfer Date</label>
+                                    <label for="" class="form-label required">Transfer Date</label>
                                     <input type="date" class="form-control" wire:model='trans_date' value="{{ $dataTransfer ? $dataTransfer->trans_date : '' }}" required>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">Transportir</label>
+                                    <label for="" class="form-label required">Transportir</label>
                                     <input type="text" class="form-control" wire:model='transportir' value="{{ $dataTransfer ? $dataTransfer->qty : '' }}" required>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">Material Code</label>
+                                    <label for="" class="form-label required">Material Code</label>
                                     <select name="" id="" class="form-control" wire:model='material_code' required>
                                         <option value="">-Select Material-</option>
                                         @foreach ($materials as $mat)
@@ -66,7 +66,7 @@
                                     </select>
                                 </div>
                                 <div class="col-3">
-                                    <label for="" class="form-label">Quantity</label>
+                                    <label for="" class="form-label required">Quantity</label>
                                     <input type="number" class="form-control" wire:model='qty' value="" required>
                                 </div>
                                 <div class="col-md-12">
@@ -75,7 +75,7 @@
                                         <div class="card-body p-1">
                                             <div class="row row-cards mt-1 mb-1">
                                                 <div class="col-3">
-                                                    <label class="form-label">From Company</label>
+                                                    <label class="form-label required">From Company</label>
                                                     <select wire:model.live="selectedFromCompany" class="form-control" required>
                                                         <option value="">-Select Company-</option>
                                                         @foreach ($companiesFrom as $comp)
@@ -85,7 +85,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-3">
-                                                    <label for="" class="form-label">From Warehouse
+                                                    <label for="" class="form-label required">From Warehouse
                                                         <div wire:loading wire:target="selectedFromCompany">
                                                             <i class="fa fa-spinner fa-spin"></i>
                                                         </div>
@@ -101,7 +101,7 @@
                                                 </div>
 
                                                 <div class="col-3">
-                                                    <label class="form-label">To Company</label>
+                                                    <label class="form-label required">To Company</label>
                                                     <select wire:model.live="selectedToCompany" class="form-control" required>
                                                         <option value="">-Select Company-</option>
                                                         @foreach ($companiesTo as $comp)
@@ -111,7 +111,7 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-3">
-                                                    <label for="" class="form-label">To Warehouse
+                                                    <label for="" class="form-label required">To Warehouse
                                                         <div wire:loading wire:target="selectedToCompany">
                                                             <i class="fa fa-spinner fa-spin"></i>
                                                         </div>

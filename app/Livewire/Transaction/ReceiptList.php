@@ -11,7 +11,9 @@ use App\Models\Plant;
 use App\Models\Receipt;
 use App\Models\Sloc;
 use App\Models\Uom;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -31,6 +33,10 @@ class ReceiptList extends Component
 
     public function render()
     {
+        $permissions = [
+            'view-loader-receipt-po'
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $receipts = Receipt::whereNull('posting_no')
             ->where('trans_date', $this->filter_date)->search($this->filter_search)
             ->paginate(10);
@@ -39,6 +45,11 @@ class ReceiptList extends Component
 
     public function delete($id)
     {
+        $permissions = [
+            'view-loader-receipt-po'
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        
         try {
             Receipt::whereIn('id', $id)->delete();
             $this->dispatch('success', 'Data has been deleted');

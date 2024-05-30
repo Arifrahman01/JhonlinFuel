@@ -7,14 +7,14 @@
                         <div class="col-6 d-flex justify-content-start">
                             <h1>Loader Receipt Transfer</h1>
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary me-2" wire:click="$dispatch('openCreate')"
-                                data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus"></i>&nbsp;
-                                Create</button>
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openUpload')"
-                                data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-file-excel"></i>&nbsp; Upload</button>
-                        </div>
+                        @can('create-loader-receipt-transfer')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary me-2" wire:click="$dispatch('openCreate')" data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus"></i>&nbsp;
+                                    Create</button>
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openUpload')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-file-excel"></i>&nbsp; Upload</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -31,9 +31,7 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="start_date"
-                                                wire:model="dateFilter" aria-label="Start Date"
-                                                placeholder="Start Date">
+                                            <input type="date" class="form-control form-control-sm" id="start_date" wire:model="dateFilter" aria-label="Start Date" placeholder="Start Date">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -45,17 +43,17 @@
                                     </div>
                                 </div>
                             </form>
+                            @can('delete-loader-receipt-transfer')
                             <div class="ms-2 d-inline-block">
-                                <button id="btn-delete{{ -1 }}" class="btn btn-danger btn-sm"
-                                    onclick="deleteItem({{ -1 }})">
+                                <button id="btn-delete{{ -1 }}" class="btn btn-danger btn-sm" onclick="deleteItem({{ -1 }})">
                                     <i class="fa fa-trash"></i> &nbsp; Delete &nbsp;
                                 </button>
                             </div>
+                            @endcan
+                            @can('posting-loader-receipt-transfer')
                             <div class="ms-2 d-inline-block">
-                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm"
-                                    onclick="postingItem({{ -1 }})">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                        fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="postingItem({{ -1 }})">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
                                         <path
                                             d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z">
                                         </path>
@@ -63,21 +61,17 @@
                                     &nbsp; Posting &nbsp;
                                 </button>
                             </div>
+                            @endcan
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-vcenter card-table table-striped table-bordered"
-                                style="table-layout: auto; min-width:100%;">
+                            <table class="table table-vcenter card-table table-striped table-bordered" style="table-layout: auto; min-width:100%;">
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 5%">
-                                            <input class="form-check-input m-0 align-middle" type="checkbox"
-                                                onchange="checkAll(this)" aria-label="Select all invoices">
+                                            <input class="form-check-input m-0 align-middle" type="checkbox" onchange="checkAll(this)" aria-label="Select all invoices">
                                         </th>
                                         <th class="text-center" style="width: 5%">Action</th>
-                                        <th class="text-center">Posting No</th>
-                                        {{-- <th class="text-center">#</th> --}}
-                                        {{-- <th class="text-center" style="width: 5%">Action</th> --}}
                                         <th class="text-center">Trans Type</th>
                                         <th class="text-center">Trans Date</th>
                                         <th class="text-center">From Company Code</th>
@@ -87,15 +81,7 @@
                                         <th class="text-center">Transportir</th>
                                         <th class="text-center">Material Code</th>
                                         <th class="text-center">Qty</th>
-                                        {{-- <th class="text-center">Notes</th> --}}
-                                        {{-- <th class="w-1"></th> --}}
                                     </tr>
-                                    {{-- <tr>
-                                        <th class="text-center">Company</th>
-                                        <th class="text-center">Warehouse</th>
-                                        <th class="text-center">Company</th>
-                                        <th class="text-center">Warehouse</th>
-                                    </tr> --}}
                                 </thead>
                                 <tbody>
                                     @if ($rcvTransfers->isEmpty())
@@ -103,45 +89,21 @@
                                     @else
                                         @foreach ($rcvTransfers as $rcv)
                                             <tr>
-                                                {{-- <td>
-                                                    <a title="Posting Transfer">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16"
-                                                            height="16" fill="currentColor" class="bi bi-send"
-                                                            viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
-                                                        </svg>
-                                                    </a> &nbsp;
-                                                    <a title="Delete Transfer"
-                                                        onclick="deleteItem({{ $rcv->id }})">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </a> &nbsp;
-
-                                                    <a title="Edit Transfer">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-
-                                                </td> --}}
                                                 <td class="text-center">
-                                                    <input class="form-check-input m-0 align-middle detailCheckbox"
-                                                        value="{{ $rcv->id }}" type="checkbox">
+                                                    <input class="form-check-input m-0 align-middle detailCheckbox" value="{{ $rcv->id }}" type="checkbox">
                                                 </td>
                                                 <td class="text-center text-nowrap">
                                                     @if (!$rcv->posting_no)
-                                                        <a id="btn-delete{{ $rcv->id }}"
-                                                            title="Delete Receipt Transfer"
-                                                            onclick="deleteItem({{ $rcv->id }})">
+                                                        {{-- <a id="btn-delete{{ $rcv->id }}" title="Delete Receipt Transfer" onclick="deleteItem({{ $rcv->id }})">
                                                             <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp;
-                                                        <a title="Edit Receipt Transfer"
-                                                            wire:click="$dispatch('openCreate', [{{ $rcv->id }}])"
-                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                        </a> &nbsp; --}}
+                                                        <a title="Edit Receipt Transfer" wire:click="$dispatch('openCreate', [{{ $rcv->id }}])" data-bs-toggle="modal"
+                                                            data-bs-target="#modal-large">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
                                                     @else
                                                     @endif
                                                 </td>
-                                                <td class="text-center">{{ $rcv->posting_no }}</td>
                                                 <td class="text-center">{{ $rcv->trans_type }}</td>
                                                 <td class="text-center">{{ $rcv->trans_date }}</td>
                                                 <td class="text-center">{{ $rcv->from_company_code }}</td>

@@ -16,6 +16,8 @@ use App\Models\Sloc;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
 
 class IssueList extends Component
 {
@@ -30,6 +32,10 @@ class IssueList extends Component
     }
     public function render()
     {
+        $permissions = [
+            'view-loader-issue'
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $issues = Issue::sumQty($this->filter_date);
         return view('livewire.transaction.issue-list', ['issues' => $issues]);
     }

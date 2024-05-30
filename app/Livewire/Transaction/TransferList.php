@@ -9,7 +9,9 @@ use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
 use App\Models\Sloc;
 use App\Models\Transfer;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -31,6 +33,10 @@ class TransferList extends Component
 
     public function render()
     {
+        $permissions = [
+            'view-loader-transfer'
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $transfers = Transfer::where('trans_date',$this->filter_date)->whereNull('posting_no')->search($this->filter_search)->paginate(10);
         return view('livewire.transaction.transfer-list',['transfers' => $transfers]);
     }
