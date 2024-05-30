@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('reference')->nullable();
             $table->string('posting_no')->nullable()->comment('diisi ketika sudah posting');
             $table->string('error_status')->nullable();
+            $table->longText('notes')->nullable();
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();
