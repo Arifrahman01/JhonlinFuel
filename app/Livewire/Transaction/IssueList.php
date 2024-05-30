@@ -76,7 +76,7 @@ class IssueList extends Component
                 // $message = false; //hapus untuk kondisi asli
                 if ($message) {
                     $value->update([
-                        'status_error' => $message
+                        'error_status' => $message
                     ]);
                 }
             }

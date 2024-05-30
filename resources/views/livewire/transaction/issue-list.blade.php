@@ -105,20 +105,18 @@
                                                         @can('delete-loader-issue')
                                                         <a id="btn-delete{{ $detail->id ?? '' }}" title="Deleted Transaction" onclick="deleteItem({{ $detail->id }})">
                                                             <i class="fas fa-trash-alt"></i>
-                                                        </a>
+                                                        </a> &nbsp;
                                                         @endcan
                                                         @can('edit-loader-issue')
                                                         <a title="Edit Transaction" wire:click="$dispatch('openEdit', [{{ $detail->id ?? '' }}])" data-bs-toggle="modal"
                                                             data-bs-target="#modal-large">
                                                             <i class="fas fa-edit"></i>
-                                                        </a>
+                                                        </a> &nbsp;
                                                         @endcan
 
-                                                        @if (!$detail->status_error == null) 
-                                                            <i href="#" class="fa fa-info-circle" style="color: red" title="{{ $detail->status_error }}">
-                                                            </i>
-                                                        @else
-                                                            &nbsp;
+                                                        @if (!$detail->error_status == null) 
+                                                            <i href="#" class="fa fa-info-circle" style="color: red" title="{{ $detail->error_status }}">
+                                                            </i>  &nbsp;
                                                         @endif
 
 
