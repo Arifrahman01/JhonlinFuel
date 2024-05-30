@@ -5,9 +5,11 @@ namespace App\Livewire;
 use App\Exports\TransferExport;
 use App\Models\Company;
 use App\Models\Transfer;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 class TransferPostingList extends Component
 {
@@ -27,6 +29,10 @@ class TransferPostingList extends Component
 
     public function render()
     {
+        $permissions = [
+            'view-transaksi-transfer'
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $transfers = Transfer::search($this->q)->with(['fromCompany','toCompany','fromSloc','toSloc','materials','equipments'])
         ->when($this->c, function ($query, $c) {
             $query->where(function ($query) use ($c) {

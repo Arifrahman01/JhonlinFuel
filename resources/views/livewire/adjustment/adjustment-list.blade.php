@@ -7,12 +7,12 @@
                         <div class="col-6">
                             Adjustment
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
-                                data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp;
-                                Create</button>
-                        </div>
+                        @can('create-transaksi-adjustment')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')" data-bs-toggle="modal" data-bs-target="#modal-large"><i class="fa fa-plus-circle"></i>&nbsp;
+                                    Create</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -29,9 +29,7 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="text" id="search" class="form-control form-control-sm"
-                                                aria-label="Adjustment No" placeholder="Adjustment No"
-                                                wire:model="adjNo">
+                                            <input type="text" id="search" class="form-control form-control-sm" aria-label="Adjustment No" placeholder="Adjustment No" wire:model="adjNo">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -47,8 +45,8 @@
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="start_date" wire:model="start_date" aria-label="Start Date"
-                                                placeholder="Start Date" value="{{ $start_date }}">
+                                            <input type="date" class="form-control form-control-sm" id="start_date" wire:model="start_date" aria-label="Start Date" placeholder="Start Date"
+                                                value="{{ $start_date }}">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -65,7 +63,7 @@
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             <button type="submit" class="btn btn-primary btn-sm">
-                                                &nbsp; <i class="fa fa-search"></i>   &nbsp;  Cari &nbsp;
+                                                &nbsp; <i class="fa fa-search"></i> &nbsp; Cari &nbsp;
                                             </button>
                                         </div>
                                     </div>
@@ -110,8 +108,7 @@
                                         {!! dataNotFond(6) !!}
                                     @else
                                         @foreach ($adjusts as $adjust)
-                                            <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1"
-                                                aria-expanded="false">
+                                            <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1" aria-expanded="false">
                                                 <td>{{ ($adjusts->currentPage() - 1) * $adjusts->perPage() + $loop->index + 1 }}
                                                 </td>
                                                 <td>{{ data_get($adjust, 'company.company_name') }}</td>
@@ -119,8 +116,7 @@
                                                 <td colspan="4">{{ $adjust->adjustment_no }}</td>
                                             </tr>
                                             @foreach ($adjust->details as $detail)
-                                                <tr role="row" aria-level="2" aria-posinset="2" aria-setsize="3"
-                                                    class="hidden">
+                                                <tr role="row" aria-level="2" aria-posinset="2" aria-setsize="3" class="hidden">
                                                     <td></td>
                                                     <td>{{ $detail->plant->plant_name }}</td>
                                                     <td>{{ $detail->sloc->sloc_name }}</td>
