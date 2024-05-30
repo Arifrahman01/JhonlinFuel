@@ -112,7 +112,7 @@ class ReceiptTransferList extends Component
             $message = 'Material Code ' . $data->material_code . ' not registered in master';
         }
 
-        if ($qtyTransitFromWarehouse >= 0 || abs($qtyTransitFromWarehouse) < $data->qty) {
+        if ($qtyTransitFromWarehouse >= 0 && abs($qtyTransitFromWarehouse) < $data->qty) {
             $message = 'Qty Transit from warehouse is not enough';
         }
 
@@ -126,9 +126,9 @@ class ReceiptTransferList extends Component
         try {
             foreach ($ids as $id) {
                 $receiptTransfer = ReceiptTransfer::findOrFail($id);
-                $date = new DateTime($this->adjDate);
+                $date = new DateTime($receiptTransfer->trans_date);
                 $year = $date->format('Y');
-                $lastPosting = ReceiptTransfer::where('company_code', $receiptTransfer->company_code)
+                $lastPosting = ReceiptTransfer::where('from_company_code', $receiptTransfer->company_code)
                     ->max('posting_no');
                 $number = 0;
                 if (isset($lastPosting)) {
@@ -137,7 +137,7 @@ class ReceiptTransferList extends Component
                         $number = $explod[2];
                     }
                 }
-                $newPostingNumber = $year . '/' . $receiptTransfer->company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
+                $newPostingNumber = $year . '/' . $receiptTransfer->from_company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
 
                 $receiptTransfer->update([
                     'posting_no' => $newPostingNumber,
@@ -178,7 +178,6 @@ class ReceiptTransferList extends Component
             $this->dispatch('success', 'Data has been posting :' . $newPostingNumber);
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
             $this->dispatch('error', $th->getMessage());
         }
     }
