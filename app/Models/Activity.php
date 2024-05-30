@@ -10,19 +10,19 @@ class Activity extends BaseModel
 {
     protected $table = 'activities';
 
-    public function company() :BelongsTo
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
     }
 
     public function hasData(): bool
     {
-        if (TmpTransaction::where('activity', $this->activity_code)->exists()) {
-            return true;
-        }
-        if (Transaction::where('activity_id', $this->id)->exists()) {
-            return true;
-        }
+        // if (TmpTransaction::where('activity', $this->activity_code)->exists()) {
+        //     return true;
+        // }
+        // if (Transaction::where('activity_id', $this->id)->exists()) {
+        //     return true;
+        // }
         return false;
     }
 
@@ -31,8 +31,8 @@ class Activity extends BaseModel
         return $query->when($filters, function ($query, $value) {
             $query->where(function ($query) use ($value) {
                 $query->where('activity_code', 'like', '%' . $value . '%')
-                      ->orWhere('activity_name', 'like', '%' . $value . '%')
-                      ->orWhere('notes', 'like', '%' . $value . '%');
+                    ->orWhere('activity_name', 'like', '%' . $value . '%')
+                    ->orWhere('notes', 'like', '%' . $value . '%');
             });
         });
     }
