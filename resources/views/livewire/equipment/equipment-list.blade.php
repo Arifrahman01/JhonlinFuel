@@ -7,11 +7,14 @@
                         <div class="col-6">
                             Equipment
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp;
-                                Create</button>
-                        </div>
+                        @can('create-master-equipment')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
+                                    data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-plus-circle"></i>&nbsp;
+                                    Create</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -51,13 +54,14 @@
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="text" class="form-control form-control-sm" aria-label="Code, Name" placeholder="Equipment" wire:model.live="q">
+                                            <input type="text" class="form-control form-control-sm"
+                                                aria-label="Code, Name" placeholder="Equipment" wire:model.live="q">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
                                             <button type="submit" class="btn btn-primary btn-sm">
-                                               <i class="fa fa-search"></i> &nbsp; Cari &nbsp;
+                                                <i class="fa fa-search"></i> &nbsp; Cari &nbsp;
                                             </button>
                                         </div>
                                     </div>
@@ -83,15 +87,21 @@
                                     @else
                                         @foreach ($equipments as $idx => $equipment)
                                             <tr class="text-nowrap">
-                                                <td class="text-center">{{ ($idx+1) }}</td>
+                                                <td class="text-center">{{ $idx + 1 }}</td>
                                                 <td class="text-center">
-                                                    <a id="btn-delete{{ $equipment->id }}" title="Delete equipment" onclick="deleteItem({{ $equipment->id }})">
-                                                        <i class="fas fa-trash-alt"></i>
-                                                    </a> &nbsp;
-
-                                                    <a title="Edit equipment" wire:click="$dispatch('openCreate', [{{ $equipment->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
+                                                    @can('delete-master-equipment')
+                                                        <a id="btn-delete{{ $equipment->id }}" title="Delete equipment"
+                                                            onclick="deleteItem({{ $equipment->id }})">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </a> &nbsp;
+                                                    @endcan
+                                                    @can('edit-master-equipment')
+                                                        <a title="Edit equipment"
+                                                            wire:click="$dispatch('openCreate', [{{ $equipment->id }}])"
+                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    @endcan
                                                 </td>
                                                 <td>{{ $equipment->company->company_name }}</td>
                                                 <td>{{ $equipment->plant->plant_name }}</td>

@@ -5,8 +5,10 @@ namespace App\Livewire\Activity;
 use App\Models\Activity;
 use App\Models\Company;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Symfony\Component\CssSelector\Node\FunctionNode;
+use Symfony\Component\HttpFoundation\Response;
 
 class ActivityCreate extends Component
 {
@@ -17,12 +19,19 @@ class ActivityCreate extends Component
     public $codeReadOnly = false;
     protected $listeners = ['openCreate'];
 
-    public Function mount()
+    public function mount()
     {
         $this->loading = true;
     }
     public function render()
     {
+        $permissions = [
+            'view-master-activity',
+            'create-master-activity',
+            'edit-master-activity',
+            'delete-master-activity',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         return view('livewire.activity.activity-create', ['companies' => $companies]);
     }
@@ -32,6 +41,11 @@ class ActivityCreate extends Component
     }
     public function openCreate($id = null)
     {
+        $permissions = [
+            'create-master-activity',
+            'edit-master-activity',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         if ($id) {
             $this->statusModal = 'Edit';
             $activity = Activity::find($id);
@@ -41,7 +55,7 @@ class ActivityCreate extends Component
             $this->activityName = $activity->activity_name;
             $this->notes = $activity->notes;
             $this->activityId = $id;
-        }else{
+        } else {
             $this->activityId = null;
             // $this->codeReadOnly = false;
             $this->statusModal = 'Create';
@@ -55,6 +69,11 @@ class ActivityCreate extends Component
 
     public function store()
     {
+        $permissions = [
+            'create-master-activity',
+            'edit-master-activity',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         DB::beginTransaction();
         try {
             if ($this->activityId) {
@@ -95,6 +114,4 @@ class ActivityCreate extends Component
             $this->dispatch('error', $th->getMessage());
         }
     }
-
-
 }

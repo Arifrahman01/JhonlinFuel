@@ -7,11 +7,14 @@
                         <div class="col-6">
                             Activity
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp;
-                                Create</button>
-                        </div>
+                        @can('create-master-activity')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
+                                    data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-plus-circle"></i>&nbsp;
+                                    Create</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -39,7 +42,8 @@
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="text" class="form-control form-control-sm" aria-label="Code, Name" placeholder="Code, Name" wire:model.live="q">
+                                            <input type="text" class="form-control form-control-sm"
+                                                aria-label="Code, Name" placeholder="Code, Name" wire:model.live="q">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -73,14 +77,21 @@
                                             <tr class="text-nowrap">
                                                 <td class="text-center">{{ $idx + 1 }}</td>
                                                 <td class="text-center">
-                                                    @if (!$activity->hasData())
-                                                        <a id="btn-delete{{ $activity->id }}" title="Delete activity" onclick="deleteItem({{ $activity->id }})">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp;
-                                                    @endif
-                                                    <a title="Edit activity" wire:click="$dispatch('openCreate', [{{ $activity->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
+                                                    @can('delete-master-activity')
+                                                        @if (!$activity->hasData())
+                                                            <a id="btn-delete{{ $activity->id }}" title="Delete activity"
+                                                                onclick="deleteItem({{ $activity->id }})">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </a> &nbsp;
+                                                        @endif
+                                                    @endcan
+                                                    @can('edit-master-activity')
+                                                        <a title="Edit activity"
+                                                            wire:click="$dispatch('openCreate', [{{ $activity->id }}])"
+                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    @endcan
                                                 </td>
                                                 <td>{{ $activity->company->company_name }}</td>
                                                 <td>{{ $activity->activity_code }}</td>

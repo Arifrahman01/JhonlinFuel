@@ -6,7 +6,9 @@ use App\Models\Company;
 use App\Models\Equipment;
 use App\Models\Plant;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\Response;
 
 class EquipmentCreate extends Component
 {
@@ -19,12 +21,19 @@ class EquipmentCreate extends Component
 
     protected $listeners = ['openCreate'];
 
-    public Function mount()
+    public function mount()
     {
         $this->loading = true;
     }
     public function render()
     {
+        $permissions = [
+            'view-master-equipment',
+            'create-master-equipment',
+            'edit-master-equipment',
+            'delete-master-equipment',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         return view('livewire.equipment.equipment-create', ['companies' => $companies]);
     }
@@ -35,6 +44,12 @@ class EquipmentCreate extends Component
     public function openCreate($id = null)
     {
         if ($id) {
+            $permissions = [
+                'create-master-equipment',
+                'edit-master-equipment',
+            ];
+            abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
             $this->statusModal = 'Edit';
             $this->equipmentId = $id;
             $equipment = Equipment::find($id);
@@ -43,7 +58,7 @@ class EquipmentCreate extends Component
             $this->plant = $equipment->plant_id;
             $this->equipmentNo = $equipment->equipment_no;
             $this->equipmentDesc = $equipment->equipment_description;
-        }else{
+        } else {
             $this->equipmentId = null;
             $this->statusModal = 'Create';
             $this->selectedCompany = null;
@@ -61,6 +76,12 @@ class EquipmentCreate extends Component
 
     public function store()
     {
+        $permissions = [
+            'create-master-equipment',
+            'edit-master-equipment',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         DB::beginTransaction();
         try {
             if ($this->equipmentId) {
@@ -77,7 +98,6 @@ class EquipmentCreate extends Component
                     'equipment_no' => $this->equipmentNo,
                     'equipment_description' => $this->equipmentDesc,
                 ]);
-
             } else {
                 $this->validate([
                     'selectedCompany' => 'required|exists:companies,id',
