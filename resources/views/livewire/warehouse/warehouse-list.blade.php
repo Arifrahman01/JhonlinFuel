@@ -7,12 +7,14 @@
                         <div class="col-6">
                             Warehouse
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
-                                data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp;
-                                Create</button>
-                        </div>
+                        @can('create-master-warehouse')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
+                                    data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-plus-circle"></i>&nbsp;
+                                    Create</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -86,18 +88,21 @@
                                         @foreach ($warehouses as $warehouse)
                                             <tr>
                                                 <td class="text-center">
-                                                    @if (!$warehouse->hasDataById() && !$warehouse->hasDataByCode())
-                                                        <a id="btn-delete{{ $warehouse->id }}" title="Delete Warehouse"
-                                                            onclick="deleteItem({{ $warehouse->id }})">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp;
-                                                    @endif
-
-                                                    <a title="Edit Warehouse"
-                                                        wire:click="$dispatch('openCreate', [{{ $warehouse->id }}])"
-                                                        data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
+                                                    @can('delete-master-warehouse')
+                                                        @if (!$warehouse->hasDataById() && !$warehouse->hasDataByCode())
+                                                            <a id="btn-delete{{ $warehouse->id }}" title="Delete Warehouse"
+                                                                onclick="deleteItem({{ $warehouse->id }})">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </a> &nbsp;
+                                                        @endif
+                                                    @endcan
+                                                    @can('edit-master-warehouse')
+                                                        <a title="Edit Warehouse"
+                                                            wire:click="$dispatch('openCreate', [{{ $warehouse->id }}])"
+                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    @endcan
                                                 </td>
                                                 <td>{{ data_get($warehouse, 'company.company_name') }}</td>
                                                 <td>{{ data_get($warehouse, 'plant.plant_name') }}</td>

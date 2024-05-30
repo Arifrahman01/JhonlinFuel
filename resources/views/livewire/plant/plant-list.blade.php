@@ -7,12 +7,14 @@
                         <div class="col-6">
                             Plant
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
-                                data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp;
-                                Create</button>
-                        </div>
+                        @can('create-master-plant')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
+                                    data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-plus-circle"></i>&nbsp;
+                                    Create</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -74,18 +76,21 @@
                                         @foreach ($plants as $plant)
                                             <tr>
                                                 <td class="text-center">
-                                                    @if (!$plant->hasDataById() && !$plant->hasDataByCode())
-                                                        <a id="btn-delete{{ $plant->id }}" title="Delete Plant"
-                                                            onclick="deleteItem({{ $plant->id }})">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp;
-                                                    @endif
-
-                                                    <a title="Edit Plant"
-                                                        wire:click="$dispatch('openCreate', [{{ $plant->id }}])"
-                                                        data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
+                                                    @can('delete-master-plant')
+                                                        @if (!$plant->hasDataById() && !$plant->hasDataByCode())
+                                                            <a id="btn-delete{{ $plant->id }}" title="Delete Plant"
+                                                                onclick="deleteItem({{ $plant->id }})">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </a> &nbsp;
+                                                        @endif
+                                                    @endcan
+                                                    @can('edit-master-plant')
+                                                        <a title="Edit Plant"
+                                                            wire:click="$dispatch('openCreate', [{{ $plant->id }}])"
+                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                    @endcan
                                                 </td>
                                                 <td>{{ data_get($plant, 'company.company_name') }}</td>
                                                 <td>{{ $plant->plant_code }}</td>
