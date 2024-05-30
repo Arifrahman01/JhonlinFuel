@@ -16,8 +16,6 @@ class DepartmentCreate extends Component
     public $loading = false;
     public $statusModal = 'Create';
     public $selectedCompany;
-    public $plants = [];
-    public $selectedPlant;
     public $departmentId;
     public $departmentCode;
     public $departmentCodeReadOnly = false;
@@ -34,11 +32,6 @@ class DepartmentCreate extends Component
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         return view('livewire.department.department-create', compact('companies'));
-    }
-
-    public function updatedSelectedCompany($value)
-    {
-        $this->plants = Plant::where('company_id', $value)->get();
     }
 
     public function closeModal()
@@ -60,15 +53,12 @@ class DepartmentCreate extends Component
             $department = Department::find($id);
             $this->departmentCodeReadOnly = $department->hasDataByCode();
             $this->selectedCompany = $department->company_id;
-            $this->plants = Plant::where('company_id', $department->company_id)->get();
-            $this->selectedPlant = $department->plant_id;
             $this->departmentId = $id;
             $this->departmentCode = $department->department_code;
             $this->departmentName = $department->department_name;
         } else {
             $this->statusModal = 'Create';
             $this->selectedCompany = null;
-            $this->selectedPlant = null;
             $this->departmentId = null;
             $this->departmentCode = null;
             $this->departmentName = null;
@@ -91,7 +81,6 @@ class DepartmentCreate extends Component
             if ($this->departmentId) {
                 $this->validate([
                     'selectedCompany' => 'required',
-                    'selectedPlant' => 'required',
                     'departmentCode' => [
                         'required',
                         Rule::unique('departments', 'department_code')->ignore($this->departmentId),
@@ -104,20 +93,17 @@ class DepartmentCreate extends Component
                 }
                 $department->update([
                     'company_id' => $this->selectedCompany,
-                    'plant_id' => $this->selectedPlant,
                     'department_code' => $this->departmentCode,
                     'department_name' => $this->departmentName,
                 ]);
             } else {
                 $this->validate([
                     'selectedCompany' => 'required',
-                    'selectedPlant' => 'required',
                     'departmentCode' => 'required|unique:departments,department_code',
                     'departmentName' => 'required',
                 ]);
                 $department = Department::create([
                     'company_id' => $this->selectedCompany,
-                    'plant_id' => $this->selectedPlant,
                     'department_code' => $this->departmentCode,
                     'department_name' => $this->departmentName,
                 ]);

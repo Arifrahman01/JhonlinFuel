@@ -31,7 +31,7 @@
                     <div class="modal-body">
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Company</label>
-                            <select wire:model.live="selectedCompany" class="form-select" required>
+                            <select wire:model="selectedCompany" class="form-select" required>
                                 <option value="">-Select Company-</option>
                                 @foreach ($companies as $company)
                                     <option value="{{ $company->id }}">
@@ -39,7 +39,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-12 mb-3">
+                        {{-- <div class="col-12 mb-3">
                             <label for="" class="form-label required">Plant</label>
                             <select wire:model="selectedPlant" wire:key="{{ $selectedCompany }}" class="form-select"
                                 required>
@@ -49,7 +49,7 @@
                                         {{ $plant->plant_name }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> --}}
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Department Code</label>
                             <input type="text" class="form-control" wire:model='departmentCode'
