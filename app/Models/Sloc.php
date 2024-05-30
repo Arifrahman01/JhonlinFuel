@@ -61,9 +61,9 @@ class Sloc extends BaseModel
         ) {
             return true;
         }
-        if (TmpTransaction::where('fuel_warehouse', $this->sloc_code)->exists()) {
-            return true;
-        }
+        // if (TmpTransaction::where('fuel_warehouse', $this->sloc_code)->exists()) {
+        //     return true;
+        // }
 
         return false;
     }

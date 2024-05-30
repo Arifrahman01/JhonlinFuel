@@ -52,9 +52,9 @@ class Plant extends BaseModel
         if (Receipt::where('location', $this->plant_code)->exists()) {
             return true;
         }
-        if (TmpTransaction::where('location', $this->plant_code)->exists()) {
-            return true;
-        }
+        // if (TmpTransaction::where('location', $this->plant_code)->exists()) {
+        //     return true;
+        // }
         return false;
     }
 }
