@@ -58,6 +58,7 @@ class SOHOverview extends Component
             ->groupBy('material_stocks.plant_id')
             ->groupBy('material_stocks.sloc_id')
             ->groupBy('storage_locations.sloc_name')
+            ->orderBy('material_stocks.id')
             ->get();
         return view('livewire.s-o-h-overview', compact('allJhonlin', 'sohPerCompany', 'sohPerPlant', 'sohPerSloc'));
     }
