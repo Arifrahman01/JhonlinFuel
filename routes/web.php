@@ -9,6 +9,7 @@ use App\Livewire\Company\CompanyList;
 use App\Livewire\Dashboard;
 use App\Livewire\Department\DepartmentList;
 use App\Livewire\Equipment\EquipmentList;
+use App\Livewire\FuelConsumption;
 use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\IssuePosting;
 use App\Livewire\Material\MaterialList;
@@ -66,6 +67,7 @@ Route::middleware('auth')->group(function () {
     /* Report */
     Route::get('/soh-overview', SOHOverview::class)->name('soh.index');
     Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');
+    Route::get('/consumption', FuelConsumption::class)->name('consumption.index');
 
     /* Master */
     Route::get('/equipment', EquipmentList::class)->name('equipment.index');

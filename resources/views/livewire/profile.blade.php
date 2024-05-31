@@ -21,15 +21,8 @@
                             <h4 class="subheader">Business settings</h4>
                             <div class="list-group list-group-transparent">
                                 <a href="./settings.html" class="list-group-item list-group-item-action d-flex align-items-center active">My Account</a>
-                                {{-- <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">My Notifications</a>
-                                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">Connected Apps</a>
-                                <a href="./settings-plan.html" class="list-group-item list-group-item-action d-flex align-items-center">Plans</a>
-                                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center">Billing &amp; Invoices</a> --}}
+                             
                             </div>
-                            {{-- <h4 class="subheader mt-4">Experience</h4>
-                            <div class="list-group list-group-transparent">
-                                <a href="#" class="list-group-item list-group-item-action">Give Feedback</a>
-                            </div> --}}
                         </div>
                     </div>
                     <div class="col-12 col-md-9 d-flex flex-column">
@@ -46,27 +39,27 @@
                                         Delete avatar
                                     </a></div>
                             </div>
-                            <h3 class="card-title mt-4">Business Profile</h3>
+                            {{-- {{ dd(Auth::user()) }} --}}
+                            <h3 class="card-title mt-4">Profile</h3>
                             <div class="row g-3">
                                 <div class="col-md">
-                                    <div class="form-label">Business Name</div>
-                                    <input type="text" class="form-control" value="Tabler">
+                                    <div class="form-label">Name</div>
+                                    <input type="text" class="form-control" value="{{ Auth::user()->name }}">
                                 </div>
                                 <div class="col-md">
-                                    <div class="form-label">Business ID</div>
-                                    <input type="text" class="form-control" value="560afc32">
+                                    <div class="form-label">Username</div>
+                                    <input type="text" class="form-control" value="{{ Auth::user()->username }}">
                                 </div>
                                 <div class="col-md">
                                     <div class="form-label">Location</div>
-                                    <input type="text" class="form-control" value="Peimei, China">
+                                    <input type="text" class="form-control" value="{{ Auth::user()->company_id }}">
                                 </div>
                             </div>
                             <h3 class="card-title mt-4">Email</h3>
-                            <p class="card-subtitle">This contact will be shown to others publicly, so choose it carefully.</p>
                             <div>
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" class="form-control w-auto" value="paweluna@howstuffworks.com">
+                                        <input type="text" class="form-control w-auto" value="{{ Auth::user()->email }}">
                                     </div>
                                     <div class="col-auto"><a href="#" class="btn">
                                             Change
