@@ -18,14 +18,19 @@ class Plant extends BaseModel
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 
+    public function slocs()
+    {
+        return $this->hasMany(Sloc::class, 'plant_id', 'id');
+    }
+
     public function hasDataById(): bool
     {
         if (AdjustmentDetail::where('plant_id', $this->id)->exists()) {
             return true;
         }
-        if (Department::where('plant_id', $this->id)->exists()) {
-            return true;
-        }
+        // if (Department::where('plant_id', $this->id)->exists()) {
+        //     return true;
+        // }
         if (Equipment::where('plant_id', $this->id)->exists()) {
             return true;
         }
