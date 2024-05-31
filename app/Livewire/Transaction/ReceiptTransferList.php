@@ -96,7 +96,9 @@ class ReceiptTransferList extends Component
     private function cekData($data)
     {
         $message = false;
-        $fromCompanyAllowed = Company::allowed()->where('company_code', $data->from_company_code)->first();
+        $fromCompanyAllowed = Company::allowed('create-loader-receipt-transfer')
+            ->where('company_code', $data->from_company_code)
+            ->first();
         $fromCompanyExists = Company::where('company_code', $data->from_company_code)->exist();
         $fromWarehouseExists = Sloc::where('sloc_code', $data->from_warehouse)->exists();
         $toCompanyExists = Company::where('company_code', $data->to_company_code)->exists();

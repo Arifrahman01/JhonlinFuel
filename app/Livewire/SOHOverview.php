@@ -4,13 +4,20 @@ namespace App\Livewire;
 
 use App\Models\Material\MaterialStock;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\Response;
 
 class SOHOverview extends Component
 {
     public $title = 'SOH Overview';
     public function render()
     {
+        $permissions = [
+            'view-report-soh-overview',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $allJhonlin = MaterialStock::selectRaw("'All Jhonlin' as company_name")
             ->selectRaw("SUM(IFNULL(qty_soh, 0)) as oh_qty")
             ->selectRaw("SUM(IFNULL(qty_intransit, 0)) as intransit_qty")
