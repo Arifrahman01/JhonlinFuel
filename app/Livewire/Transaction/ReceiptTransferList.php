@@ -68,6 +68,9 @@ class ReceiptTransferList extends Component
                 $message = $this->cekData($value);
             }
             if ($message) {
+                $value->update([
+                    'error_status' => $message
+                ]);
                 $this->dispatch('error', $message);
             } else {
                 $this->storeData($id);

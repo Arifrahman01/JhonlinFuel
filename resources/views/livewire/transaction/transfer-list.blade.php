@@ -96,14 +96,18 @@
                                                         <td class="text-center">
                                                             <input class="form-check-input m-0 align-middle detailCheckbox" value="{{ $val->id }}" type="checkbox">
                                                         </td>
-                                                        <td class="text-nowrap">
+                                                        <td class="text-nowrap text center">
                                                             @can('edit-loader-transfer')
                                                                 @if (!$val->posting_no)
                                                                     <a title="Edit User" wire:click="$dispatch('openCreate', [{{ $val->id }}])" data-bs-toggle="modal" data-bs-target="#modal-large">
                                                                         <i class="fas fa-edit"></i>
-                                                                    </a>
+                                                                    </a> &nbsp;
                                                                 @endif
                                                             @endcan
+                                                            @if (!$val->error_status == null)
+                                                                <i href="#" class="fa fa-info-circle" style="color: red" title="{{ $val->error_status }}">
+                                                                </i>
+                                                            @endif
                                                         </td>
                                                         <td>{{ $val->trans_type }}</td>
                                                         <td>{{ $val->from_company_code }}</td>

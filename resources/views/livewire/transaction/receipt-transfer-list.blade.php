@@ -44,23 +44,23 @@
                                 </div>
                             </form>
                             @can('delete-loader-receipt-transfer')
-                            <div class="ms-2 d-inline-block">
-                                <button id="btn-delete{{ -1 }}" class="btn btn-danger btn-sm" onclick="deleteItem({{ -1 }})">
-                                    <i class="fa fa-trash"></i> &nbsp; Delete &nbsp;
-                                </button>
-                            </div>
+                                <div class="ms-2 d-inline-block">
+                                    <button id="btn-delete{{ -1 }}" class="btn btn-danger btn-sm" onclick="deleteItem({{ -1 }})">
+                                        <i class="fa fa-trash"></i> &nbsp; Delete &nbsp;
+                                    </button>
+                                </div>
                             @endcan
                             @can('posting-loader-receipt-transfer')
-                            <div class="ms-2 d-inline-block">
-                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="postingItem({{ -1 }})">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
-                                        <path
-                                            d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z">
-                                        </path>
-                                    </svg>
-                                    &nbsp; Posting &nbsp;
-                                </button>
-                            </div>
+                                <div class="ms-2 d-inline-block">
+                                    <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="postingItem({{ -1 }})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                                            <path
+                                                d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z">
+                                            </path>
+                                        </svg>
+                                        &nbsp; Posting &nbsp;
+                                    </button>
+                                </div>
                             @endcan
                         </div>
 
@@ -93,15 +93,17 @@
                                                     <input class="form-check-input m-0 align-middle detailCheckbox" value="{{ $rcv->id }}" type="checkbox">
                                                 </td>
                                                 <td class="text-center text-nowrap">
-                                                    @if (!$rcv->posting_no)
-                                                        {{-- <a id="btn-delete{{ $rcv->id }}" title="Delete Receipt Transfer" onclick="deleteItem({{ $rcv->id }})">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp; --}}
-                                                        <a title="Edit Receipt Transfer" wire:click="$dispatch('openCreate', [{{ $rcv->id }}])" data-bs-toggle="modal"
-                                                            data-bs-target="#modal-large">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                    @else
+                                                    @can('edit-loader-receipt-transfer')
+                                                        @if (!$rcv->posting_no)
+                                                            <a title="Edit Receipt Transfer" wire:click="$dispatch('openCreate', [{{ $rcv->id }}])" data-bs-toggle="modal"
+                                                                data-bs-target="#modal-large">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a> &nbsp;
+                                                        @endif
+                                                    @endcan
+                                                    @if (!$rcv->error_status == null)
+                                                        <i href="#" class="fa fa-info-circle" style="color: red" title="{{ $rcv->error_status }}">
+                                                        </i>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">{{ $rcv->trans_type }}</td>
