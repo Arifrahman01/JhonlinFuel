@@ -8,9 +8,11 @@ use App\Models\Material\Material;
 use App\Models\ReceiptTransfer;
 use App\Models\Sloc;
 use App\Models\Uom;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReceiptTransferCreate extends Component
 {
@@ -99,7 +101,14 @@ class ReceiptTransferCreate extends Component
 
     public function render()
     {
-        $this->companies = Company::all();
+        $permissions = [
+            'view-loader-receipt-transfer',
+            'create-loader-receipt-transfer',
+            'edit-loader-receipt-transfer',
+            'delete-loader-receipt-transfer',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $this->companies = Company::allowed('create-loader-receipt-transfer')->get();
         $this->materials = Material::all();
         return view('livewire.transaction.receipt-transfer-create');
     }
@@ -198,7 +207,30 @@ class ReceiptTransferCreate extends Component
 
     public function closeModal()
     {
-        $this->loading = false;
+        $this->statusModal = 'Create';
+        $this->fileLoader = null;
+
+        $this->rcvId = null;
+
+        $this->transDate = null;
+
+        $this->fromSlocs = [];
+        $this->selectedFromCompany = null;
+        $this->selectedFromWarehouse = null;
+        $this->companies = [];
+        $this->selectedToCompany = null;
+        $this->isLoadingFromWarehouse = false;
+
+        $this->toSlocs = [];
+        $this->selectedToWarehouse = null;
+        $this->isLoadingToWarehouse = false;
+
+        $this->transportir = null;
+        $this->materials = null;
+        $this->selectedMaterial = null;
+
+        $this->qty = null;
+        $this->loading = true;
         // $this->dataTransfer = null;
         // $this->id = null;
     }

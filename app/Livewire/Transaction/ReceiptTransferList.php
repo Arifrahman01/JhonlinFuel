@@ -25,7 +25,11 @@ class ReceiptTransferList extends Component
     public function render()
     {
         $permissions = [
-            'view-loader-receipt-transfer'
+            'view-loader-receipt-transfer',
+            'create-loader-receipt-transfer',
+            'edit-loader-receipt-transfer',
+            'delete-loader-receipt-transfer',
+            'posting-loader-receipt-transfer',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $rcvTransfers = ReceiptTransfer::with([
@@ -51,6 +55,10 @@ class ReceiptTransferList extends Component
 
     public function delete($id)
     {
+        $permissions = [
+            'delete-loader-receipt-transfer',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             ReceiptTransfer::whereIn('id', $id)->delete();
             $this->dispatch('success', 'Data has been deleted');
@@ -61,6 +69,11 @@ class ReceiptTransferList extends Component
 
     public function posting($id)
     {
+        $permissions = [
+            'posting-loader-receipt-transfer',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $message = false;
         $data = ReceiptTransfer::whereIn('id', $id)->get();
         if ($data->isNotEmpty()) {
@@ -73,7 +86,7 @@ class ReceiptTransferList extends Component
                 ]);
                 $this->dispatch('error', $message);
             } else {
-                $this->storeData($id);
+                $this->storeData($data);
             }
         } else {
             $this->dispatch('error', 'There is no data to posting');
@@ -83,7 +96,8 @@ class ReceiptTransferList extends Component
     private function cekData($data)
     {
         $message = false;
-        $fromCompanyExists = Company::where('company_code', $data->from_company_code)->first();
+        $fromCompanyAllowed = Company::allowed()->where('company_code', $data->from_company_code)->first();
+        $fromCompanyExists = Company::where('company_code', $data->from_company_code)->exist();
         $fromWarehouseExists = Sloc::where('sloc_code', $data->from_warehouse)->exists();
         $toCompanyExists = Company::where('company_code', $data->to_company_code)->exists();
         $toWarehouseExists = Sloc::where('sloc_code', $data->to_warehouse)->exists();
@@ -93,8 +107,8 @@ class ReceiptTransferList extends Component
             ->value('id'))
             ->value('qty_intransit');
 
-        if (!$fromCompanyExists) {
-            $message = 'Company code from ' . $data->from_company_code . ' not registered in master';
+        if (!$fromCompanyAllowed) {
+            $message = 'Anda tidak punya akses Company code from ' . $data->from_company_code;
         }
         if (!$fromCompanyExists) {
             $message = 'Company code from ' . $data->from_company_code . ' not registered in master';
@@ -115,32 +129,31 @@ class ReceiptTransferList extends Component
             $message = 'Material Code ' . $data->material_code . ' not registered in master';
         }
 
-        if ($qtyTransitFromWarehouse >= 0 && abs($qtyTransitFromWarehouse) < $data->qty) {
+        if ($qtyTransitFromWarehouse >= 0 || abs($qtyTransitFromWarehouse) < $data->qty) {
             $message = 'Qty Transit from warehouse is not enough';
         }
 
         return $message;
     }
 
-    public function storeData($ids)
+    public function storeData($data)
     {
-        // dd($ids);
         DB::beginTransaction();
         try {
-            foreach ($ids as $id) {
-                $receiptTransfer = ReceiptTransfer::findOrFail($id);
-                $date = new DateTime($receiptTransfer->trans_date);
-                $year = $date->format('Y');
-                $lastPosting = ReceiptTransfer::where('from_company_code', $receiptTransfer->company_code)
-                    ->max('posting_no');
-                $number = 0;
-                if (isset($lastPosting)) {
-                    $explod = explode('/', $lastPosting);
-                    if ($explod[0] == $year) {
-                        $number = $explod[2];
-                    }
+            $date = new DateTime($data[0]->trans_date);
+            $year = $date->format('Y');
+            $lastPosting = ReceiptTransfer::where('from_company_code', $data[0]->company_code)
+                ->max('posting_no');
+            $number = 0;
+            if (isset($lastPosting)) {
+                $explod = explode('/', $lastPosting);
+                if ($explod[0] == $year) {
+                    $number = $explod[2];
                 }
-                $newPostingNumber = $year . '/' . $receiptTransfer->from_company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
+            }
+            $newPostingNumber = $year . '/' . $data[0]->from_company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
+
+            foreach ($data as $receiptTransfer) {
 
                 $receiptTransfer->update([
                     'posting_no' => $newPostingNumber,
