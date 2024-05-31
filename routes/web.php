@@ -15,6 +15,7 @@ use App\Livewire\Material\MaterialList;
 use App\Livewire\UOM\UOMList;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Plant\PlantList;
+use App\Livewire\Profile;
 use App\Livewire\ReceiptPostingList;
 use App\Livewire\ReceiptTransferPostingList;
 use App\Livewire\Role\RoleList;
@@ -79,6 +80,7 @@ Route::middleware('auth')->group(function () {
 
     /* Manajement User */
     Route::get('/role', RoleList::class)->name('role.index');
+    Route::get('/profile', Profile::class)->name('profile.index');
 
     Route::get('/', Dashboard::class)->name('home');
 });
