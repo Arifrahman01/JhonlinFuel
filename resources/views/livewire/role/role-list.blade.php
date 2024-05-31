@@ -7,12 +7,14 @@
                         <div class="col-6">
                             Role
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
-                                data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp;
-                                Create</button>
-                        </div>
+                        @can('create-role')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
+                                    data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-plus-circle"></i>&nbsp;
+                                    Create</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -67,18 +69,21 @@
                                                     <td></td>
                                                 @else
                                                     <td class="text-center align-top">
-                                                        @if (!$role->hasDataById())
-                                                            <a id="btn-delete{{ $role->id }}" title="Delete Role"
-                                                                onclick="deleteItem({{ $role->id }})">
-                                                                <i class="fas fa-trash-alt"></i>
-                                                            </a> &nbsp;
-                                                        @endif
-
-                                                        <a title="Edit Role"
-                                                            wire:click="$dispatch('openCreate', [{{ $role->id }}])"
-                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
+                                                        @can('delete-role')
+                                                            @if (!$role->hasDataById())
+                                                                <a id="btn-delete{{ $role->id }}" title="Delete Role"
+                                                                    onclick="deleteItem({{ $role->id }})">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </a> &nbsp;
+                                                            @endif
+                                                        @endcan
+                                                        @can('edit-role')
+                                                            <a title="Edit Role"
+                                                                wire:click="$dispatch('openCreate', [{{ $role->id }}])"
+                                                                data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                                <i class="fas fa-edit"></i>
+                                                            </a>
+                                                        @endcan
                                                     </td>
                                                 @endif
                                                 <td class="align-top">{{ $role->role_code }}</td>

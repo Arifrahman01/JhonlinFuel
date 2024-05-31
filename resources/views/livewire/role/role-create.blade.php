@@ -55,7 +55,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- {{ dd($permissions) }} --}}
                                         @foreach ($permissions as $permission)
                                             <tr>
                                                 <td>
@@ -74,14 +73,13 @@
                                 </table>
                             </div>
                         </div>
-
-
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn me-auto" data-bs-dismiss="modal"
                             wire:click="closeModal">Close</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp; Save</button>
+                        @canany(['create-role', 'edit-role'])
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp; Save</button>
+                        @endcanany
                     </div>
                 </form>
             @endif
