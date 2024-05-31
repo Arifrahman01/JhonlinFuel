@@ -99,7 +99,7 @@ class ReceiptTransferList extends Component
         $fromCompanyAllowed = Company::allowed('create-loader-receipt-transfer')
             ->where('company_code', $data->from_company_code)
             ->first();
-        $fromCompanyExists = Company::where('company_code', $data->from_company_code)->exist();
+        $fromCompanyExists = Company::where('company_code', $data->from_company_code)->exists();
         $fromWarehouseExists = Sloc::where('sloc_code', $data->from_warehouse)->exists();
         $toCompanyExists = Company::where('company_code', $data->to_company_code)->exists();
         $toWarehouseExists = Sloc::where('sloc_code', $data->to_warehouse)->exists();

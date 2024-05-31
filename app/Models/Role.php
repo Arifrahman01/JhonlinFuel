@@ -20,6 +20,6 @@ class Role extends BaseModel
 
     public function hasDataById(): bool
     {
-        return Role::whereHas('users')->where('id', $this->id)->exists();
+        return $this->users()->exists();
     }
 }
