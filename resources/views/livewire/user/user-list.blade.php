@@ -7,11 +7,13 @@
                         <div class="col-6">
                             User
                         </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
-                                data-bs-toggle="modal" data-bs-target="#modal-large"><i
-                                    class="fa fa-plus-circle"></i>&nbsp; Create</button>
-                        </div>
+                        @can('create-user')
+                            <div class="col-6 d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
+                                    data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                        class="fa fa-plus-circle"></i>&nbsp; Create</button>
+                            </div>
+                        @endcan
                     </h2>
                 </div>
             </div>
@@ -97,16 +99,21 @@
                                             @else
                                                 <tr>
                                                     <td rowspan="{{ count($user->roles) }}">
-                                                        <a id="btn-delete{{ $user->id }}" title="Delete User"
-                                                            onclick="deleteItem({{ $user->id }})">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </a> &nbsp;
-
-                                                        <a title="Edit User"
-                                                            wire:click="$dispatch('openModal', [{{ $user->id }}])"
-                                                            data-bs-toggle="modal" data-bs-target="#modal-large">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
+                                                        @if (auth()->id() != $user->id)
+                                                            @can('delete-user')
+                                                                <a id="btn-delete{{ $user->id }}" title="Delete User"
+                                                                    onclick="deleteItem({{ $user->id }})">
+                                                                    <i class="fas fa-trash-alt"></i>
+                                                                </a> &nbsp;
+                                                            @endcan
+                                                            @can('edit-user')
+                                                                <a title="Edit User"
+                                                                    wire:click="$dispatch('openModal', [{{ $user->id }}])"
+                                                                    data-bs-toggle="modal" data-bs-target="#modal-large">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
+                                                            @endcan
+                                                        @endif
                                                     </td>
                                                     <td rowspan="{{ count($user->roles) }}">{{ $user->name }}</td>
                                                     <td rowspan="{{ count($user->roles) }}">{{ $user->username }}</td>
@@ -115,9 +122,11 @@
                                                     </td>
                                                     <td>
                                                         <ul>
-                                                            <li>
-                                                                {{ data_get($user, 'roles.0.pivot.companies.0.company_name') }}
-                                                            </li>
+                                                            @foreach (data_get($user, 'roles.0.pivot.companies') as $company__)
+                                                                <li>
+                                                                    {{ $company__->company_name }}
+                                                                </li>
+                                                            @endforeach
                                                         </ul>
                                                     </td>
                                                 </tr>

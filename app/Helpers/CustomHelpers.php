@@ -35,12 +35,11 @@ if (!function_exists('allowedCompanyId')) {
     function allowedCompanyId($otorisasi): array
     {
         $user = User::with('roles.permissions')->find(auth()->id());
-        $roleCode = data_get($user, 'roles.*.code');
+        $roleCode = data_get($user, 'roles.*.role_code');
 
         if (in_array('sa', $roleCode)) {
             return data_get(Company::all(), '*.id');
         }
-
         foreach ($user->roles as $role) {
             if (in_array($otorisasi, data_get($role, 'permissions.*.permission_code'))) {
                 return data_get($role, 'pivot.companies.*.id');
@@ -54,7 +53,7 @@ if (!function_exists('allowedCompanyCode')) {
     function allowedCompanyCode($otorisasi): array
     {
         $user = User::with('roles.permissions')->find(auth()->id());
-        $roleCode = data_get($user, 'roles.*.code');
+        $roleCode = data_get($user, 'roles.*.role_code');
 
         if (in_array('sa', $roleCode)) {
             return data_get(Company::all(), '*.company_code');

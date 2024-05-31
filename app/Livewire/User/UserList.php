@@ -5,8 +5,10 @@ namespace App\Livewire\User;
 
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserList extends Component
 {
@@ -20,6 +22,13 @@ class UserList extends Component
 
     public function render()
     {
+        $permissions = [
+            'view-user',
+            'create-user',
+            'edit-user',
+            'delete-user',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $roles = Role::all();
         $users = User::with('roles')
             ->search([
@@ -35,6 +44,10 @@ class UserList extends Component
 
     public function delete($id)
     {
+        $permissions = [
+            'delete-user',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         try {
             $user = User::findOrFail($id);
             $user->delete();
