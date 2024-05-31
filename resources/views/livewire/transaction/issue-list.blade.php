@@ -149,6 +149,7 @@
     </div>
     @livewire('transaction.issue-create')
     @push('scripts')
+    <script src="{{ asset('./dist/js/custom.js') }}"></script>
         <script>
             async function deleteItem(id) {
                 const isConfirmed = await sweetDeleted({

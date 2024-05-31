@@ -282,6 +282,12 @@
                                     SOH Overview
                                 </a>
                             @endcan
+                            @can('view-report-soh-overview')
+                            <a class="dropdown-item {{ request()->is('consumption') || request()->is('consumption/*') ? 'active' : '' }}"
+                                href="{{ route('consumption.index') }}" rel="noopener">
+                                Fuel Consumption 
+                            </a>
+                        @endcan
                             {{-- <a class="dropdown-item" href="./changelog.html">
                             Report 2
                         </a> --}}

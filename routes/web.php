@@ -9,12 +9,14 @@ use App\Livewire\Company\CompanyList;
 use App\Livewire\Dashboard;
 use App\Livewire\Department\DepartmentList;
 use App\Livewire\Equipment\EquipmentList;
+use App\Livewire\FuelConsumption;
 use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\IssuePosting;
 use App\Livewire\Material\MaterialList;
 use App\Livewire\UOM\UOMList;
 use App\Livewire\Quota\QuotaList;
 use App\Livewire\Plant\PlantList;
+use App\Livewire\Profile;
 use App\Livewire\ReceiptPostingList;
 use App\Livewire\ReceiptTransferPostingList;
 use App\Livewire\Role\RoleList;
@@ -65,6 +67,7 @@ Route::middleware('auth')->group(function () {
     /* Report */
     Route::get('/soh-overview', SOHOverview::class)->name('soh.index');
     Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');
+    Route::get('/consumption', FuelConsumption::class)->name('consumption.index');
 
     /* Master */
     Route::get('/equipment', EquipmentList::class)->name('equipment.index');
@@ -79,6 +82,7 @@ Route::middleware('auth')->group(function () {
 
     /* Manajement User */
     Route::get('/role', RoleList::class)->name('role.index');
+    Route::get('/profile', Profile::class)->name('profile.index');
 
     Route::get('/', Dashboard::class)->name('home');
 });
