@@ -6,8 +6,10 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\Response;
 
 class ModalUser extends Component
 {
@@ -87,6 +89,13 @@ class ModalUser extends Component
 
     public function render()
     {
+        $permissions = [
+            'view-user',
+            'create-user',
+            'edit-user',
+            'delete-user',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $companies = Company::all();
         $roles = Role::all();
 
@@ -139,6 +148,11 @@ class ModalUser extends Component
 
     public function store()
     {
+        $permissions = [
+            'create-user',
+            'edit-user',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         DB::beginTransaction();
         try {
 
