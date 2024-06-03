@@ -28,7 +28,7 @@ class ModalUser extends Component
 
     public $roles_ = [];
 
-    protected $listeners = ['openModal', 'toggleAllCompanies'];
+    protected $listeners = ['openModal'];
 
     // public function mount()
     // {
@@ -145,20 +145,20 @@ class ModalUser extends Component
         return false;
     }
 
-    public function updatedAllCompany($value)
-    {
-        $this->selectedCompany = [];
-        if ($value) {
-            foreach ($this->companiesTmp as $record) {
-                $this->selectedCompany[$record['id']] = true;
-            }
-        }
-    }
+    // public function updatedAllCompany($value)
+    // {
+    //     $this->selectedCompany = [];
+    //     if ($value) {
+    //         foreach ($this->companiesTmp as $record) {
+    //             $this->selectedCompany[$record['id']] = true;
+    //         }
+    //     }
+    // }
 
-    public function updatedSelectedCompany()
-    {
-        $this->allCompany = count($this->selectedCompany) == count($this->companiesTmp);
-    }
+    // public function updatedSelectedCompany()
+    // {
+    //     $this->allCompany = count($this->selectedCompany) == count($this->companiesTmp);
+    // }
 
     public function store()
     {
@@ -250,6 +250,23 @@ class ModalUser extends Component
             DB::rollBack();
             $this->dispatch('error', $th->getMessage());
         }
+    }
+
+    public function editItem($index)
+    {
+        $this->selectedRole = $this->roles_[$index]['role_value'];
+        foreach ($this->roles_[$index]['company_value'] as $value) {
+            $this->selectedCompany[$value] = true;
+        }
+        // $this->selectedCompany = data_get($this->roles_[$index], 'company_value');
+        // $this->roles_[] = [
+        //     'role_value' => $role->id,
+        //     'role_text' => $role->role_name,
+        //     'company_value' => data_get($role, 'pivot.companies.*.id'),
+        //     'company_text' => data_get($role, 'pivot.companies.*.company_name'),
+        // ];
+        unset($this->roles_[$index]);
+        $this->roles_ = array_values($this->roles_);
     }
 
     public function deleteItem($index)
