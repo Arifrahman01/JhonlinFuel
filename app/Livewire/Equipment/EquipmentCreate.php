@@ -7,6 +7,7 @@ use App\Models\Equipment;
 use App\Models\Plant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -102,7 +103,12 @@ class EquipmentCreate extends Component
                 $this->validate([
                     'selectedCompany' => 'required|exists:companies,id',
                     'plant' => 'required|exists:plants,id',
-                    'equipmentNo' => 'required|string|max:255|unique:equipments,equipment_no',
+                    'equipmentNo' => [
+                        'required',
+                        'string',
+                        'max:255',
+                        Rule::unique('equipments', 'equipment_no')->whereNull('deleted_at'),
+                    ],
                     'equipmentDesc' => 'required|string|max:255',
                 ]);
                 Equipment::create([

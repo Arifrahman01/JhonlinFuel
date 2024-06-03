@@ -122,32 +122,38 @@
                                                         @foreach ($user->roles as $idx => $role)
                                                             <tr>
                                                                 <td>{{ $role->role_name }}</td>
-                                                                <td>
-                                                                    @php
-                                                                        $prevMenuId = null;
-                                                                    @endphp
-                                                                    @foreach ($role->permissions as $permission)
-                                                                        @if ($permission->menu_id != $prevMenuId)
-                                                                            @if (!is_null($prevMenuId))
-                                                                                <br>
+                                                                @if ($role->role_code == 'sa')
+                                                                    <td>
+                                                                        All
+                                                                    </td>
+                                                                @else
+                                                                    <td>
+                                                                        @php
+                                                                            $prevMenuId = null;
+                                                                        @endphp
+                                                                        @foreach ($role->permissions as $permission)
+                                                                            @if ($permission->menu_id != $prevMenuId)
+                                                                                @if (!is_null($prevMenuId))
+                                                                                    <br>
+                                                                                @endif
+                                                                                @php
+                                                                                    $prevMenuId = $permission->menu_id;
+                                                                                @endphp
                                                                             @endif
-                                                                            @php
-                                                                                $prevMenuId = $permission->menu_id;
-                                                                            @endphp
-                                                                        @endif
-                                                                        @if (explode('-', $permission->permission_code)[0] == 'view')
-                                                                            <span class="badge bg-blue text-blue-fg mb-2">{{ $permission->permission_name }}</span>
-                                                                        @elseif (explode('-', $permission->permission_code)[0] == 'create')
-                                                                            <span class="badge bg-azure text-azure-fg mb-2">{{ $permission->permission_name }}</span>
-                                                                        @elseif (explode('-', $permission->permission_code)[0] == 'edit')
-                                                                            <span class="badge bg-lime text-lime-fg mb-2">{{ $permission->permission_name }}</span>
-                                                                        @elseif (explode('-', $permission->permission_code)[0] == 'delete')
-                                                                            <span class="badge bg-red text-red-fg mb-2">{{ $permission->permission_name }}</span>
-                                                                        @elseif (explode('-', $permission->permission_code)[0] == 'posting')
-                                                                            <span class="badge bg-orange text-orange-fg mb-2">{{ $permission->permission_name }}</span>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </td>
+                                                                            @if (explode('-', $permission->permission_code)[0] == 'view')
+                                                                                <span class="badge bg-blue text-blue-fg mb-2">{{ $permission->permission_name }}</span>
+                                                                            @elseif (explode('-', $permission->permission_code)[0] == 'create')
+                                                                                <span class="badge bg-azure text-azure-fg mb-2">{{ $permission->permission_name }}</span>
+                                                                            @elseif (explode('-', $permission->permission_code)[0] == 'edit')
+                                                                                <span class="badge bg-lime text-lime-fg mb-2">{{ $permission->permission_name }}</span>
+                                                                            @elseif (explode('-', $permission->permission_code)[0] == 'delete')
+                                                                                <span class="badge bg-red text-red-fg mb-2">{{ $permission->permission_name }}</span>
+                                                                            @elseif (explode('-', $permission->permission_code)[0] == 'posting')
+                                                                                <span class="badge bg-orange text-orange-fg mb-2">{{ $permission->permission_name }}</span>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </td>
+                                                                @endif
                                                             </tr>
                                                         @endforeach
                                                     @endforeach
@@ -214,7 +220,6 @@
                                                                     </ul>
                                                                 </td>
                                                             </tr>
-                                                       
                                                         @endif
                                                     @endforeach
                                                 </tbody>
