@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Symfony\Component\CssSelector\Node\FunctionNode;
 use Symfony\Component\HttpFoundation\Response;
@@ -93,7 +94,12 @@ class ActivityCreate extends Component
             } else {
                 $this->validate([
                     'company' => 'required|exists:companies,id',
-                    'activityCode' => 'required|string|max:255|unique:activities,activity_code',
+                    'activityCode' => [
+                        'required',
+                        'string',
+                        'max:255',
+                        Rule::unique('activities', 'activity_code')->whereNull('deleted_at'),
+                    ],
                     'activityName' => 'required',
                     'notes' => 'required',
                 ]);

@@ -55,7 +55,7 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label for="" class="form-label required">Equipment No</label>
-                            <input type="text" class="form-control" wire:model="equipmentNo" placeholder="Code"
+                            <input type="text" class="form-control" wire:model="equipmentNo" placeholder="Code"  @if ($readOnly) readonly disabled @endif
                                 required oninput="this.value = this.value.toUpperCase()">
                         </div>
                         <div class="col-12 mb-3">

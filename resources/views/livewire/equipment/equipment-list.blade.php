@@ -89,12 +89,14 @@
                                             <tr class="text-nowrap">
                                                 <td class="text-center">{{ $idx + 1 }}</td>
                                                 <td class="text-center">
-                                                    
+
                                                     @can('delete-master-equipment')
+                                                    @if (!$equipment->hasDataByNo())
                                                         <a id="btn-delete{{ $equipment->id }}" title="Delete equipment"
                                                             onclick="deleteItem({{ $equipment->id }})">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </a> &nbsp;
+                                                    @endif
                                                     @endcan
                                                     @can('edit-master-equipment')
                                                         <a title="Edit equipment"
