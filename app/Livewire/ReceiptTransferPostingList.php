@@ -53,5 +53,10 @@ class ReceiptTransferPostingList extends Component
             $this->dispatch('error', $th->getMessage());
         }
     }
+    
+    public function search()
+    {
+        $this->resetPage();
+    }
 
 }
