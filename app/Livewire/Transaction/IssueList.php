@@ -25,7 +25,7 @@ class IssueList extends Component
     public $filter_date;
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['refreshPage'];
-    
+
     public function mount()
     {
         $this->filter_date = $this->filter_date ?? date('Y-m-d');
@@ -52,7 +52,7 @@ class IssueList extends Component
             $transaction->delete();
             $this->dispatch('success', 'Data has been deleted');
         } catch (\Throwable $th) {
-        $this->dispatch('error', $th->getMessage());
+            $this->dispatch('error', $th->getMessage());
         }
     }
 
@@ -156,6 +156,9 @@ class IssueList extends Component
     private function cekData($val)
     {
         $message = false;
+        $companyAllowed = Company::allowed('create-loader-issue')
+            ->where('company_code', $val->company_code)
+            ->first();
         $companyExists = Company::where('company_code', $val->company_code)->exists();
         $fuelWarehouseExist = Sloc::where('sloc_code', $val->warehouse)->exists();
         $transTypeInvalid = in_array($val->trans_type, ['ISS']); /* Hanya untuk ISS/issued */
@@ -164,8 +167,11 @@ class IssueList extends Component
         $locationExist = Plant::where('plant_code', $val->location)->exists();
         $departmentExist = Department::where('department_code', $val->department)->exists();
         $activityExist = Activity::where('activity_code', $val->activity)->exists();
-        $fuelTypeExist = Material::where('material_code',$val->material_code)->exists();
+        $fuelTypeExist = Material::where('material_code', $val->material_code)->exists();
 
+        if (!$companyAllowed) {
+            $message = 'Anda tidak punya akses Company code ' . $val->company_code;
+        }
         if (!$companyExists) {
             $message = 'Company code ' . $val->company_code . ' not registered in master';
         }
@@ -195,5 +201,4 @@ class IssueList extends Component
         }
         return $message;
     }
-
 }

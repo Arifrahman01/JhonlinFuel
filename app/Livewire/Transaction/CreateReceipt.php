@@ -42,7 +42,7 @@ class CreateReceipt extends Component
     {
         $this->loading = true;
         $this->fileLoader = null;
-        $this->companies = Company::all();
+        $this->companies = Company::allowed('create-loader-receipt-po')->get();
         $this->materials = Material::all();
     }
     public function openUpload()
@@ -61,9 +61,9 @@ class CreateReceipt extends Component
             $this->do_no = $this->dataReceipt['do_no'];
             $this->transportir = $this->dataReceipt['transportir'];
             $this->material_code = $this->dataReceipt['material_code'];
-            $this->qty = str_replace('.00', '', $this->dataReceipt['qty']); 
+            $this->qty = str_replace('.00', '', $this->dataReceipt['qty']);
             $this->plants = Plant::where('company_id', Company::where('company_code',  $this->dataReceipt['company_code'])->value('id'))->get();
-            $this->slocs = Sloc::where('plant_id', Plant::where('plant_code',  $this->dataReceipt['location'])->value('id') )->get();
+            $this->slocs = Sloc::where('plant_id', Plant::where('plant_code',  $this->dataReceipt['location'])->value('id'))->get();
         } else {
             $this->dataReceipt = null;
             $this->selectedCompany = null;
@@ -76,7 +76,6 @@ class CreateReceipt extends Component
             $this->qty = null;
             $this->plants = [];
             $this->slocs = [];
-
         }
         $this->statusModal = 'edit';
         $this->loading = false;

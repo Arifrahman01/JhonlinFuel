@@ -38,7 +38,7 @@ class CreateTransfer extends Component
         $this->loading = true;
         $this->fileLoader = null;
         $this->materials = Material::all();
-        $this->companiesFrom = Company::all();
+        $this->companiesFrom = Company::allowed('create-loader-transfer')->get();
         $this->companiesTo = Company::all();
     }
 
@@ -114,7 +114,7 @@ class CreateTransfer extends Component
                     'trans_date'    => $this->trans_date,
                     'from_company_code' => $this->selectedFromCompany,
                     'from_warehouse' => $this->from_warehouse,
-                    'to_company_code'=> $this->selectedToCompany,
+                    'to_company_code' => $this->selectedToCompany,
                     'to_warehouse'  => $this->to_warehouse,
                     'transportir'   => $this->transportir,
                     'material_code' => $this->material_code,
@@ -128,7 +128,7 @@ class CreateTransfer extends Component
                     'trans_date'    => $this->trans_date,
                     'from_company_code' => $this->selectedFromCompany,
                     'from_warehouse' => $this->from_warehouse,
-                    'to_company_code'=> $this->selectedToCompany,
+                    'to_company_code' => $this->selectedToCompany,
                     'to_warehouse'  => $this->to_warehouse,
                     'transportir'   => $this->transportir,
                     'material_code' => $this->material_code,
