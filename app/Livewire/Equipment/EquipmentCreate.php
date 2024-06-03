@@ -19,7 +19,7 @@ class EquipmentCreate extends Component
     public $selectedCompany;
     public $equipmentId;
     public $plants = [];
-
+    public $readOnly = false;
     protected $listeners = ['openCreate'];
 
     public function mount()
@@ -50,10 +50,10 @@ class EquipmentCreate extends Component
                 'edit-master-equipment',
             ];
             abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
             $this->statusModal = 'Edit';
             $this->equipmentId = $id;
             $equipment = Equipment::find($id);
+            $this->readOnly = $equipment->hasDataByNo();
             $this->selectedCompany = $equipment->company_id;
             $this->plants = Plant::where('company_id', $this->selectedCompany)->get();
             $this->plant = $equipment->plant_id;
