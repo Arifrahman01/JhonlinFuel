@@ -41,7 +41,7 @@ class IssueCreate extends Component
     protected $listeners = ['openUpload', 'openEdit'];
     public function mount()
     {
-        $this->companies = Company::all();
+        $this->companies = Company::allowed('create-loader-issue')->get();
         $this->materials = Material::all();
     }
     public function render()
@@ -54,7 +54,7 @@ class IssueCreate extends Component
         $this->loading = false;
     }
 
-  
+
 
     public function updatedSelectedCompany($value)
     {

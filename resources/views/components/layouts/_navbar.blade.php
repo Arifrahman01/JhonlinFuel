@@ -253,7 +253,7 @@
                     </li>
                 @endcanany
                 @canany(['view-report-stock-overview', 'view-report-fuel-consumption'])
-                    <li class="nav-item {{ request()->is('stock-overview') ? 'active' : '' }} dropdown">
+                    <li class="nav-item {{ request()->is('stock-overview') || request()->is('consumption') ? 'active' : '' }} dropdown">
                         <a class="nav-link dropdown-toggle" href="#navbar-help" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">

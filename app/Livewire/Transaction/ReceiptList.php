@@ -49,7 +49,7 @@ class ReceiptList extends Component
             'view-loader-receipt-po'
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        
+
         try {
             Receipt::whereIn('id', $id)->delete();
             $this->dispatch('success', 'Data has been deleted');
@@ -155,6 +155,9 @@ class ReceiptList extends Component
     private function cekData($data)
     {
         $message = false;
+        $companyAllowed = Company::allowed('create-loader-receipt')
+            ->where('company_code', $data->company_code)
+            ->first();
         $companyExists = Company::where('company_code', $data->company_code)->exists();
         $transTypeInvalid = in_array($data->trans_type, ['RCV']);
         $locationExist = Plant::where('plant_code', $data->location)->exists();
@@ -162,7 +165,9 @@ class ReceiptList extends Component
         $transportirExist = Equipment::where('equipment_no', $data->transportir)->exists();
         $materialExist = Material::where('material_code', $data->material_code)->exists();
 
-
+        if (!$companyAllowed) {
+            $message = 'Anda tidak punya akses Company code ' . $data->company_code;
+        }
         if (!$companyExists) {
             $message = 'Company code ' . $data->company_code . ' not registered in master';
         }
