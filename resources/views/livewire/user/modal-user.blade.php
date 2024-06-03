@@ -61,17 +61,17 @@
                                 <div class="col-6"></div>
                                 <div class="row">
                                     <label class="form-label required">Company</label>
-                                    <div class="col-6">
+                                    {{-- <div class="col-6">
                                         <label class="form-check form-check-inline">
                                             <input class="form-check-input" type="checkbox"
-                                                aria-label="Select all company" wire:model.live="allCompany">
+                                                aria-label="Select all company">
                                             <span class="form-check-label"><strong>All</strong></span>
                                         </label>
-                                    </div>
+                                    </div> --}}
                                     @foreach ($companies as $company)
                                         <div class="col-6">
                                             <label class="form-check form-check-inline">
-                                                <input wire:model.live="selectedCompany.{{ $company->id }}"
+                                                <input wire:model="selectedCompany.{{ $company->id }}"
                                                     class="form-check-input check-company" type="checkbox"
                                                     value="{{ $company->id }}">
                                                 <span class="form-check-label">{{ $company->company_name }}</span>
@@ -85,12 +85,11 @@
                                         wire:click="addData">Add</button>
                                 </div>
 
-
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th class="w-1"></th>
+                                                <th style="width: 12%"></th>
                                                 <th>Role</th>
                                                 <th>Company</th>
                                             </tr>
@@ -98,10 +97,13 @@
                                         <tbody>
                                             @foreach ($roles_ as $role_)
                                                 <tr>
-                                                    <td class="align-top">
+                                                    <td class="align-top text-center">
                                                         <a title="Delete Item"
                                                             wire:click="deleteItem({{ $loop->index }})">
                                                             <i class="fas fa-trash-alt"></i>
+                                                        </a> &nbsp;
+                                                        <a title="Edit Item" wire:click="editItem({{ $loop->index }})">
+                                                            <i class="fas fa-edit"></i>
                                                         </a>
                                                     </td>
                                                     <td class="align-top">{{ $role_['role_text'] }}</td>

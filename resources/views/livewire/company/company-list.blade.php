@@ -9,7 +9,7 @@
                         </div>
                         @can('create-master-company')
                             <div class="col-6 d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openModal')"
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
                                     data-bs-toggle="modal" data-bs-target="#modal-large"><i
                                         class="fa fa-plus-circle"></i>&nbsp;
                                     Create</button>
