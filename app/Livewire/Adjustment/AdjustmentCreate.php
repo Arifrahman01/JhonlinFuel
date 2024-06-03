@@ -117,10 +117,11 @@ class AdjustmentCreate extends Component
             if (empty($this->sohAdjustment) || $this->sohAdjustment == 0) {
                 throw new \Exception('Adjust Qty tidak boleh nol');
             }
-
-            if ($this->sohAdjustment < 0 && abs($this->sohAdjustment) > $this->soh) {
-                throw new \Exception('Adjust Qty tidak boleh lebih dari Original Qty');
-            }
+            /*  delete validate minus adjusment
+                if ($this->sohAdjustment < 0 && abs($this->sohAdjustment) > $this->soh) {
+                    throw new \Exception('Adjust Qty tidak boleh lebih dari Original Qty');
+                }
+             */
 
             foreach ($this->datas as $data) {
                 if ($data->sloc_id == $this->selectedSloc) {
