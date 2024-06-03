@@ -4,7 +4,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        SOH Overview
+                        Stock Overview
                     </h2>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                                 </colgroup>
                                 <thead>
                                     <tr>
-                                        <th>Company/Plant/Sloc</th>
+                                        <th>Company/Plant/Warehouse</th>
                                         <th style="text-align: right;">SOH</th>
                                         <th style="text-align: right;">Intransit</th>
                                     </tr>

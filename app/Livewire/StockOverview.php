@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\Response;
 
-class SOHOverview extends Component
+class StockOverview extends Component
 {
-    public $title = 'SOH Overview';
+    public $title = 'Stock Overview';
     public function render()
     {
         $permissions = [
-            'view-report-soh-overview',
+            'view-report-stock-overview',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
@@ -67,6 +67,6 @@ class SOHOverview extends Component
             ->groupBy('storage_locations.sloc_name')
             ->orderBy('material_stocks.id')
             ->get();
-        return view('livewire.s-o-h-overview', compact('allJhonlin', 'sohPerCompany', 'sohPerPlant', 'sohPerSloc'));
+        return view('livewire.stock-overview', compact('allJhonlin', 'sohPerCompany', 'sohPerPlant', 'sohPerSloc'));
     }
 }
