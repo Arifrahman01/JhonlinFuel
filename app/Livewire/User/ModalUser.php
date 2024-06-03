@@ -118,17 +118,31 @@ class ModalUser extends Component
                     $companyTexts[] = (collect($this->companiesTmp))->firstWhere('id', $companyId)['company_name'];
                 }
             }
-            $this->roles_[] = [
-                'role_value' => $this->selectedRole,
-                'role_text' => collect($this->rolesTmp)->firstWhere('id', $this->selectedRole)['role_name'],
-                'company_value' => $companyValues,
-                'company_text' => $companyTexts,
-            ];
+            // Periksa apakah role_value sudah ada
+            if (!$this->roleExists($this->roles_, $this->selectedRole)) {
+                // Tambahkan ke array jika role_value belum ada
+                $this->roles_[] = [
+                    'role_value' => $this->selectedRole,
+                    'role_text' => collect($this->rolesTmp)->firstWhere('id', $this->selectedRole)['role_name'],
+                    'company_value' => $companyValues,
+                    'company_text' => $companyTexts,
+                ];
+            }
             $this->selectedRole = null;
             $this->selectedCompany = [];
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
         }
+    }
+
+    private function roleExists($roles, $selectedRole)
+    {
+        foreach ($roles as $role) {
+            if ($role['role_value'] === $selectedRole) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function updatedAllCompany($value)

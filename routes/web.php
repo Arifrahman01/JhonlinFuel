@@ -1,7 +1,6 @@
 
 <?php
 
-use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProfileController;
 use App\Livewire\Activity\ActivityList;
 use App\Livewire\Adjustment\AdjustmentList;
@@ -14,19 +13,15 @@ use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\IssuePosting;
 use App\Livewire\Material\MaterialList;
 use App\Livewire\UOM\UOMList;
-use App\Livewire\Quota\QuotaList;
 use App\Livewire\Plant\PlantList;
 use App\Livewire\Profile;
 use App\Livewire\ReceiptPostingList;
 use App\Livewire\ReceiptTransferPostingList;
 use App\Livewire\Role\RoleList;
-use App\Livewire\SOHOverview;
+use App\Livewire\StockOverview;
 use App\Livewire\Transaction\IssueList as TransactionIssueList;
-use App\Livewire\Transaction\PostingList;
 use App\Livewire\Transaction\ReceiptList;
 use App\Livewire\Transaction\ReceiptTransferList;
-use App\Livewire\Transaction\ReceivedList;
-use App\Livewire\Transaction\TransactionList;
 use App\Livewire\Transaction\TransferList;
 use App\Livewire\TransferPostingList;
 use App\Livewire\User\UserList;
@@ -65,7 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/loader/receipt-transfer', ReceiptTransferList::class)->name('receipt-transfer.loader');
 
     /* Report */
-    Route::get('/soh-overview', SOHOverview::class)->name('soh.index');
+    Route::get('/stock-overview', StockOverview::class)->name('stock.index');
     Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');
     Route::get('/consumption', FuelConsumption::class)->name('consumption.index');
 

@@ -117,8 +117,8 @@ class MenusTableSeeder extends Seeder
                 'Edit Master UOM',
                 'Delete Master UOM',
             ],
-            'Report SOH Overview' => [
-                'View Report SOH Overview',
+            'Report Stock Overview' => [
+                'View Report Stock Overview',
             ],
             'User' => [
                 'View User',
@@ -131,6 +131,9 @@ class MenusTableSeeder extends Seeder
                 'Create Role',
                 'Edit Role',
                 'Delete Role',
+            ],
+            'Report Fuel Consumption' => [
+                'View Report Fuel Consumption',
             ],
         ];
 

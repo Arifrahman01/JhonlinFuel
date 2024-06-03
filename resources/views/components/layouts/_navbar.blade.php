@@ -237,14 +237,14 @@
                                     @canany(['view-master-material', 'create-master-material', 'edit-master-material',
                                         'delete-master-material'])
                                         <a class="dropdown-item {{ request()->is('material') ? 'active' : '' }}"
-                                    href="{{ route('material.index') }}">
+                                            href="{{ route('material.index') }}">
                                             Material
                                         </a>
                                     @endcanany
                                     @canany(['view-master-uom', 'create-master-uom', 'edit-master-uom',
                                         'delete-master-uom'])
                                         <a class="dropdown-item {{ request()->is('uom') ? 'active' : '' }}"
-                                    href="{{ route('uom.index') }}">
+                                            href="{{ route('uom.index') }}">
                                             Unit Of Measure
                                         </a>
                                     @endcanany
@@ -252,9 +252,8 @@
                             </div>
                     </li>
                 @endcanany
-                @canany(['view-report-soh-overview'])
-                    <li
-                        class="nav-item {{ request()->is('soh-overview') || request()->is('soh-overview/*') ? 'active' : '' }} dropdown">
+                @canany(['view-report-stock-overview', 'view-report-fuel-consumption'])
+                    <li class="nav-item {{ request()->is('stock-overview') ? 'active' : '' }} dropdown">
                         <a class="nav-link dropdown-toggle" href="#navbar-help" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -276,18 +275,18 @@
                         </a>
 
                         <div class="dropdown-menu">
-                            @can('view-report-soh-overview')
-                                <a class="dropdown-item {{ request()->is('soh-overview') || request()->is('soh-overview/*') ? 'active' : '' }}"
-                                    href="{{ route('soh.index') }}" rel="noopener">
-                                    SOH Overview
+                            @can('view-report-stock-overview')
+                                <a class="dropdown-item {{ request()->is('stock-overview') ? 'active' : '' }}"
+                                    href="{{ route('stock.index') }}" rel="noopener">
+                                    Stock Overview
                                 </a>
                             @endcan
-                            @can('view-report-soh-overview')
-                            <a class="dropdown-item {{ request()->is('consumption') || request()->is('consumption/*') ? 'active' : '' }}"
-                                href="{{ route('consumption.index') }}" rel="noopener">
-                                Fuel Consumption 
-                            </a>
-                        @endcan
+                            @can('view-report-fuel-consumption')
+                                <a class="dropdown-item {{ request()->is('consumption') ? 'active' : '' }}"
+                                    href="{{ route('consumption.index') }}" rel="noopener">
+                                    Fuel Consumption
+                                </a>
+                            @endcan
                             {{-- <a class="dropdown-item" href="./changelog.html">
                             Report 2
                         </a> --}}
