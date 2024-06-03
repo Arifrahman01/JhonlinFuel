@@ -136,9 +136,11 @@ class IssueList extends Component
                 $cekStok = MaterialStock::where('company_id', $company->id)->where('plant_id', $location->id)->where('sloc_id', $slocId)->first();
                 if ($cekStok) {
                     $newStock = $cekStok->qty_soh - $tmp->qty;
-                    if ($newStock < 0) {
-                        throw new \Exception('Insufficient stock to issue');
-                    }
+                    /* delete validate issue minus
+                        if ($newStock < 0) {
+                            throw new \Exception('Insufficient stock to issue');
+                        }
+                     */
                     $cekStok->qty_soh = $newStock;
                     $cekStok->save();
                 } else {
