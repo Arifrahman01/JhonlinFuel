@@ -93,7 +93,7 @@
                                         {!! dataNotFond(6) !!}
                                     @else
                                         @foreach ($rcvTransfers as $rcv)
-                                            <tr>
+                                            <tr class="text-nowrap">
                                                 <td class="text-center">
                                                     {{ ($rcvTransfers->currentPage() - 1) * $rcvTransfers->perPage() + $loop->index + 1 }}
                                                 </td>
