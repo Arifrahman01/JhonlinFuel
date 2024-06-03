@@ -24,10 +24,10 @@ class TransferList extends Component
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['refreshPage'];
 
-    
+
     public function mount()
     {
-      
+
         $this->filter_date = $this->filter_date ?? date('Y-m-d');
     }
 
@@ -37,8 +37,8 @@ class TransferList extends Component
             'view-loader-transfer'
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $transfers = Transfer::where('trans_date',$this->filter_date)->whereNull('posting_no')->search($this->filter_search)->paginate(10);
-        return view('livewire.transaction.transfer-list',['transfers' => $transfers]);
+        $transfers = Transfer::where('trans_date', $this->filter_date)->whereNull('posting_no')->search($this->filter_search)->paginate(10);
+        return view('livewire.transaction.transfer-list', ['transfers' => $transfers]);
     }
     public function search()
     {
@@ -51,8 +51,8 @@ class TransferList extends Component
         if ($data->isNotEmpty()) {
             foreach ($data as $key => $value) {
                 $message = $this->cekData($value);
-                 // $message = false; //hapus untuk kondisi asli
-                 if ($message) {
+                // $message = false; //hapus untuk kondisi asli
+                if ($message) {
                     $value->update([
                         'error_status' => $message
                     ]);
@@ -64,7 +64,6 @@ class TransferList extends Component
                 /* Save nya langsung per batch jika tidak ada error di validasi cekData() */
                 $this->storeData($data);
             }
-
         } else {
             $this->dispatch('error', 'There is no data to posting');
         }
@@ -73,6 +72,9 @@ class TransferList extends Component
     private function cekData($data)
     {
         $message = false;
+        $fromCompanyAllowed = Company::allowed('create-loader-transfer')
+            ->where('company_code', $data->from_company_code)
+            ->first();
         $fromCompanyExists = Company::where('company_code', $data->from_company_code)->exists();
         $fromWarehouseExists = Sloc::where('sloc_code', $data->from_warehouse)->exists();
         $toCompanyExists = Company::where('company_code', $data->to_company_code)->exists();
@@ -80,11 +82,14 @@ class TransferList extends Component
         $transportirExist = Equipment::where('equipment_no', $data->transportir)->exists();
         $materialExist = Material::where('material_code', $data->material_code)->exists();
 
+        if (!$fromCompanyAllowed) {
+            $message = 'Anda tidak punya akses Company code from ' . $data->from_company_code;
+        }
         if (!$fromCompanyExists) {
             $message = 'From Company code ' . $data->from_company_code . ' not registered in master';
         }
         if (!$fromWarehouseExists) {
-            $message = 'From Warehouse code ' . $data->from_warehouse . ' not registered in master'; 
+            $message = 'From Warehouse code ' . $data->from_warehouse . ' not registered in master';
         }
         if (!$toCompanyExists) {
             $message = 'To Company code ' . $data->to_company_code . ' not registered in master';
@@ -97,7 +102,7 @@ class TransferList extends Component
         }
         if (!$materialExist) {
             $message = 'Material Code ' . $data->material_code . ' not registered in master';
-        }       
+        }
         return $message;
     }
     public function storeData($data)
@@ -114,12 +119,12 @@ class TransferList extends Component
         } else {
             $number = 0;
         }
-        $newPostingNumber = date('Y').'/'.$data[0]->from_company_code.'/'.str_pad($number + 1, 6, '0', STR_PAD_LEFT) ;
+        $newPostingNumber = date('Y') . '/' . $data[0]->from_company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
         try {
             foreach ($data as $tmp) {
                 $fromCompany = Company::where('company_code', $tmp->from_company_code)->first();
                 $toCompany  = Company::where('company_code', $tmp->to_company_code)->first();
-                $fuelType = Material::where('material_code',$tmp->material_code)->first();
+                $fuelType = Material::where('material_code', $tmp->material_code)->first();
                 $slocIdFrom = Sloc::where('sloc_code',  $tmp->from_warehouse)->first();
                 $slocIdTo = Sloc::where('sloc_code', $tmp->to_warehouse)->value('id');
 
@@ -156,10 +161,9 @@ class TransferList extends Component
                     $newStockTo = $cekStokTo->qty_intransit + $tmp->qty;
                     $cekStokTo->qty_intransit = $newStockTo;
                     $cekStokTo->save();
-                }else{
+                } else {
                     throw new \Exception('Material stock in the destination warehouse was not found.');
                 }
-
             }
             DB::commit();
             $this->dispatch('success', 'Data has been posting :' . $newPostingNumber);
