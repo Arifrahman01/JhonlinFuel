@@ -96,11 +96,11 @@ class ReceiptTransferList extends Component
     private function cekData($data)
     {
         $message = false;
-        $fromCompanyAllowed = Company::allowed('create-loader-receipt-transfer')
-            ->where('company_code', $data->from_company_code)
-            ->first();
         $fromCompanyExists = Company::where('company_code', $data->from_company_code)->exists();
         $fromWarehouseExists = Sloc::where('sloc_code', $data->from_warehouse)->exists();
+        $toCompanyAllowed = Company::allowed('create-loader-receipt-transfer')
+            ->where('company_code', $data->to_company_code)
+            ->first();
         $toCompanyExists = Company::where('company_code', $data->to_company_code)->exists();
         $toWarehouseExists = Sloc::where('sloc_code', $data->to_warehouse)->exists();
         $transportirExist = Equipment::where('equipment_no', $data->transportir)->exists();
@@ -109,14 +109,14 @@ class ReceiptTransferList extends Component
             ->value('id'))
             ->value('qty_intransit');
 
-        if (!$fromCompanyAllowed) {
-            $message = 'Anda tidak punya akses Company code from ' . $data->from_company_code;
-        }
         if (!$fromCompanyExists) {
             $message = 'Company code from ' . $data->from_company_code . ' not registered in master';
         }
         if (!$fromWarehouseExists) {
             $message = 'Warehouse from ' . $data->from_warehouse . ' not registered in master';
+        }
+        if (!$toCompanyAllowed) {
+            $message = 'Anda tidak punya akses Company code to ' . $data->to_company_code;
         }
         if (!$toCompanyExists) {
             $message = 'Company code to ' . $data->to_company_code . ' not registered in master';
