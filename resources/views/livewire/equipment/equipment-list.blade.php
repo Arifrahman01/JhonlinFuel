@@ -89,6 +89,7 @@
                                             <tr class="text-nowrap">
                                                 <td class="text-center">{{ $idx + 1 }}</td>
                                                 <td class="text-center">
+                                                    
                                                     @can('delete-master-equipment')
                                                         <a id="btn-delete{{ $equipment->id }}" title="Delete equipment"
                                                             onclick="deleteItem({{ $equipment->id }})">
