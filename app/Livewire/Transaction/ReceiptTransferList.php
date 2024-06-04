@@ -22,6 +22,15 @@ class ReceiptTransferList extends Component
     use WithPagination;
     public $dateFilter;
     protected $listeners = ['refreshPage'];
+    public $filter_date;
+
+    protected $paginationTheme = 'bootstrap';
+
+    public function mount()
+    {
+        $this->filter_date = $this->filter_date ?? date('Y-m-d');
+    }
+
     public function render()
     {
         $permissions = [
@@ -39,8 +48,8 @@ class ReceiptTransferList extends Component
             'toWarehouse',
         ])
             ->whereNull('posting_no')
-            ->when($this->dateFilter, function ($query, $dateFilter) {
-                $query->where('trans_date', $dateFilter);
+            ->when($this->filter_date, function ($query, $filter_date) {
+                $query->where('trans_date', $filter_date);
             })
             ->latest()
             ->paginate(10);

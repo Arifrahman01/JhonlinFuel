@@ -13,6 +13,7 @@ use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
 use App\Models\Plant;
 use App\Models\Sloc;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -94,18 +95,18 @@ class IssueList extends Component
     public function storeData($data)
     {
         DB::beginTransaction();
-        $lastPosting = Issue::max('posting_no');
+        $date = new DateTime($data[0]->trans_date);
+        $year = $date->format('Y');
+     
+        $lastPosting = Issue::where('company_code', $data[0]->company_code)->max('posting_no');
+        $number = 0;
         if (isset($lastPosting)) {
             $explod = explode('/', $lastPosting);
-            if ($explod[0] == date('Y')) {
+            if ($explod[0] == $year) {
                 $number = $explod[2];
-            } else {
-                $number = 0;
             }
-        } else {
-            $number = 0;
         }
-        $newPostingNumber = date('Y') . '/' . $data[0]->company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
+        $newPostingNumber = $year . '/' . $data[0]->company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
         try {
             foreach ($data as $tmp) {
                 $company = Company::where('company_code', $tmp->company_code)->first();

@@ -31,7 +31,7 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="start_date" wire:model="dateFilter" aria-label="Start Date" placeholder="Start Date">
+                                            <input type="date" class="form-control form-control-sm" id="start_date" wire:model="filter_date" aria-label="Start Date" placeholder="Start Date">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
