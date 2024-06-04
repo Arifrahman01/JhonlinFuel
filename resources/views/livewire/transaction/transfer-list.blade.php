@@ -5,7 +5,7 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6 d-flex justify-content-start">
-                            <h1>Loader Transfer</h1>
+                            <h2>Loader Transfer</h2>
                         </div>
                         @can('create-loader-transfer')
                             <div class="col-6 d-flex justify-content-end">

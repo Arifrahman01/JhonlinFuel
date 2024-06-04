@@ -11,6 +11,7 @@ use App\Models\Plant;
 use App\Models\Receipt;
 use App\Models\Sloc;
 use App\Models\Uom;
+use DateTime;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -85,19 +86,19 @@ class ReceiptList extends Component
     public function storeData($data)
     {
         DB::beginTransaction();
-        $lastPosting = Receipt::max('posting_no');
+        $date = new DateTime($data[0]->trans_date);
+        $year = $date->format('Y');
+        $lastPosting = Receipt::where('company_code', $data[0]->company_code)
+            ->max('posting_no');
+        $number = 0;
         if (isset($lastPosting)) {
             $explod = explode('/', $lastPosting);
-            if ($explod[0] == date('Y')) {
+            if ($explod[0] == $year) {
                 $number = $explod[2];
-            } else {
-                $number = 0;
             }
-        } else {
-            $number = 0;
         }
+        $newPostingNumber = $year . '/' . $data[0]->company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
 
-        $newPostingNumber = date('Y') . '/' . $data[0]->company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
         try {
             foreach ($data as $tmp) {
                 $company = Company::where('company_code', $tmp->company_code)->first();
@@ -155,7 +156,7 @@ class ReceiptList extends Component
     private function cekData($data)
     {
         $message = false;
-        $companyAllowed = Company::allowed('create-loader-receipt')
+        $companyAllowed = Company::allowed('create-loader-receipt-po')
             ->where('company_code', $data->company_code)
             ->first();
         $companyExists = Company::where('company_code', $data->company_code)->exists();

@@ -55,7 +55,7 @@ class ReceiptTransferCreate extends Component
 
     public function mount()
     {
-        // $this->loading = true;
+        $this->companies = Company::allowed('create-loader-receipt-transfer')->get();
         $this->fileLoader = null;
     }
 
@@ -67,7 +67,9 @@ class ReceiptTransferCreate extends Component
             $rcvTransfer = ReceiptTransfer::find($id);
             $this->transDate = $rcvTransfer->trans_date;
             $this->selectedFromWarehouse = $rcvTransfer->from_warehouse;
+            $this->selectedFromCompany = $rcvTransfer->from_company_code;
             $this->selectedToCompany = $rcvTransfer->to_company_code;
+
             $companyId = Company::where('company_code', $rcvTransfer->to_company_code)
                 ->value('id');
             $this->toSlocs = Sloc::where('company_id', $companyId)
@@ -76,6 +78,11 @@ class ReceiptTransferCreate extends Component
             $this->transportir = $rcvTransfer->transportir;
             $this->selectedMaterial = $rcvTransfer->material_code;
             $this->qty = intval($rcvTransfer->qty);
+
+            $this->fromSlocs = Sloc::where('company_id', Company::where('company_code', $rcvTransfer->from_company_code)
+            ->value('id'))
+            ->get();
+
         } else {
 
             $this->statusModal = 'Create';

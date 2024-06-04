@@ -5,7 +5,7 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6 d-flex justify-content-start">
-                            <h1>Loader Receipt Transfer</h1>
+                            <h2>Loader Receipt Transfer</h2>
                         </div>
                         @can('create-loader-receipt-transfer')
                             <div class="col-6 d-flex justify-content-end">
@@ -31,7 +31,7 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="start_date" wire:model="dateFilter" aria-label="Start Date" placeholder="Start Date">
+                                            <input type="date" class="form-control form-control-sm" id="start_date" wire:model="filter_date" aria-label="Start Date" placeholder="Start Date">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
