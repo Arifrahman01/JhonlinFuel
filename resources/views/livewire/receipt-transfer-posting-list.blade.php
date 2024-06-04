@@ -127,19 +127,19 @@
     @push('scripts')
     <script>
         function setEndDateMax() {
-            var startDate = document.getElementById("start_date").value;
-            var endDateField = document.getElementById("end_date");
-            if (!startDate) {
-                endDateField.removeAttribute("max");
-                return;
-            }
-            var maxDate = new Date(startDate);
-            maxDate.setDate(maxDate.getDate() + 30);
-            var maxDateString = maxDate.toISOString().split('T')[0];
-            endDateField.setAttribute("max", maxDateString);
-            if (endDateField.value > maxDateString) {
-                endDateField.value = maxDateString;
-            }
+            // var startDate = document.getElementById("start_date").value;
+            // var endDateField = document.getElementById("end_date");
+            // if (!startDate) {
+            //     endDateField.removeAttribute("max");
+            //     return;
+            // }
+            // var maxDate = new Date(startDate);
+            // maxDate.setDate(maxDate.getDate() + 30);
+            // var maxDateString = maxDate.toISOString().split('T')[0];
+            // endDateField.setAttribute("max", maxDateString);
+            // if (endDateField.value > maxDateString) {
+            //     endDateField.value = maxDateString;
+            // }
         }
 
         async function downloadExcel(id) {
