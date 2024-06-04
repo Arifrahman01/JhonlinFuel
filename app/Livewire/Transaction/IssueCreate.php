@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Transaction;
 
+use App\Imports\IssueImport;
 use App\Models\Activity;
 use App\Models\Company;
 use App\Models\Department;
@@ -12,6 +13,7 @@ use App\Models\Plant;
 use App\Models\Sloc;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Maatwebsite\Excel\Facades\Excel;
 
 class IssueCreate extends Component
 {
@@ -111,6 +113,25 @@ class IssueCreate extends Component
         $this->statusModal = 'edit';
         $this->loading = false;
     }
+    public function store()
+    {
+        try {
+            if ($this->fileLoader) {
+                $file = $this->fileLoader;
+                $filePath = $this->fileLoader->store('temp');
+                Excel::import(new IssueImport, $filePath);
+                $this->dispatch('success', 'Loader is successfull');
+                $this->closeModal();
+                $this->dispatch('closeModal');
+                $this->dispatch('refreshPage');
+            } else {
+                $this->dispatch('error', 'File not uploaded');
+            }
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
+        }
+    }
+
     public function storeData()
     {
         try {
