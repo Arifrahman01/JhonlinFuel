@@ -5,7 +5,7 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6 d-flex justify-content-start">
-                            <h1>Loader Receipt</h1>
+                            <h2>Loader Receipt</h2>
                         </div>
                         <div class="col-6 d-flex justify-content-end">
                             @can('create-loader-receipt-po')

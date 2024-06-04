@@ -5,7 +5,7 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6 d-flex justify-content-start">
-                            <h1>Receipt</h1>
+                            <h2>Receipt</h2>
                         </div>
                     </h2>
                 </div>

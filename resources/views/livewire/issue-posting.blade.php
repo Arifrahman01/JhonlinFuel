@@ -4,10 +4,9 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title col-12">
-                        <div class="col-6">
+                        <div class="col-6 d-flex justify-content-start">
                             Transaction Posting
                         </div>
-
                     </h2>
                 </div>
             </div>
