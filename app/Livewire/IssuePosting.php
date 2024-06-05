@@ -42,15 +42,17 @@ class IssuePosting extends Component
 
     public function report($company, $start, $end)
     {
-        try {            
-            $fileName = 'Issue ' . str_replace(['/', '\\'], '_', $start) . ' s-d ' . str_replace(['/', '\\'], '_', $end) . '.xlsx';
+        try {    
+            ini_set('memory_limit', '256M');    
+            ini_set('max_execution_time', 120);
+
+            $fileName = 'Issue ' . $start . ' . ' . $end . '.xlsx';
 
             return Excel::download(new IssueExport($company,$start,$end), $fileName, \Maatwebsite\Excel\Excel::XLSX);
 
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
         }
-       
     }
     public function search()
     {
