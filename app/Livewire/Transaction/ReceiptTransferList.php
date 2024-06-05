@@ -194,7 +194,7 @@ class ReceiptTransferList extends Component
                     'material_mnemonic' => $material->material_mnemonic,
                     'material_description' => $material->material_description,
                     'movement_date' => $receiptTransfer->trans_date,
-                    'movement_type' => 'rct',
+                    'movement_type' => 'RCT',
                     'plant_id' => $slocTo->plant_id,
                     'sloc_id' => $slocTo->id,
                     'uom_id' => 1,
