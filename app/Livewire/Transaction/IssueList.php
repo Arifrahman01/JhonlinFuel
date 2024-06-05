@@ -60,7 +60,7 @@ class IssueList extends Component
     public function deleteSumary($warehouse, $date)
     {
         try {
-            Issue::where('trans_date', $date)->where('warehouse', $warehouse)->delete();
+            Issue::where('trans_date', $date)->whereNull('posting_no')->where('warehouse', $warehouse)->delete();
             $this->dispatch('success', 'Data has been deleted');
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
