@@ -126,7 +126,7 @@ class IssueList extends Component
                     'part_no'       => $fuelType->part_no,
                     'material_mnemonic' => $fuelType->material_mnemonic,
                     'material_description' => $fuelType->material_description,
-                    'movement_date' => date('Y-m-d'),
+                    'movement_date' => $tmp->trans_date,
                     'movement_type' => $tmp->trans_type,
                     'plant_id'  => $location->id,
                     'sloc_id'   =>  $slocId,
