@@ -9,6 +9,7 @@ use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
 use App\Models\ReceiptTransfer;
 use App\Models\Sloc;
+use App\Models\Uom;
 use DateTime;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -164,6 +165,7 @@ class ReceiptTransferList extends Component
             }
             $newPostingNumber = $year . '/' . $data[0]->from_company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
 
+            $uom = Uom::first();
             foreach ($data as $receiptTransfer) {
 
                 $receiptTransfer->update([
@@ -197,7 +199,7 @@ class ReceiptTransferList extends Component
                     'movement_type' => 'RCT',
                     'plant_id' => $slocTo->plant_id,
                     'sloc_id' => $slocTo->id,
-                    'uom_id' => 1,
+                    'uom_id' => $uom->id,
                     'qty' => $receiptTransfer->qty,
                 ]);
             }
