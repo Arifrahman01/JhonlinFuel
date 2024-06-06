@@ -44,32 +44,46 @@
                             </form>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-vcenter card-table table-striped table-bordered">
+                            <table class="table table-vcenter card-table table-sm table-bordered" style="width: 100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" style="width: 6%">No</th>
-                                        <th class="text-center">Transfer Date</th>
-                                        <th class="text-center">Transfer By</th>
+                                        <th class="text-center" rowspan="2" style="width: 5%">No</th>
+                                        <th class="text-center" rowspan="2">Transfer Date</th>
+                                        <th class="text-center" rowspan="2">Transfer By</th>
+                                        <th class="text-center" colspan="2">From Transfer</th>
+                                        <th class="text-center" colspan="2">To Transfer</th>
+                                        <th class="text-center" rowspan="2">Warehouse Code</th>
+                                        <th class="text-center" rowspan="2">Warehouse Name</th>
+                                        <th class="text-center" rowspan="2">Notes</th>
+                                    </tr>
+                                    <tr>
                                         <th class="text-center">Company</th>
                                         <th class="text-center">Plant</th>
-                                        <th class="text-center">Warehouse Code</th>
-                                        <th class="text-center">Warehouse Name</th>
-                                        <th class="text-center">Notes</th>
+                                        <th class="text-center">Company</th>
+                                        <th class="text-center">Plant</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($slocTransfers as $index => $slocTransfer)
-                                        <tr class="text-nowrap">
-                                            <td class="text-center">{{ ($slocTransfers->currentPage() - 1) * $slocTransfers->perPage() + $loop->index + 1 }}</td>
-                                            <td class="text-center">{{ $slocTransfer->created_at }}</td>
-                                            <td class="text-right">{{ $slocTransfer->user->name }}</td>
-                                            <td class="text-right">{{ $slocTransfer->company->company_name ?? '' }}</td>
-                                            <td class="text-right">{{ $slocTransfer->plant->plant_name ?? '' }}</td>
-                                            <td class="text-right">{{ $slocTransfer->sloc->sloc_code ?? '' }}</td>
-                                            <td class="text-right">{{ $slocTransfer->sloc->sloc_name ?? '' }}</td>
-                                            <td class="text-right"> {{ $slocTransfer->notes }}</td>
-                                        </tr>
-                                    @endforeach
+                                    @if ($slocTransfers->isEmpty())
+                                        {!! dataNotFond(4) !!}
+                                    @else
+                                        @foreach ($slocTransfers as $index => $slocTransfer)
+                                        {{-- @dd($slocTransfer) --}}
+                                            <tr class="text-nowrap">
+                                                <td class="text-center">{{ ($slocTransfers->currentPage() - 1) * $slocTransfers->perPage() + $loop->index + 1 }}</td>
+                                                <td class="text-center">{{$slocTransfer->trans_date }}</td>
+                                                <td class="text-right">{{ $slocTransfer->user->name }}</td>
+                                                <td class="text-right">{{ $slocTransfer->fromCompany->company_name ?? ''}}</td>
+                                                <td class="text-right">{{ $slocTransfer->fromPlant->plant_name ?? ''}}</td>
+                                                <td class="text-right">{{ $slocTransfer->toCompany->company_name ?? ''}}</td>
+                                                <td class="text-right">{{ $slocTransfer->toPlant->plant_name ?? ''}}</td>
+                                                <td class="text-right">{{ $slocTransfer->sloc->sloc_code ?? '' }}</td>
+                                                <td class="text-right">{{ $slocTransfer->sloc->sloc_name ?? '' }}</td>
+                                                <td class="text-right"> {{ $slocTransfer->notes }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+
                                 </tbody>
                             </table>
                         </div>

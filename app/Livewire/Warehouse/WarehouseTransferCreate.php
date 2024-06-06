@@ -20,7 +20,7 @@ class WarehouseTransferCreate extends Component
     public $fromSlocs = [];
     public $toSlocs = [];
 
-    public $selectedFromCompany, $selectedFromPlant, $from_warehouse;
+    public $selectedFromCompany, $selectedFromPlant, $from_warehouse, $trans_date;
     public $selectedToCompany, $selectedToPlant, $notes;
 
     public function mount()
@@ -82,13 +82,19 @@ class WarehouseTransferCreate extends Component
                         'plant_id' => $this->selectedToPlant,
                     ]);
                     SlocTransfer::create([
-                        'company_id' => $this->selectedToCompany,
-                        'plant_id' => $this->selectedToPlant,
+                        'trans_date'  => $this->trans_date,
+                        'from_company_id' => $this->selectedFromCompany,
+                        'from_plant_id' => $this->selectedFromPlant,
+                        'to_company_id' => $this->selectedToCompany,
+                        'to_plant_id' => $this->selectedToPlant,
                         'sloc_id' => $this->from_warehouse,
                         'notes' => $this->notes,
                     ]);
                     DB::commit();
                     $this->dispatch('success', 'Transfer Warehouse Success');
+                    $this->closeModal();
+                    $this->dispatch('closeModal');
+                    $this->dispatch('refreshPage');
                 }
             } else {
                 $this->dispatch('error', 'Material stock not found');
