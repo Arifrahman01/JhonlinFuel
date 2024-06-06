@@ -35,7 +35,8 @@ class ReceiptTransferExport implements FromCollection, WithHeadings
                 $query->where('from_company_code', $c)
                       ->orWhere('to_company_code', $c);
             });
-        })->whereBetween('trans_date', [$this->start, $this->end])->orderBy('id','desc')->latest()->paginate(10);
+        })->whereBetween('trans_date', [$this->start, $this->end])->orderBy('id','desc')->latest()->get();
+
 
         $data = $rcvTransfers->map(function ($trans) {
             return [
@@ -43,9 +44,9 @@ class ReceiptTransferExport implements FromCollection, WithHeadings
                 $trans->trans_type,
                 $trans->trans_date, 
                 $trans->fromCompany->company_name ?? '' ,
-                $trans->fromSloc->sloc_name ?? '' ,
+                $trans->fromWarehouse->sloc_name ?? '' ,
                 $trans->toCompany->company_name ?? '' ,
-                $trans->toSloc->sloc_name ?? '' ,
+                $trans->toWarehouse->sloc_name ?? '' ,
                 $trans->equipments->equipment_description ?? '',
                 $trans->materials->material_description ?? '',
                 $trans->uom,
