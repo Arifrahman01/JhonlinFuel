@@ -5,12 +5,11 @@
                 <div class="col">
                     <h2 class="page-title col-12">
                         <div class="col-6">
-                            Warehouse Movement
+                            Warehouse Transfer
                         </div>
                         @can('create-master-warehouse')
                             <div class="col-6 d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')"
-                                    data-bs-toggle="modal" data-bs-target="#modal-large"><i
+                                <button type="button" class="btn btn-primary" wire:click="$dispatch('openCreate')" data-bs-toggle="modal" data-bs-target="#modal-large"><i
                                         class="fa fa-plus-circle"></i>&nbsp;
                                     Create</button>
                             </div>
@@ -20,7 +19,6 @@
             </div>
         </div>
     </div>
-
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-cards">
@@ -28,12 +26,11 @@
                     <div class="card">
                         <div class="card-header">
                             <form wire:submit.prevent="search">
-                                <div class="d-flex">
+                                {{-- <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="text" class="form-control form-control-sm"
-                                                aria-label="Warehouse Code, Warehouse Name"
-                                                placeholder="Warehouse Code, Warehouse Name" wire:model="q">
+                                            <input type="text" class="form-control form-control-sm" aria-label="Warehouse Code, Warehouse Name" placeholder="Warehouse Code, Warehouse Name"
+                                                wire:model="q">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -43,37 +40,48 @@
                                             </button>
                                         </div>
                                     </div>
-                                </div>
-
+                                </div> --}}
                             </form>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-vcenter card-table table-striped table-bordered">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" style="width: 6%">Action</th>
+                                        <th class="text-center" style="width: 6%">No</th>
+                                        <th class="text-center">Transfer Date</th>
+                                        <th class="text-center">Transfer By</th>
                                         <th class="text-center">Company</th>
                                         <th class="text-center">Plant</th>
                                         <th class="text-center">Warehouse Code</th>
                                         <th class="text-center">Warehouse Name</th>
+                                        <th class="text-center">Notes</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                               
+                                    @foreach ($slocTransfers as $index => $slocTransfer)
+                                        <tr class="text-nowrap">
+                                            <td class="text-center">{{ ($slocTransfers->currentPage() - 1) * $slocTransfers->perPage() + $loop->index + 1 }}</td>
+                                            <td class="text-center">{{ $slocTransfer->created_at }}</td>
+                                            <td class="text-right">{{ $slocTransfer->user->name }}</td>
+                                            <td class="text-right">{{ $slocTransfer->company->company_name ?? '' }}</td>
+                                            <td class="text-right">{{ $slocTransfer->plant->plant_name ?? '' }}</td>
+                                            <td class="text-right">{{ $slocTransfer->sloc->sloc_code ?? '' }}</td>
+                                            <td class="text-right">{{ $slocTransfer->sloc->sloc_name ?? '' }}</td>
+                                            <td class="text-right"> {{ $slocTransfer->notes }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        {{-- </div> --}}
-
                         <div class="card-footer justify-content-between align-items-center">
-                         
+                            {{ $slocTransfers->links() }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @livewire('warehouse.warehouse-movement-create')
+    @livewire('warehouse.warehouse-transfer-create')
     @push('scripts')
         <script>
             document.addEventListener('livewire:init', function() {

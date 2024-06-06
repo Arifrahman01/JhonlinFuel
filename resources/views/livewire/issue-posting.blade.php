@@ -94,7 +94,7 @@
                                                 @else
                                                     @foreach ($issues as $idx => $trans)
                                                         <tr>
-                                                            <td>{{ $idx + 1 }}</td>
+                                                            <td>{{ ($issues->currentPage() - 1) * $issues->perPage() + $loop->index + 1 }}</td>
                                                             <td>{{ $trans->company->company_name }}</td>
                                                             <td class="text-center">{{ $trans->posting_no }}</td>
                                                             <td class="text-center">{{ $trans->trans_date }}</td>
