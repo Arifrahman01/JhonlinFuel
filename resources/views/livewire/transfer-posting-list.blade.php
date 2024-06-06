@@ -95,7 +95,7 @@
                                             @else
                                                 @foreach ($transfers as $idx => $val)
                                                     <tr class="text-nowrap">
-                                                        <td class="text-center">{{ ($idx+1) }}</td>
+                                                        <td class="text-center">{{ ($transfers->currentPage() - 1) * $transfers->perPage() + $loop->index + 1 }}</td>
                                                         <td class="text-center">{{ $val->posting_no }}</td>
                                                         <td class="text-center">{{ $val->trans_date }}</td>
                                                         <td class="text-center">{{ $val->trans_type }}</td>

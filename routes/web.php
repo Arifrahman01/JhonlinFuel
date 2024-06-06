@@ -26,7 +26,7 @@ use App\Livewire\Transaction\TransferList;
 use App\Livewire\TransferPostingList;
 use App\Livewire\User\UserList;
 use App\Livewire\Warehouse\WarehouseList;
-use App\Livewire\Warehouse\WarehouseMovementList;
+use App\Livewire\Warehouse\WarehouseTransferList;
 use Illuminate\Support\Facades\Route;
 
 
@@ -75,7 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/department', DepartmentList::class)->name('department.index');
     Route::get('/material', MaterialList::class)->name('material.index');
     Route::get('/uom', UOMList::class)->name('uom.index');
-    Route::get('/warehouse-movement', WarehouseMovementList::class)->name('movement.index');
+    Route::get('/warehouse-transfer', WarehouseTransferList::class)->name('warehouse-transfer.index');
 
 
     /* Manajement User */
