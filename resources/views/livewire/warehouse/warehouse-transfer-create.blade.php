@@ -29,7 +29,11 @@
                                 <div class="card-status-top bg-red mb-2 mt-2">From Warehouse</div><br>
                                 <div class="card-body p-1">
                                     <div class="row row-cards mt-1 mb-1">
-                                        <div class="col-4">
+                                        <div class="col-3">
+                                            <label class="form-label required">Trans Date</label>
+                                           <input type="date" class="form-control" wire:model="trans_date" required>
+                                        </div>
+                                        <div class="col-3">
                                             <label class="form-label required">From Company</label>
                                             <select wire:model.live="selectedFromCompany" class="form-control" required="">
                                                 <option value="">-Select Company-</option>
@@ -38,7 +42,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <label for="" class="form-label required">From Location/ Plant
                                                 <div wire:loading="" wire:target="selectedFromCompany">
                                                     <i class="fa fa-spinner fa-spin"></i>
@@ -51,7 +55,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <label for="" class="form-label required">From Warehouse
                                                 <div wire:loading="" wire:target="selectedFromPlant">
                                                     <i class="fa fa-spinner fa-spin"></i>
