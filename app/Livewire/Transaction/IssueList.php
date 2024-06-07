@@ -97,7 +97,7 @@ class IssueList extends Component
         DB::beginTransaction();
         $date = new DateTime($data[0]->trans_date);
         $year = $date->format('Y');
-     
+
         $lastPosting = Issue::where('company_code', $data[0]->company_code)->max('posting_no');
         $number = 0;
         if (isset($lastPosting)) {
@@ -116,6 +116,9 @@ class IssueList extends Component
 
                 Issue::find($tmp->id)->update(['posting_no' => $newPostingNumber]);
 
+                $cekStok = MaterialStock::where('company_id', $company->id)
+                    ->where('plant_id', $location->id)->where('sloc_id', $slocId)
+                    ->first();
                 $paramMovement = [
                     'company_id'    => $company->id,
                     'doc_header_id' => $tmp->id,
@@ -131,10 +134,13 @@ class IssueList extends Component
                     'plant_id'  => $location->id,
                     'sloc_id'   =>  $slocId,
                     'uom_id'    => $fuelType->uom_id,
+                    'soh_before' => $cekStok->qty_soh,
+                    'intransit_before' => $cekStok->qty_intransit,
                     'qty'       => $tmp->qty,
+                    'soh_after' => toNumber($cekStok->qty_soh) - toNumber($tmp->qty),
+                    'intransit_after' => $cekStok->qty_intransit,
                 ];
                 MaterialMovement::create($paramMovement);
-                $cekStok = MaterialStock::where('company_id', $company->id)->where('plant_id', $location->id)->where('sloc_id', $slocId)->first();
                 if ($cekStok) {
                     $newStock = $cekStok->qty_soh - $tmp->qty;
                     /* delete validate issue minus

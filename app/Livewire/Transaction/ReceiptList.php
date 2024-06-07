@@ -111,6 +111,7 @@ class ReceiptList extends Component
                 $uomId = Uom::where('uom_code', $tmp->uom)->value('id');
                 Receipt::find($tmp->id)->update(['posting_no' => $newPostingNumber]);
 
+                $cekStok = MaterialStock::where('company_id', $company->id)->where('plant_id', $location->id)->where('sloc_id', $slocId)->first();
                 $paramMovement = [
                     'company_id'    => $company->id,
                     'doc_header_id' => $tmp->id,
@@ -127,11 +128,14 @@ class ReceiptList extends Component
                     'plant_id'  => $location->id,
                     'sloc_id'   =>  $slocId,
                     'uom_id'    =>  $uomId,
+                    'soh_before' => $cekStok->qty_soh,
+                    'intransit_before' => $cekStok->qty_intransit,
                     'qty'       => $tmp->qty,
+                    'soh_after' => toNumber($cekStok->qty_soh) + toNumber($tmp->qty),
+                    'intransit_after' => $cekStok->qty_intransit,
                 ];
 
                 MaterialMovement::create($paramMovement);
-                $cekStok = MaterialStock::where('company_id', $company->id)->where('plant_id', $location->id)->where('sloc_id', $slocId)->first();
                 if ($cekStok) {
                     $newStock = $cekStok->qty_soh + $tmp->qty;
                     $cekStok->qty_soh = $newStock;

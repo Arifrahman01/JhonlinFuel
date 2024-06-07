@@ -172,19 +172,46 @@ class ReceiptTransferList extends Component
                     'posting_no' => $newPostingNumber,
                 ]);
 
+                $slocFrom = Sloc::where('sloc_code', $receiptTransfer->from_warehouse)->first();
                 $stokFrom = MaterialStock::where('sloc_id', Sloc::where('sloc_code', $receiptTransfer->from_warehouse)->value('id'));
-
+                $sohBeforeFrom = $stokFrom->value('qty_soh');
+                $intransitBeforeFrom = $stokFrom->value('qty_intransit');
                 $stokFrom->decrement('qty_soh', $receiptTransfer->qty);
                 $stokFrom->increment('qty_intransit', $receiptTransfer->qty);
 
                 $slocTo = Sloc::where('sloc_code', $receiptTransfer->to_warehouse)->first();
                 $stokTo = MaterialStock::where('sloc_id', $slocTo->id);
-
+                $sohBeforeTo = $stokTo->value('qty_soh');
+                $intransitBeforeTo = $stokTo->value('qty_intransit');
                 $stokTo->increment('qty_soh', $receiptTransfer->qty);
                 $stokTo->decrement('qty_intransit', $receiptTransfer->qty);
 
                 $material = Material::where('material_code', $receiptTransfer->material_code)->first();
 
+                // movement gudang asal
+                MaterialMovement::create([
+                    'company_id' => $slocFrom->company_id,
+                    'doc_header_id' => $receiptTransfer->id,
+                    'doc_no' => $newPostingNumber,
+                    'doc_detail_id' => $receiptTransfer->id,
+                    'material_id' => $material->id,
+                    'material_code' => $material->material_code,
+                    'part_no' => $material->part_no,
+                    'material_mnemonic' => $material->material_mnemonic,
+                    'material_description' => $material->material_description,
+                    'movement_date' => $receiptTransfer->trans_date,
+                    'movement_type' => 'RCT',
+                    'plant_id' => $slocFrom->plant_id,
+                    'sloc_id' => $slocFrom->id,
+                    'uom_id' => $uom->id,
+                    'soh_before' => $sohBeforeFrom,
+                    'intransit_before' => $intransitBeforeFrom,
+                    'qty' => $receiptTransfer->qty,
+                    'soh_after' => toNumber($sohBeforeFrom) - toNumber($receiptTransfer->qty),
+                    'intransit_after' => toNumber($intransitBeforeFrom) + toNumber($receiptTransfer->qty),
+                ]);
+
+                // movement gudang tujuan
                 MaterialMovement::create([
                     'company_id' => $slocTo->company_id,
                     'doc_header_id' => $receiptTransfer->id,
@@ -200,7 +227,11 @@ class ReceiptTransferList extends Component
                     'plant_id' => $slocTo->plant_id,
                     'sloc_id' => $slocTo->id,
                     'uom_id' => $uom->id,
+                    'soh_before' => $sohBeforeTo,
+                    'intransit_before' => $intransitBeforeTo,
                     'qty' => $receiptTransfer->qty,
+                    'soh_after' => toNumber($sohBeforeTo) + toNumber($receiptTransfer->qty),
+                    'intransit_after' => toNumber($intransitBeforeTo) - toNumber($receiptTransfer->qty),
                 ]);
             }
             DB::commit();

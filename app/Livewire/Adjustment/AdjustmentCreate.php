@@ -220,6 +220,11 @@ class AdjustmentCreate extends Component
                     'notes' => $data->notes,
                 ]);
 
+                $currentStock = MaterialStock::where('company_id', $this->selectedCompany)
+                    ->where('plant_id', $data->plant_id)
+                    ->where('sloc_id', $data->sloc_id)
+                    ->first();
+
                 MaterialMovement::create([
                     'company_id' => $this->selectedCompany,
                     'doc_header_id' => $header->id,
@@ -235,17 +240,18 @@ class AdjustmentCreate extends Component
                     'plant_id' => $data->plant_id,
                     'sloc_id' => $data->sloc_id,
                     'uom_id' => $uom->id,
+                    'soh_before' => $currentStock->qty_soh,
+                    'intransit_before' => $currentStock->qty_intransit,
                     'qty' => $data->soh_adjust,
+                    'soh_after' => $data->soh_after,
+                    'intransit_after' => $currentStock->qty_intransit,
                 ]);
 
                 $qtyUpdate = toNumber($data->soh_before) + toNumber($data->soh_adjust);
 
-                MaterialStock::where('company_id', $this->selectedCompany)
-                    ->where('plant_id', $data->plant_id)
-                    ->where('sloc_id', $data->sloc_id)
-                    ->update([
-                        'qty_soh' => $qtyUpdate,
-                    ]);
+                $currentStock->update([
+                    'qty_soh' => $qtyUpdate,
+                ]);
             }
             DB::commit();
             $this->dispatch('success', 'Data has been created');
