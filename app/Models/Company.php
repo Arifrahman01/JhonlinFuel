@@ -8,6 +8,7 @@ use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
 use App\Models\Transaction\TmpTransaction;
 use App\Models\Transaction\Transaction;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Company extends BaseModel
 {
@@ -19,6 +20,11 @@ class Company extends BaseModel
             return $query;
         }
         return $query->whereIn('id', allowedCompanyId($otorisasi));
+    }
+
+    public function periods(): BelongsToMany
+    {
+        return $this->belongsToMany(Period::class, 'company_period')->withPivot('status');
     }
 
     public function hasDataById(): bool

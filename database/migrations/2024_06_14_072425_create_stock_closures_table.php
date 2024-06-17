@@ -13,11 +13,6 @@ return new class extends Migration
     {
         Schema::create('stock_closures', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-        });
-
-        Schema::create('stock_closures', function (Blueprint $table) {
-            $table->id();
             $table->smallInteger('company_id');
             $table->smallInteger('plant_id');
             $table->smallInteger('sloc_id');
