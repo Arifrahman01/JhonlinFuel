@@ -17,6 +17,7 @@ return new class extends Migration
             $table->smallInteger('plant_id');
             $table->string('sloc_code', 100);
             $table->string('sloc_name', 100);
+            $table->decimal('capacity', 12, 2);
             $table->longText('notes')->nullable();
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();

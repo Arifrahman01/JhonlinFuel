@@ -21,10 +21,13 @@
                                 <div class="d-flex">
                                     <div class="ms-auto">
                                         <div class="ms-2 d-inline-block">
-                                            <select class="form-select form-select-sm">
+                                            <select wire:model='periodId' class="form-select form-select-sm">
                                                 <option value="">Current Period</option>
-                                                <option value="1">Current ejfoiqjeof wejfoijef wejfowjef</option>
-                                                <option value="2">2</option>
+                                                @foreach ($periods as $period)
+                                                    <option value="{{ $period->id }}">
+                                                        {{ $period->period_name }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>

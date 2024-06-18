@@ -122,6 +122,8 @@ class MenusTableSeeder extends Seeder
                 'Create Master Period',
                 'Edit Master Period',
                 'Delete Master Period',
+                'Open Period',
+                'Close Period',
             ],
             'Report Stock Overview' => [
                 'View Report Stock Overview',

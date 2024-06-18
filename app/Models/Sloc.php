@@ -5,9 +5,8 @@ namespace App\Models;
 use App\Models\Adjustment\AdjustmentDetail;
 use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
-use App\Models\Transaction\TmpTransaction;
-use App\Models\Transaction\Transaction;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Sloc extends BaseModel
 {
@@ -21,6 +20,11 @@ class Sloc extends BaseModel
     public function plant(): BelongsTo
     {
         return $this->belongsTo(Plant::class, 'plant_id', 'id');
+    }
+
+    public function materialStock(): HasOne
+    {
+        return $this->hasOne(MaterialStock::class, 'material_id', 'id');
     }
 
     public function hasDataById(): bool

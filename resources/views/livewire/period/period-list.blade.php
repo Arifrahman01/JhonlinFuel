@@ -158,15 +158,19 @@
                                             <tr>
                                                 <td class="text-center">
                                                     @if ($class == 'status-green')
-                                                        <button class="btn btn-sm btn-danger"
-                                                            onclick="closePeriod('{{ $periodId_ }}', '{{ $companyId_ }}')">
-                                                            Close
-                                                        </button>
+                                                        @can('close-period')
+                                                            <button class="btn btn-sm btn-danger"
+                                                                onclick="closePeriod('{{ $periodId_ }}', '{{ $companyId_ }}')">
+                                                                Close
+                                                            </button>
+                                                        @endcan
                                                     @else
-                                                        <button class="btn btn-sm btn-warning"
-                                                            onclick="openPeriod('{{ $periodId_ }}', '{{ $companyId_ }}')">
-                                                            Open
-                                                        </button>
+                                                        @can('open-period')
+                                                            <button class="btn btn-sm btn-warning"
+                                                                onclick="openPeriod('{{ $periodId_ }}', '{{ $companyId_ }}')">
+                                                                Open
+                                                            </button>
+                                                        @endcan
                                                     @endif
                                                 </td>
                                                 <td>{{ $periodCompany->company_name }}</td>
