@@ -22,9 +22,14 @@ class Sloc extends BaseModel
         return $this->belongsTo(Plant::class, 'plant_id', 'id');
     }
 
-    public function materialStock(): HasOne
+    public function currentStock(): BelongsTo
     {
-        return $this->hasOne(MaterialStock::class, 'material_id', 'id');
+        return $this->belongsTo(MaterialStock::class, 'sloc_id', 'id');
+    }
+
+    public function periodStock(): BelongsTo
+    {
+        return $this->belongsTo(StockClosure::class, 'sloc_id', 'id');
     }
 
     public function hasDataById(): bool
