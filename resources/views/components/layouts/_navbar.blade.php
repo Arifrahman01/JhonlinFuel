@@ -163,9 +163,10 @@
                     'delete-master-activity', 'view-master-equipment', 'create-master-equipment', 'edit-master-equipment',
                     'delete-master-equipment', 'view-master-material', 'create-master-material', 'edit-master-material',
                     'delete-master-material', 'view-master-uom', 'create-master-uom', 'edit-master-uom',
-                    'delete-master-uom'])
+                    'delete-master-uom', 'view-master-period', 'create-master-period', 'edit-master-period',
+                    'delete-master-period'])
                     <li
-                        class="nav-item dropdown {{ request()->is('company') || request()->is('plant') || request()->is('warehouse') || request()->is('fuelman') || request()->is('department') || request()->is('equipment') || request()->is('material') || request()->is('uom') ? 'active' : '' }}">
+                        class="nav-item dropdown {{ request()->is('company') || request()->is('plant') || request()->is('warehouse') || request()->is('fuelman') || request()->is('department') || request()->is('equipment') || request()->is('material') || request()->is('uom') || request()->is('period') ? 'active' : '' }}">
                         <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
                             <span
@@ -248,12 +249,20 @@
                                             Unit Of Measure
                                         </a>
                                     @endcanany
+                                    @canany(['view-master-period', 'create-master-period', 'edit-master-period',
+                                        'delete-master-period'])
+                                        <a class="dropdown-item {{ request()->is('period') ? 'active' : '' }}"
+                                            href="{{ route('period.index') }}">
+                                            Period
+                                        </a>
+                                    @endcanany
                                 </div>
                             </div>
                     </li>
                 @endcanany
                 @canany(['view-report-stock-overview', 'view-report-fuel-consumption'])
-                    <li class="nav-item {{ request()->is('stock-overview') || request()->is('consumption') ? 'active' : '' }} dropdown">
+                    <li
+                        class="nav-item {{ request()->is('stock-overview') || request()->is('consumption') ? 'active' : '' }} dropdown">
                         <a class="nav-link dropdown-toggle" href="#navbar-help" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">

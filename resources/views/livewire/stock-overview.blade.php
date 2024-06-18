@@ -16,6 +16,28 @@
                 <div class="col-8">
                     {{-- <div class="card"> --}}
                     <div class="card">
+                        <div class="card-header">
+                            <form wire:submit.prevent="search">
+                                <div class="d-flex">
+                                    <div class="ms-auto">
+                                        <div class="ms-2 d-inline-block">
+                                            <select class="form-select form-select-sm">
+                                                <option value="">Current Period</option>
+                                                <option value="1">Current ejfoiqjeof wejfoijef wejfowjef</option>
+                                                <option value="2">2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="fa fa-search"></i> &nbsp; Cari &nbsp;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                         <div class="table-wrap">
                             <table id="treegrid" role="treegrid" aria-label="Inbox"
                                 class="table table-sm table-striped">

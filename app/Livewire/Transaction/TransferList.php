@@ -9,6 +9,7 @@ use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
 use App\Models\Sloc;
 use App\Models\Transfer;
+use App\Models\Uom;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -120,6 +121,7 @@ class TransferList extends Component
             $number = 0;
         }
         $newPostingNumber = date('Y') . '/' . $data[0]->from_company_code . '/' . str_pad($number + 1, 6, '0', STR_PAD_LEFT);
+        $uom = Uom::first();
         try {
             foreach ($data as $tmp) {
                 $fromCompany = Company::where('company_code', $tmp->from_company_code)->first();
@@ -130,7 +132,10 @@ class TransferList extends Component
 
                 Transfer::find($tmp->id)->update(['posting_no' => $newPostingNumber]);
 
-                $paramMovement = [
+                $cekStokFrom = MaterialStock::where('company_id', $fromCompany->id)->where('sloc_id', $slocIdFrom->id)->first();
+
+                // movement gudang asal
+                $paramMovementFrom = [
                     'company_id'    => $fromCompany->id,
                     'doc_header_id' => $tmp->id,
                     'doc_no'        => $newPostingNumber,
@@ -144,11 +149,40 @@ class TransferList extends Component
                     'movement_type' => $tmp->trans_type,
                     'plant_id'  => $slocIdFrom->plant_id,
                     'sloc_id'   =>  $slocIdFrom->id,
-                    'uom_id'    =>  1,
+                    'uom_id'    =>  $uom->id,
+                    'soh_before' => $cekStokFrom->qty_soh,
+                    'intransit_before' => $cekStokFrom->qty_intransit,
                     'qty'       => $tmp->qty,
+                    'soh_after' => $cekStokFrom->qty_soh,
+                    'intransit_after' => $cekStokFrom->qty_intransit - $tmp->qty,
                 ];
-                MaterialMovement::create($paramMovement);
-                $cekStokFrom = MaterialStock::where('company_id', $fromCompany->id)->where('sloc_id', $slocIdFrom->id)->first();
+                MaterialMovement::create($paramMovementFrom);
+
+                $cekStokTo = MaterialStock::where('company_id', $toCompany->id)->where('sloc_id', $slocIdTo)->first();
+                // movement gudang tujuan
+                $paramMovementTo = [
+                    'company_id'    => $toCompany->id,
+                    'doc_header_id' => $tmp->id,
+                    'doc_no'        => $newPostingNumber,
+                    'doc_detail_id' => $tmp->id,
+                    'material_id'   => $fuelType->id,
+                    'material_code' => $fuelType->material_code,
+                    'part_no'       => $fuelType->part_no,
+                    'material_mnemonic' => $fuelType->material_mnemonic,
+                    'material_description' => $fuelType->material_description,
+                    'movement_date' => $tmp->trans_date,
+                    'movement_type' => $tmp->trans_type,
+                    'plant_id'  => $slocIdTo->plant_id,
+                    'sloc_id'   =>  $slocIdTo->id,
+                    'uom_id'    =>  $uom->id,
+                    'soh_before' => $cekStokTo->qty_soh,
+                    'intransit_before' => $cekStokTo->qty_intransit,
+                    'qty'       => $tmp->qty,
+                    'soh_after' => $cekStokTo->qty_soh,
+                    'intransit_after' => $cekStokTo->qty_intransit + $tmp->qty,
+                ];
+                MaterialMovement::create($paramMovementTo);
+
                 if ($cekStokFrom) {
                     $newStock = $cekStokFrom->qty_intransit - $tmp->qty;
                     $cekStokFrom->qty_intransit = $newStock;
@@ -156,7 +190,6 @@ class TransferList extends Component
                 } else {
                     throw new \Exception('Material stock in the original warehouse was not found.');
                 }
-                $cekStokTo = MaterialStock::where('company_id', $toCompany->id)->where('sloc_id', $slocIdTo)->first();
                 if ($cekStokTo) {
                     $newStockTo = $cekStokTo->qty_intransit + $tmp->qty;
                     $cekStokTo->qty_intransit = $newStockTo;

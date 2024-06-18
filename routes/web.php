@@ -12,6 +12,7 @@ use App\Livewire\FuelConsumption;
 use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\IssuePosting;
 use App\Livewire\Material\MaterialList;
+use App\Livewire\Period\PeriodList;
 use App\Livewire\UOM\UOMList;
 use App\Livewire\Plant\PlantList;
 use App\Livewire\Profile;
@@ -75,6 +76,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/department', DepartmentList::class)->name('department.index');
     Route::get('/material', MaterialList::class)->name('material.index');
     Route::get('/uom', UOMList::class)->name('uom.index');
+    Route::get('/period', PeriodList::class)->name('period.index');
     Route::get('/warehouse-transfer', WarehouseTransferList::class)->name('warehouse-transfer.index');
 
 
