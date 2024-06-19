@@ -2,9 +2,14 @@
 
 namespace App\Livewire\Period;
 
+use App\Models\Issue;
+use App\Models\Material\MaterialStock;
 use App\Models\Period;
+use App\Models\Receipt;
+use App\Models\ReceiptTransfer;
 use App\Models\Sloc;
 use App\Models\StockClosure;
+use App\Models\Transfer;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -113,8 +118,10 @@ class PeriodList extends Component
             if ($period) {
                 $period->companies()->updateExistingPivot($companyId, ['status' => 'open']);
             } else {
-                throw new \Exception('Period not found');
+                throw new \Exception('Periode tidak ditemukan');
             }
+
+            $this->cekTransaksi($companyId);
 
             $slocs = Sloc::where('company_id', $companyId)
                 ->get();
@@ -160,6 +167,8 @@ class PeriodList extends Component
                 throw new \Exception('Period not found');
             }
 
+            $this->cekTransaksi($companyId);
+
             $slocs = Sloc::where('company_id', $companyId)
                 ->get();
 
@@ -185,6 +194,43 @@ class PeriodList extends Component
             $this->resetPage();
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
+        }
+    }
+
+    private function cekTransaksi($companyId)
+    {
+
+        $receiptBelumPosting = Receipt::whereNull('posting_no')
+            ->exists();
+        $transferBelumPosting = Transfer::whereNull('posting_no')
+            ->exists();
+        $receiptTransferBelumPosting = ReceiptTransfer::whereNull('posting_no')
+            ->exists();
+        $issueBelumPosting = Issue::whereNull('posting_no')
+            ->exists();
+        $osTransfer = MaterialStock::where('company_id', $companyId)
+            ->whereNotNull('qty_intransit')
+            ->where('qty_intransit', '!=', 0)
+            ->exists();
+
+        if ($receiptBelumPosting) {
+            throw new \Exception('Ada Receipt PO yang belum posting');
+        }
+
+        if ($transferBelumPosting) {
+            throw new \Exception('Ada Transfer yang belum posting');
+        }
+
+        if ($receiptTransferBelumPosting) {
+            throw new \Exception('Ada Receipt Transfer yang belum posting');
+        }
+
+        if ($issueBelumPosting) {
+            throw new \Exception('Ada Issue yang belum posting');
+        }
+
+        if ($osTransfer) {
+            throw new \Exception('Ada Transfer yang belum diReceipt Transfer');
         }
     }
 }
