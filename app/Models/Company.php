@@ -9,6 +9,7 @@ use App\Models\Material\MaterialStock;
 use App\Models\Transaction\TmpTransaction;
 use App\Models\Transaction\Transaction;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Company extends BaseModel
 {
@@ -20,6 +21,11 @@ class Company extends BaseModel
             return $query;
         }
         return $query->whereIn('id', allowedCompanyId($otorisasi));
+    }
+
+    public function plants(): HasMany
+    {
+        return $this->hasMany(Plant::class, 'company_id', 'id');
     }
 
     public function periods(): BelongsToMany

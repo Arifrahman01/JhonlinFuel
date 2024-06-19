@@ -3,6 +3,8 @@
 namespace App\Livewire\Period;
 
 use App\Models\Period;
+use App\Models\Sloc;
+use App\Models\StockClosure;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -32,13 +34,15 @@ class PeriodList extends Component
 
     public function render()
     {
-        // $permissions = [
-        //     'view-master-period',
-        //     'create-master-period',
-        //     'edit-master-period',
-        //     'delete-master-period',
-        // ];
-        // abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $permissions = [
+            'view-master-period',
+            'create-master-period',
+            'edit-master-period',
+            'delete-master-period',
+            'open-period',
+            'close-period',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         $periods = Period::with(['companies'])
             ->latest()
             ->paginate(10);
@@ -50,10 +54,17 @@ class PeriodList extends Component
             $periodQuery->latest();
         }
         $period = $periodQuery->first();
-        $this->periodName = $period->period_name;
-        $this->startDate = $period->start_date;
-        $this->endDate = $period->end_date;
-        $this->periodCompanies = data_get($period, 'companies');
+        if ($period) {
+            $this->periodName = $period->period_name;
+            $this->startDate = $period->start_date;
+            $this->endDate = $period->end_date;
+            $this->periodCompanies = data_get($period, 'companies');
+        } else {
+            $this->periodName = null;
+            $this->startDate = null;
+            $this->endDate = null;
+            $this->periodCompanies = collect();
+        }
         return view('livewire.period.period-list', [
             'periods' => $periods,
         ]);
@@ -91,24 +102,89 @@ class PeriodList extends Component
 
     public function openPeriod($periodId, $companyId)
     {
-        $period = Period::find($periodId);
+        $permissions = [
+            'open-period',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if ($period) {
-            $period->companies()->updateExistingPivot($companyId, ['status' => 'open']);
+        try {
+            $period = Period::find($periodId);
+
+            if ($period) {
+                $period->companies()->updateExistingPivot($companyId, ['status' => 'open']);
+            } else {
+                throw new \Exception('Period not found');
+            }
+
+            $slocs = Sloc::where('company_id', $companyId)
+                ->get();
+
+            foreach ($slocs as $sloc) {
+                StockClosure::create([
+                    'period_id' => $periodId,
+                    'company_id' => $companyId,
+                    'plant_id' => $sloc->plant_id,
+                    'sloc_id' => $sloc->sloc_id,
+                    'material_id' => $sloc->material_id,
+                    'material_code' => $sloc->material_code,
+                    'part_no' => $sloc->part_no,
+                    'material_mnemonic' => $sloc->material_mnemonic,
+                    'material_description' => $sloc->material_description,
+                    'uom_id' => $sloc->uom_id,
+                    'qty_soh' => $sloc->qty_soh,
+                    'qty_intransit' => $sloc->qty_intransit,
+                    'trans_type' => 'opening',
+                ]);
+            }
+
+            $this->dispatch('success', 'Data has been updated');
+            $this->resetPage();
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
         }
-        $this->dispatch('success', 'Data has been updated');
-        $this->resetPage();
     }
 
     public function closePeriod($periodId, $companyId)
     {
-        $period = Period::find($periodId);
+        $permissions = [
+            'close-period',
+        ];
+        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if ($period) {
-            $period->companies()->updateExistingPivot($companyId, ['status' => 'close']);
+        try {
+            $period = Period::find($periodId);
+
+            if ($period) {
+                $period->companies()->updateExistingPivot($companyId, ['status' => 'close']);
+            } else {
+                throw new \Exception('Period not found');
+            }
+
+            $slocs = Sloc::where('company_id', $companyId)
+                ->get();
+
+            foreach ($slocs as $sloc) {
+                StockClosure::create([
+                    'period_id' => $periodId,
+                    'company_id' => $companyId,
+                    'plant_id' => $sloc->plant_id,
+                    'sloc_id' => $sloc->sloc_id,
+                    'material_id' => $sloc->material_id,
+                    'material_code' => $sloc->material_code,
+                    'part_no' => $sloc->part_no,
+                    'material_mnemonic' => $sloc->material_mnemonic,
+                    'material_description' => $sloc->material_description,
+                    'uom_id' => $sloc->uom_id,
+                    'qty_soh' => $sloc->qty_soh,
+                    'qty_intransit' => $sloc->qty_intransit,
+                    'trans_type' => 'closing',
+                ]);
+            }
+
+            $this->dispatch('success', 'Data has been updated');
+            $this->resetPage();
+        } catch (\Throwable $th) {
+            $this->dispatch('error', $th->getMessage());
         }
-
-        $this->dispatch('success', 'Data has been updated');
-        $this->resetPage();
     }
 }

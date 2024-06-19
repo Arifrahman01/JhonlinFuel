@@ -17,15 +17,15 @@
                     {{-- <div class="card"> --}}
                     <div class="card">
                         <div class="card-header">
-                            <form wire:submit.prevent="resetPage">
+                            <form wire:submit.prevent="search">
                                 <div class="d-flex">
                                     <div class="ms-auto">
                                         <div class="ms-2 d-inline-block">
                                             <select wire:model='periodId' class="form-select form-select-sm">
-                                                <option value="">Current Stock</option>
+                                                <option value="">Current Period</option>
                                                 @foreach ($periods as $period)
                                                     <option value="{{ $period->id }}">
-                                                        {{ 'Period ' . $period->period_name }}
+                                                        {{ $period->period_name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -59,44 +59,48 @@
                                 <tbody>
                                     <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1"
                                         aria-expanded="true">
-                                        <td role="gridcell">{{ $data->name }}</td>
+                                        <td role="gridcell">{{ $allJhonlin->company_name }}</td>
                                         <td role="gridcell" style="text-align: right;">
-                                            {{ number_format($data->soh, 0, ',', '.') }}</td>
+                                            {{ number_format($allJhonlin->oh_qty, 0, ',', '.') }}</td>
                                         <td role="gridcell" style="text-align: right;">
-                                            {{ number_format($data->intransit, 0, ',', '.') }}
+                                            {{ number_format($allJhonlin->intransit_qty, 0, ',', '.') }}
                                         </td>
                                     </tr>
-                                    @foreach ($data->details as $company)
+                                    @foreach ($sohPerCompany as $sohCompany)
                                         <tr role="row" aria-level="2" aria-posinset="2" aria-setsize="3"
                                             aria-expanded="false">
-                                            <td role="gridcell">{{ $company->name }}</td>
+                                            <td role="gridcell">{{ $sohCompany->company_name }}</td>
                                             <td role="gridcell" style="text-align: right;">
-                                                {{ number_format($company->soh, 0, ',', '.') }}</td>
+                                                {{ number_format($sohCompany->oh_qty, 0, ',', '.') }}</td>
                                             <td role="gridcell" style="text-align: right;">
-                                                {{ number_format($company->intransit, 0, ',', '.') }}
+                                                {{ number_format($sohCompany->intransit_qty, 0, ',', '.') }}
                                             </td>
                                         </tr>
-                                        @foreach ($company->details as $plant)
-                                            <tr role="row" aria-level="3" aria-posinset="1" aria-setsize="1"
-                                                aria-expanded="false" class="hidden">
-                                                <td role="gridcell">{{ $plant->name }}</td>
-                                                <td role="gridcell" style="text-align: right;">
-                                                    {{ number_format($plant->soh, 0, ',', '.') }}
-                                                </td>
-                                                <td role="gridcell" style="text-align: right;">
-                                                    {{ number_format($plant->intransit, 0, ',', '.') }}</td>
-                                            </tr>
-                                            @foreach ($plant->details as $sloc)
-                                                <tr role="row" aria-level="4" aria-posinset="1" aria-setsize="1"
-                                                    class="hidden">
-                                                    <td role="gridcell">{{ $sloc->name }}</td>
+                                        @foreach ($sohPerPlant as $sohPlant)
+                                            @if ($sohPlant->company_id == $sohCompany->company_id)
+                                                <tr role="row" aria-level="3" aria-posinset="1" aria-setsize="1"
+                                                    aria-expanded="false" class="hidden">
+                                                    <td role="gridcell">{{ $sohPlant->plant_name }}</td>
                                                     <td role="gridcell" style="text-align: right;">
-                                                        {{ number_format($sloc->soh, 0, ',', '.') }}</td>
-                                                    <td role="gridcell" style="text-align: right;">
-                                                        {{ number_format($sloc->intransit, 0, ',', '.') }}
+                                                        {{ number_format($sohPlant->oh_qty, 0, ',', '.') }}
                                                     </td>
+                                                    <td role="gridcell" style="text-align: right;">
+                                                        {{ number_format($sohPlant->intransit_qty, 0, ',', '.') }}</td>
                                                 </tr>
-                                            @endforeach
+                                                @foreach ($sohPerSloc as $sohSloc)
+                                                    @if ($sohSloc->plant_id == $sohPlant->plant_id)
+                                                        <tr role="row" aria-level="4" aria-posinset="1"
+                                                            aria-setsize="1" class="hidden">
+                                                            <td role="gridcell">{{ $sohSloc->sloc_name }}</td>
+                                                            <td role="gridcell" style="text-align: right;">
+                                                                {{ number_format($sohSloc->oh_qty, 0, ',', '.') }}</td>
+                                                            <td role="gridcell" style="text-align: right;">
+                                                                {{ number_format($sohSloc->intransit_qty, 0, ',', '.') }}
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            @endif
                                         @endforeach
                                     @endforeach
                                     {{-- <tr role="row" aria-level="1" aria-posinset="1" aria-setsize="1"
