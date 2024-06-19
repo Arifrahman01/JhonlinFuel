@@ -132,6 +132,14 @@ class TransferList extends Component
 
                 Transfer::find($tmp->id)->update(['posting_no' => $newPostingNumber]);
 
+                if (!checkOpenPeriod($fromCompany->id, $tmp->trans_date)) {
+                    throw new \Exception('Periode tidak open untuk ' . $fromCompany->company_name . ' tanggal ' . $tmp->trans_date);
+                }
+
+                if (!checkOpenPeriod($toCompany->id, $tmp->trans_date)) {
+                    throw new \Exception('Periode tidak open untuk ' . $toCompany->company_name . ' tanggal ' . $tmp->trans_date);
+                }
+
                 $cekStokFrom = MaterialStock::where('company_id', $fromCompany->id)->where('sloc_id', $slocIdFrom->id)->first();
 
                 // movement gudang asal

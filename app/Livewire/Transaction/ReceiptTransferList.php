@@ -171,7 +171,8 @@ class ReceiptTransferList extends Component
                 $receiptTransfer->update([
                     'posting_no' => $newPostingNumber,
                 ]);
-
+                $fromCompany = Company::where('company_code', $receiptTransfer->from_company_code)->first();
+                $toCompany  = Company::where('company_code', $receiptTransfer->to_company_code)->first();
                 $slocFrom = Sloc::where('sloc_code', $receiptTransfer->from_warehouse)->first();
                 $stokFrom = MaterialStock::where('sloc_id', Sloc::where('sloc_code', $receiptTransfer->from_warehouse)->value('id'));
                 $sohBeforeFrom = $stokFrom->value('qty_soh');
@@ -185,6 +186,14 @@ class ReceiptTransferList extends Component
                 $intransitBeforeTo = $stokTo->value('qty_intransit');
                 $stokTo->increment('qty_soh', $receiptTransfer->qty);
                 $stokTo->decrement('qty_intransit', $receiptTransfer->qty);
+
+                if (!checkOpenPeriod($fromCompany->company_id, $receiptTransfer->trans_date)) {
+                    throw new \Exception('Periode tidak open untuk ' . $fromCompany->company_name . ' tanggal ' . $receiptTransfer->trans_date);
+                }
+
+                if (!checkOpenPeriod($toCompany->id, $receiptTransfer->trans_date)) {
+                    throw new \Exception('Periode tidak open untuk ' . $toCompany->company_name . ' tanggal ' . $receiptTransfer->trans_date);
+                }
 
                 $material = Material::where('material_code', $receiptTransfer->material_code)->first();
 

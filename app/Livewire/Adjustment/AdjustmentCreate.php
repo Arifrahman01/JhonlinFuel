@@ -179,6 +179,10 @@ class AdjustmentCreate extends Component
                 throw new \Exception('Item tidak boleh kosong');
             }
 
+            if (!checkOpenPeriod($this->selectedCompany, $this->adjDate)) {
+                throw new \Exception('Periode tidak open');
+            }
+
             $company = Company::find($this->selectedCompany);
 
             $date = new DateTime($this->adjDate);

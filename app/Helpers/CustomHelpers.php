@@ -2,7 +2,9 @@
 
 use App\Helpers\ApiResponse;
 use App\Models\Company;
+use App\Models\Period;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Response;
 
@@ -66,5 +68,39 @@ if (!function_exists('allowedCompanyCode')) {
         }
 
         return [];
+    }
+}
+if (!function_exists('allowedCompanyCode')) {
+    function allowedCompanyCode($otorisasi): array
+    {
+        $user = User::with('roles.permissions')->find(auth()->id());
+        $roleCode = data_get($user, 'roles.*.role_code');
+
+        if (in_array('sa', $roleCode)) {
+            return data_get(Company::all(), '*.company_code');
+        }
+
+        foreach ($user->roles as $role) {
+            if (in_array($otorisasi, data_get($role, 'permissions.*.permission_code'))) {
+                return data_get($role, 'pivot.companies.*.company_code');
+            }
+        }
+
+        return [];
+    }
+}
+
+if (!function_exists('checkPeriod')) {
+    function checkOpenPeriod($companyId, $transDate): bool
+    {
+        $dateToCheck = Carbon::parse($transDate);
+
+        return Company::where('id', $companyId)
+            ->whereHas('periods', function ($query) use ($dateToCheck) {
+                $query->where('company_period.status', 'open')
+                    ->where('start_date', '<=', $dateToCheck)
+                    ->where('end_date', '>=', $dateToCheck);
+            })
+            ->exists();
     }
 }

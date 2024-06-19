@@ -103,7 +103,7 @@ class StockOverview extends Component
         $companiesQuery = Company::query();
         if ($this->periodId) {
             $companiesQuery->with(['plants.slocs.periodStock' => function ($query) {
-                $query->where('trans_type', 'close')
+                $query->where('trans_type', 'closing')
                     ->where('period_id', $this->periodId);
             }]);
         } else {

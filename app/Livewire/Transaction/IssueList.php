@@ -116,6 +116,10 @@ class IssueList extends Component
 
                 Issue::find($tmp->id)->update(['posting_no' => $newPostingNumber]);
 
+                if (!checkOpenPeriod($company->id, $tmp->trans_date)) {
+                    throw new \Exception('Periode tidak open untuk ' . $company->company_name . ' tanggal ' . $tmp->trans_date);
+                }
+
                 $cekStok = MaterialStock::where('company_id', $company->id)
                     ->where('plant_id', $location->id)->where('sloc_id', $slocId)
                     ->first();
