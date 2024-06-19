@@ -25,6 +25,7 @@ class WarehouseCreate extends Component
     public $warehouseId;
     public $warehouseCode;
     public $warehouseName;
+    public $capacity;
     protected $listeners = ['openCreate'];
 
     public function render()
@@ -101,6 +102,7 @@ class WarehouseCreate extends Component
                         Rule::unique('storage_locations', 'sloc_code')->ignore($this->warehouseId),
                     ],
                     'warehouseName' => 'required',
+                    'capacity'  => 'required|numeric'
                 ]);
                 $warehouse = Sloc::find($this->warehouseId);
                 if ($warehouse->hasDataByCode()) {
@@ -111,6 +113,7 @@ class WarehouseCreate extends Component
                     'plant_id' => $this->selectedPlant,
                     'sloc_code' => $this->warehouseCode,
                     'sloc_name' => $this->warehouseName,
+                    'capacity'  => $this->capacity,
                 ]);
 
                 $materialStock = MaterialStock::where('sloc_id', $this->warehouseId)->first();
@@ -124,12 +127,14 @@ class WarehouseCreate extends Component
                     'selectedPlant' => 'required',
                     'warehouseCode' => 'required|unique:storage_locations,sloc_code',
                     'warehouseName' => 'required',
+                    'capacity'  => 'required|numeric'
                 ]);
                 $sloc = Sloc::create([
                     'company_id' => $this->selectedCompany,
                     'plant_id' => $this->selectedPlant,
                     'sloc_code' => $this->warehouseCode,
                     'sloc_name' => $this->warehouseName,
+                    'capacity'  => $this->capacity,
                 ]);
 
                 $material = Material::first();

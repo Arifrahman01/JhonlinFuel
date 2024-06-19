@@ -61,6 +61,11 @@
                             <input type="text" class="form-control" wire:model='warehouseName'
                                 placeholder="Warehouse Name" required>
                         </div>
+                        <div class="col-12 mb-3">
+                            <label for="" class="form-label required">Capacity</label>
+                            <input type="number" class="form-control" wire:model='capacity'
+                                placeholder="Capacity" required>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn me-auto" data-bs-dismiss="modal"

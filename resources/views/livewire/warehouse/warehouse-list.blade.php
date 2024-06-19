@@ -79,6 +79,7 @@
                                         <th class="text-center">Plant</th>
                                         <th class="text-center">Warehouse Code</th>
                                         <th class="text-center">Warehouse Name</th>
+                                        <th class="text-center">Capacity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -108,6 +109,7 @@
                                                 <td>{{ data_get($warehouse, 'plant.plant_name') }}</td>
                                                 <td>{{ $warehouse->sloc_code }}</td>
                                                 <td>{{ $warehouse->sloc_name }}</td>
+                                                <td>{{ $warehouse->capacity }}</td>
                                             </tr>
                                         @endforeach
                                     @endif
