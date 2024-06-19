@@ -10,6 +10,7 @@ use App\Models\ReceiptTransfer;
 use App\Models\Sloc;
 use App\Models\StockClosure;
 use App\Models\Transfer;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -111,7 +112,7 @@ class PeriodList extends Component
             'open-period',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+        DB::beginTransaction();
         try {
             $period = Period::find($periodId);
 
@@ -121,32 +122,36 @@ class PeriodList extends Component
                 throw new \Exception('Periode tidak ditemukan');
             }
 
-            $this->cekTransaksi($companyId);
+            $errorTransaksi = $this->cekTransaksi($companyId);
+            if (!$errorTransaksi) {
+                throw new \Exception($errorTransaksi);
+            }
 
-            $slocs = Sloc::where('company_id', $companyId)
+            $currentStocks = MaterialStock::where('company_id', $companyId)
                 ->get();
 
-            foreach ($slocs as $sloc) {
+            foreach ($currentStocks as $currentStock) {
                 StockClosure::create([
                     'period_id' => $periodId,
                     'company_id' => $companyId,
-                    'plant_id' => $sloc->plant_id,
-                    'sloc_id' => $sloc->sloc_id,
-                    'material_id' => $sloc->material_id,
-                    'material_code' => $sloc->material_code,
-                    'part_no' => $sloc->part_no,
-                    'material_mnemonic' => $sloc->material_mnemonic,
-                    'material_description' => $sloc->material_description,
-                    'uom_id' => $sloc->uom_id,
-                    'qty_soh' => $sloc->qty_soh,
-                    'qty_intransit' => $sloc->qty_intransit,
+                    'plant_id' => $currentStock->plant_id,
+                    'sloc_id' => $currentStock->sloc_id,
+                    'material_id' => $currentStock->material_id,
+                    'material_code' => $currentStock->material_code,
+                    'part_no' => $currentStock->part_no,
+                    'material_mnemonic' => $currentStock->material_mnemonic,
+                    'material_description' => $currentStock->material_description,
+                    'uom_id' => $currentStock->uom_id,
+                    'qty_soh' => $currentStock->qty_soh,
+                    'qty_intransit' => $currentStock->qty_intransit,
                     'trans_type' => 'opening',
                 ]);
             }
-
+            DB::commit();
             $this->dispatch('success', 'Data has been updated');
             $this->resetPage();
         } catch (\Throwable $th) {
+            DB::rollBack();
             $this->dispatch('error', $th->getMessage());
         }
     }
@@ -157,7 +162,7 @@ class PeriodList extends Component
             'close-period',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
+        DB::beginTransaction();
         try {
             $period = Period::find($periodId);
 
@@ -167,32 +172,36 @@ class PeriodList extends Component
                 throw new \Exception('Period not found');
             }
 
-            $this->cekTransaksi($companyId);
+            $errorTransaksi = $this->cekTransaksi($companyId);
+            if (!$errorTransaksi) {
+                throw new \Exception($errorTransaksi);
+            }
 
-            $slocs = Sloc::where('company_id', $companyId)
+            $currentStocks = MaterialStock::where('company_id', $companyId)
                 ->get();
 
-            foreach ($slocs as $sloc) {
+            foreach ($currentStocks as $currentStock) {
                 StockClosure::create([
                     'period_id' => $periodId,
                     'company_id' => $companyId,
-                    'plant_id' => $sloc->plant_id,
-                    'sloc_id' => $sloc->sloc_id,
-                    'material_id' => $sloc->material_id,
-                    'material_code' => $sloc->material_code,
-                    'part_no' => $sloc->part_no,
-                    'material_mnemonic' => $sloc->material_mnemonic,
-                    'material_description' => $sloc->material_description,
-                    'uom_id' => $sloc->uom_id,
-                    'qty_soh' => $sloc->qty_soh,
-                    'qty_intransit' => $sloc->qty_intransit,
+                    'plant_id' => $currentStock->plant_id,
+                    'sloc_id' => $currentStock->sloc_id,
+                    'material_id' => $currentStock->material_id,
+                    'material_code' => $currentStock->material_code,
+                    'part_no' => $currentStock->part_no,
+                    'material_mnemonic' => $currentStock->material_mnemonic,
+                    'material_description' => $currentStock->material_description,
+                    'uom_id' => $currentStock->uom_id,
+                    'qty_soh' => $currentStock->qty_soh,
+                    'qty_intransit' => $currentStock->qty_intransit,
                     'trans_type' => 'closing',
                 ]);
             }
-
+            DB::commit();
             $this->dispatch('success', 'Data has been updated');
             $this->resetPage();
         } catch (\Throwable $th) {
+            DB::rollBack();
             $this->dispatch('error', $th->getMessage());
         }
     }
@@ -214,23 +223,25 @@ class PeriodList extends Component
             ->exists();
 
         if ($receiptBelumPosting) {
-            throw new \Exception('Ada Receipt PO yang belum posting');
+            return 'Ada Receipt PO yang belum posting';
         }
 
         if ($transferBelumPosting) {
-            throw new \Exception('Ada Transfer yang belum posting');
+            return 'Ada Transfer yang belum posting';
         }
 
         if ($receiptTransferBelumPosting) {
-            throw new \Exception('Ada Receipt Transfer yang belum posting');
+            return 'Ada Receipt Transfer yang belum posting';
         }
 
         if ($issueBelumPosting) {
-            throw new \Exception('Ada Issue yang belum posting');
+            return 'Ada Issue yang belum posting';
         }
 
         if ($osTransfer) {
-            throw new \Exception('Ada Transfer yang belum diReceipt Transfer');
+            return 'Ada Transfer yang belum diReceipt Transfer';
         }
+
+        return false;
     }
 }
