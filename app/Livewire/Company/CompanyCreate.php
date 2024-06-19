@@ -43,7 +43,6 @@ class CompanyCreate extends Component
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
             $company = Company::find($id);
@@ -53,6 +52,7 @@ class CompanyCreate extends Component
             $this->companyName = $company->company_name;
         } else {
             $this->statusModal = 'Create';
+            $this->companyCodeReadOnly = false;
             $this->companyId = null;
             $this->companyCode = null;
             $this->companyName = null;
@@ -81,7 +81,7 @@ class CompanyCreate extends Component
                     'companyName' => 'required',
                 ]);
                 $company = Company::find($this->companyId);
-                if ($company->hasDataByCode()) {
+                if ($company->company_code != $this->companyCode && $company->hasDataByCode()) {
                     throw new \Exception("Company Code has data. Can't be edited");
                 }
                 $company->update([

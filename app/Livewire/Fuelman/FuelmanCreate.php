@@ -55,7 +55,6 @@ class FuelmanCreate extends Component
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
             $fuelman = Fuelman::find($id);
@@ -69,6 +68,7 @@ class FuelmanCreate extends Component
             $this->fuelmanName = $fuelman->name;
         } else {
             $this->statusModal = 'Create';
+            $this->fuelmanNIKReadOnly = false;
             $this->selectedCompany = null;
             $this->selectedPlant = null;
             $this->fuelmanId = null;
@@ -101,7 +101,7 @@ class FuelmanCreate extends Component
                     'fuelmanName' => 'required',
                 ]);
                 $fuelman = Fuelman::find($this->fuelmanId);
-                if ($fuelman->hasDataByNik()) {
+                if ($fuelman->nik != $this->fuelmanNIK && $fuelman->hasDataByNik()) {
                     throw new \Exception("Fuelman NIK has data. Can't be edited");
                 }
                 $fuelman->update([
