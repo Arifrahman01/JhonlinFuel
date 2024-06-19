@@ -26,7 +26,7 @@
             <div class="row row-cards">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
+                        {{-- <div class="card-header">
                             <form wire:submit.prevent="search">
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
@@ -45,7 +45,7 @@
                                 </div>
 
                             </form>
-                        </div>
+                        </div> --}}
                         <div class="table-responsive">
                             <table class="table table-vcenter card-table table-bordered" id="period-table">
                                 <thead>

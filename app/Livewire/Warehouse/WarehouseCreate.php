@@ -53,7 +53,6 @@ class WarehouseCreate extends Component
             'edit-master-warehouse',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
             $warehouse = Sloc::find($id);
@@ -66,6 +65,7 @@ class WarehouseCreate extends Component
             $this->warehouseName = $warehouse->sloc_name;
         } else {
             $this->statusModal = 'Create';
+            $this->warehouseCodeReadOnly = false;
             $this->selectedCompany = null;
             $this->selectedPlant = null;
             $this->warehouseId = null;
@@ -105,7 +105,7 @@ class WarehouseCreate extends Component
                     'capacity'  => 'required|numeric'
                 ]);
                 $warehouse = Sloc::find($this->warehouseId);
-                if ($warehouse->hasDataByCode()) {
+                if ($warehouse->sloc_code != $this->warehouseCode && $warehouse->hasDataByCode()) {
                     throw new \Exception("Warehouse Code has data. Can't be edited");
                 }
                 $warehouse->update([

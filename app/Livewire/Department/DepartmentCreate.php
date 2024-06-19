@@ -47,7 +47,6 @@ class DepartmentCreate extends Component
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
             $department = Department::find($id);
@@ -58,6 +57,7 @@ class DepartmentCreate extends Component
             $this->departmentName = $department->department_name;
         } else {
             $this->statusModal = 'Create';
+            $this->departmentCodeReadOnly = false;
             $this->selectedCompany = null;
             $this->departmentId = null;
             $this->departmentCode = null;
@@ -88,7 +88,7 @@ class DepartmentCreate extends Component
                     'departmentName' => 'required',
                 ]);
                 $department = Department::find($this->departmentId);
-                if ($department->hasDataByCode()) {
+                if ($department->department_code != $this->departmentCode && $department->hasDataByCode()) {
                     throw new \Exception("Department Code has data. Can't be edited");
                 }
                 $department->update([

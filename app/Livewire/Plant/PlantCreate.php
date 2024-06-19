@@ -46,7 +46,6 @@ class PlantCreate extends Component
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $this->loading = true;
         if ($id) {
             $this->statusModal = 'Edit';
             $plant = Plant::find($id);
@@ -57,6 +56,7 @@ class PlantCreate extends Component
             $this->plantName = $plant->plant_name;
         } else {
             $this->statusModal = 'Create';
+            $this->plantCodeReadOnly = false;
             $this->selectedCompany = null;
             $this->plantId = null;
             $this->plantCode = null;
@@ -84,7 +84,7 @@ class PlantCreate extends Component
                     'plantName' => 'required',
                 ]);
                 $plant = Plant::find($this->plantId);
-                if ($plant->hasDataByCode()) {
+                if ($plant->plant_code != $this->plantCode && $plant->hasDataByCode()) {
                     throw new \Exception("Plant Code has data. Can't be edited");
                 }
                 $plant->update([
