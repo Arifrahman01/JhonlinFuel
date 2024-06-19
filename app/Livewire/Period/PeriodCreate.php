@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PeriodCreate extends Component
 {
-    public $loading;
+    public $loading = true;
     public $statusModal;
     public $periodId;
     public $periodName;
@@ -73,5 +73,6 @@ class PeriodCreate extends Component
 
     public function closeModal()
     {
+        $this->loading = true;
     }
 }
