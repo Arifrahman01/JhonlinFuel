@@ -157,7 +157,9 @@
                                             @endphp
                                             <tr>
                                                 <td class="text-center">
-                                                    @if ($class == 'status-green')
+                                                    <input class="form-check-input m-0 align-middle detailCheckbox"
+                                                        type="checkbox">
+                                                    {{-- @if ($class == 'status-green')
                                                         @can('close-period')
                                                             <button class="btn btn-sm btn-danger"
                                                                 onclick="closePeriod('{{ $periodId_ }}', '{{ $companyId_ }}')">
@@ -171,7 +173,7 @@
                                                                 Open
                                                             </button>
                                                         @endcan
-                                                    @endif
+                                                    @endif --}}
                                                 </td>
                                                 <td>{{ $periodCompany->company_name }}</td>
                                                 <td>
