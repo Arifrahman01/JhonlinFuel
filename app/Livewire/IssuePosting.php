@@ -43,7 +43,7 @@ class IssuePosting extends Component
     public function report($company, $start, $end)
     {
         try {    
-            ini_set('memory_limit', '256M');    
+            ini_set('memory_limit', '1G'); 
             ini_set('max_execution_time', 120);
 
             $fileName = 'Issue ' . $start . ' . ' . $end . '.xlsx';

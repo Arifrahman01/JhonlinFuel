@@ -27,6 +27,10 @@ class Company extends BaseModel
     {
         return $this->hasMany(Plant::class, 'company_id', 'id');
     }
+    public function slocs(): HasMany
+    {
+        return $this->hasMany(Sloc::class, 'company_id', 'id');
+    }
 
     public function periods(): BelongsToMany
     {
