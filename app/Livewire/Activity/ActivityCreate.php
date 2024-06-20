@@ -58,7 +58,7 @@ class ActivityCreate extends Component
             $this->activityId = $id;
         } else {
             $this->activityId = null;
-            // $this->codeReadOnly = false;
+            $this->codeReadOnly = false;
             $this->statusModal = 'Create';
             $this->company = null;
             $this->activityCode = null;

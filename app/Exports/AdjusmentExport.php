@@ -36,8 +36,7 @@ class AdjusmentExport implements FromCollection, WithHeadings
             ->when($this->company, fn ($query, $c) => $query->where('company_id', $c))
             ->whereBetween('adjustment_date', [$this->start, $this->end])
             ->search(['adjNo' => $this->search])
-            ->latest()
-            ->paginate(10);
+            ->latest()->get();
 
             $data = $adjusts->flatMap(function ($adjust) {
                 return $adjust->details->map(function ($detail) use ($adjust) {

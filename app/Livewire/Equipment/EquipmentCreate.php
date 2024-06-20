@@ -62,6 +62,7 @@ class EquipmentCreate extends Component
         } else {
             $this->equipmentId = null;
             $this->statusModal = 'Create';
+            $this->readOnly = false;
             $this->selectedCompany = null;
             $this->plant = null;
             $this->equipmentNo = null;

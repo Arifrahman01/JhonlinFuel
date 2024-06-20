@@ -23,6 +23,11 @@ class Plant extends BaseModel
         return $this->hasMany(Sloc::class, 'plant_id', 'id');
     }
 
+    public function materialStock()
+    {
+        return $this->hasMany(MaterialStock::class, 'plant_id', 'id');
+    }
+
     public function hasDataById(): bool
     {
         if (AdjustmentDetail::where('plant_id', $this->id)->exists()) {
