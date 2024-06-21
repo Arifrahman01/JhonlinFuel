@@ -27,7 +27,7 @@ class PlantList extends Component
             'delete-master-plant',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $companies = Company::all();
+        $companies = Company::allowed('view-master-plant')->get();
         $plants = Plant::when($this->c, fn ($query, $c) => $query->where('company_id', $c))
             ->when($this->q, fn ($query, $q) => $query->where(fn ($query) =>
             $query->where('plant_code', 'like', '%' . $q . '%')

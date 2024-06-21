@@ -27,7 +27,7 @@ class EquipmentList extends Component
             'delete-master-equipment',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $companies = Company::all();
+        $companies = Company::allowed('view-master-equipment')->get();
         $equipments = Equipment::with(['company', 'plant'])
             ->when($this->c, fn ($query, $c) => $query->where('company_id', $c))
             ->when($this->p, fn ($query, $p) => $query->where('plant_id', $p))

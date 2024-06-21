@@ -38,7 +38,7 @@ class AdjustmentCreate extends Component
 
     public function render()
     {
-        $companies = Company::all();
+        $companies = Company::allowed('view-transaksi-adjustment')->get();
         return view('livewire.adjustment.adjustment-create', compact('companies'));
     }
 

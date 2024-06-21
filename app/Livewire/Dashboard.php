@@ -21,7 +21,7 @@ class Dashboard extends Component
         $maxCapacity = Sloc::sum('capacity');
         $materialStock = $results = MaterialStock::with('company')->selectRaw('SUM(qty_soh) as total_soh, SUM(qty_intransit) as total_intransit, company_id')->groupBy('company_id')->get();
         $totalFuel = MaterialStock::selectRaw("'All Jhonlin' as company_name")->selectRaw("SUM(IFNULL(qty_soh, 0)) as oh_qty")->selectRaw("SUM(IFNULL(qty_intransit, 0)) as intransit_qty")->first();
-        $companyStock = Company::with(['plants.slocs','plants.materialStock'])->get();
+        $companyStock = Company::with(['plants.slocs','plants.materialStock'])->allowed('view-dashboard')->get();
 
         return view('livewire.dashboard',compact('maxCapacity','materialStock','totalFuel','companyStock'));
     }

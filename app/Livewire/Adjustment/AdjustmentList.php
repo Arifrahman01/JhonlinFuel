@@ -30,7 +30,7 @@ class AdjustmentList extends Component
     {
         $this->start_date = $this->start_date ?? date('Y-m-d', strtotime("-30 days"));
         $this->end_date = $this->end_date ?? date('Y-m-d');
-        $this->companies = Company::all();
+        $this->companies = Company::allowed('view-transaksi-adjustment')->get();
     }
 
     public function render()

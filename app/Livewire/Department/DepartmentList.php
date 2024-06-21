@@ -26,7 +26,7 @@ class DepartmentList extends Component
             'delete-master-department',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $companies = Company::all();
+        $companies = Company::allowed('view-master-department')->get();
         $departments = Department::with(['company', 'plant'])
             ->when($this->c, fn ($query, $c) => $query->where('company_id', $c))
             ->when($this->p, fn ($query, $p) => $query->where('plant_id', $p))

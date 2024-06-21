@@ -26,7 +26,7 @@ class ActivityList extends Component
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $companies = Company::all();
+        $companies = Company::allowed('view-master-activity')->get();
         $activitys = Activity::with(['company'])->search($this->q)
             ->latest()
             ->paginate(10);

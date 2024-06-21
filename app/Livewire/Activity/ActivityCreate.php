@@ -33,7 +33,7 @@ class ActivityCreate extends Component
             'delete-master-activity',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $companies = Company::all();
+        $companies = Company::allowed('view-master-activity')->get();
         return view('livewire.activity.activity-create', ['companies' => $companies]);
     }
     public function closeModal()
