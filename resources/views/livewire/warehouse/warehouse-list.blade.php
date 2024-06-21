@@ -109,7 +109,7 @@
                                                 <td>{{ data_get($warehouse, 'plant.plant_name') }}</td>
                                                 <td>{{ $warehouse->sloc_code }}</td>
                                                 <td>{{ $warehouse->sloc_name }}</td>
-                                                <td>{{ $warehouse->capacity }}</td>
+                                                <td>{{ number_format($warehouse->capacity,'0',',','.') }}</td>
                                             </tr>
                                         @endforeach
                                     @endif

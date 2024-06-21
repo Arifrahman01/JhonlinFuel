@@ -63,6 +63,7 @@ class WarehouseCreate extends Component
             $this->warehouseId = $id;
             $this->warehouseCode = $warehouse->sloc_code;
             $this->warehouseName = $warehouse->sloc_name;
+            $this->capacity = $warehouse->capacity;
         } else {
             $this->statusModal = 'Create';
             $this->warehouseCodeReadOnly = false;
@@ -71,6 +72,7 @@ class WarehouseCreate extends Component
             $this->warehouseId = null;
             $this->warehouseCode = null;
             $this->warehouseName = null;
+            $this->capacity = null;
         }
 
         $this->loading = false;
