@@ -79,12 +79,21 @@ class PeriodList extends Component
             // $this->periodCompanies = collect();
         }
 
-        $periodCompanies = Company::with(['periods' => function ($query) use ($filterYear, $filterMonth) {
+        $periodCompanies = Company::with(['periods' => function ($query) {
             $query->select('periods.id', 'periods.period_name', 'periods.year', 'periods.month', 'company_period.status')
                 ->where('periods.year', $this->selectedYear)
                 ->where('periods.month', $this->selectedMonth);
         }])->get(['companies.id', 'companies.company_code', 'companies.company_name']);
 
+        // $periodCompanies = Company::whereHas('periods', function ($query) {
+        //     $query->where('year', $this->selectedYear)
+        //         ->where('month', $this->selectedMonth);
+        // })->with(['periods' => function ($query) {
+        //     $query->select('periods.id', 'periods.period_name', 'periods.year', 'periods.month', 'company_period.status')
+        //         ->where('year', $this->selectedYear)
+        //         ->where('month', $this->selectedMonth);
+        // }])->get(['companies.id', 'companies.company_code', 'companies.company_name']);
+        // dd(data_get($periodCompanies, '*.periods'));
         return view('livewire.period.period-list', [
             'years' => getListTahun(),
             'months' => getListBulan(),
