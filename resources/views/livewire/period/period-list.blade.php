@@ -101,9 +101,42 @@
                         class="spinner-border spinner-border-sm text-primary" role="status"></span>
                     <div wire:loading.remove wire:target='periodSelected' class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Period Status</h3>
+                            <form wire:submit.prevent="search">
+                                <div class="d-flex">
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <select wire:model="selectedYear" class="form-select form-select-sm">
+                                                <option value="">Current Year</option>
+                                                @foreach ($years as $year)
+                                                    <option value="{{ $year }}">
+                                                        {{ $year }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <select wire:model="selectedMonth" class="form-select form-select-sm">
+                                                <option value="">Current Month</option>
+                                                @foreach ($months as $month)
+                                                    <option value="{{ $month }}">
+                                                        {{ $month }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto text-muted">
+                                        <div class="ms-2 d-inline-block">
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                &nbsp; Cari &nbsp;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
                         </div>
-                        <div class="card-body">
+                        {{-- <div class="card-body">
                             <div class="datagrid">
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Period Name</div>
@@ -118,10 +151,9 @@
                                     <div class="datagrid-content">{{ $endDate }}</div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="table-responsive">
-                            <table class="table table-vcenter card-table table-bordered"
-                                style="border-top: 1px solid var(--tblr-border-color-translucent);">
+                            <table class="table table-vcenter card-table table-bordered"ƒ>
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 6%;">Action</th>

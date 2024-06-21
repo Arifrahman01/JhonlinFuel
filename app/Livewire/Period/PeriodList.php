@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Period;
 
+use App\Models\Company;
 use App\Models\Issue;
 use App\Models\Material\MaterialStock;
 use App\Models\Period;
@@ -25,7 +26,8 @@ class PeriodList extends Component
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['refreshPage'];
 
-    public $periodCompanies = [];
+    public $selectedYear;
+    public $selectedMonth;
 
     public $periodId, $periodName, $startDate, $endDate;
 
@@ -34,8 +36,13 @@ class PeriodList extends Component
 
     public function mount()
     {
-        $period = Period::latest()->first();
-        $this->periodCompanies = data_get($period, 'companies');
+        $this->selectedYear = date('Y');
+        $this->selectedMonth = date('n');
+
+        // dd($this->periodCompanies);
+
+        // $period = Period::latest()->first();
+        // $this->periodCompanies = data_get($period, 'companies');
     }
 
     public function render()
@@ -64,14 +71,24 @@ class PeriodList extends Component
             $this->periodName = $period->period_name;
             $this->startDate = $period->start_date;
             $this->endDate = $period->end_date;
-            $this->periodCompanies = data_get($period, 'companies');
+            // $this->periodCompanies = data_get($period, 'companies');
         } else {
             $this->periodName = null;
             $this->startDate = null;
             $this->endDate = null;
-            $this->periodCompanies = collect();
+            // $this->periodCompanies = collect();
         }
+
+        $periodCompanies = Company::with(['periods' => function ($query) use ($filterYear, $filterMonth) {
+            $query->select('periods.id', 'periods.period_name', 'periods.year', 'periods.month', 'company_period.status')
+                ->where('periods.year', $this->selectedYear)
+                ->where('periods.month', $this->selectedMonth);
+        }])->get(['companies.id', 'companies.company_code', 'companies.company_name']);
+
         return view('livewire.period.period-list', [
+            'years' => getListTahun(),
+            'months' => getListBulan(),
+            'periodCompanies' => $periodCompanies,
             'periods' => $periods,
         ]);
     }
