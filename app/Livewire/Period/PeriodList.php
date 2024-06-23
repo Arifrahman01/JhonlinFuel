@@ -29,6 +29,8 @@ class PeriodList extends Component
     public $selectedYear;
     public $selectedMonth;
 
+    public $periodCompanies;
+
     public $periodId, $periodName, $startDate, $endDate;
 
     public $q;
@@ -36,8 +38,10 @@ class PeriodList extends Component
 
     public function mount()
     {
-        $this->selectedYear = date('Y');
-        $this->selectedMonth = date('n');
+        // $this->selectedYear = date('Y');
+        $this->selectedYear = 2024;
+        // $this->selectedMonth = date('n');
+        $this->selectedMonth = 1;
 
         // dd($this->periodCompanies);
 
@@ -79,7 +83,7 @@ class PeriodList extends Component
             // $this->periodCompanies = collect();
         }
 
-        $periodCompanies = Company::with(['periods' => function ($query) {
+        $this->periodCompanies = Company::with(['periods' => function ($query) {
             $query->select('periods.id', 'periods.period_name', 'periods.year', 'periods.month', 'company_period.status')
                 ->where('periods.year', $this->selectedYear)
                 ->where('periods.month', $this->selectedMonth);
@@ -93,11 +97,11 @@ class PeriodList extends Component
         //         ->where('year', $this->selectedYear)
         //         ->where('month', $this->selectedMonth);
         // }])->get(['companies.id', 'companies.company_code', 'companies.company_name']);
-        // dd(data_get($periodCompanies, '*.periods'));
+        // dd(data_get($periodCompanies, '0.periods.0.id'));
         return view('livewire.period.period-list', [
             'years' => getListTahun(),
             'months' => getListBulan(),
-            'periodCompanies' => $periodCompanies,
+            // 'periodCompanies' => $periodCompanies,
             'periods' => $periods,
         ]);
     }
@@ -182,15 +186,17 @@ class PeriodList extends Component
         }
     }
 
-    public function closePeriod($periodId, $companyId)
+    public function closePeriod($companyIds)
     {
+        // dd(data_get($this->periodCompanies, '0.periods.0.id'), $companyIds);
         $permissions = [
             'close-period',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
         DB::beginTransaction();
         try {
-            $period = Period::find($periodId);
+            $periodId = data_get($this->periodCompanies, '0.periods.0.id');
+            // $period = Period::find($periodId);
 
             if ($period) {
                 $period->companies()->updateExistingPivot($companyId, ['status' => 'close']);

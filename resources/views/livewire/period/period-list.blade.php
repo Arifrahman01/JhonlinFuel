@@ -61,7 +61,8 @@
                                             </button>
                                         </div>
                                         <div class="ms-2 d-inline-block">
-                                            <button type="button" class="btn btn-danger" wire:click='tambahMenu'>
+                                            <button type="button" class="btn btn-danger"
+                                                onclick="closePeriodx('{{ data_get($periodCompanies, 'ƒ0.periods.0.period_id') }}')">
                                                 &nbsp; Close &nbsp;
                                             </button>
                                         </div>
@@ -108,8 +109,7 @@
                                             @php
                                                 $status =
                                                     data_get($periodCompany, 'periods.0.pivot.status') ?? 'not-active';
-                                                $periodId_ = data_get($periodCompany, 'periods.0.period_id') ?? '';
-                                                $companyId_ = data_get($periodCompany, 'id') ?? '';
+                                                // $periodId_ = data_get($periodCompany, 'periods.0.period_id') ?? '';
                                                 $class = '';
 
                                                 switch ($status) {
@@ -130,7 +130,7 @@
                                             <tr>
                                                 <td class="text-center">
                                                     <input class="form-check-input m-0 align-middle detailCheckbox"
-                                                        type="checkbox">
+                                                        value="{{ $periodCompany->id }}" type="checkbox">
                                                 </td>
                                                 <td>{{ data_get($periodCompany, 'periods.0.period_name') ?? $months[$selectedMonth] . ' ' . $selectedYear }}
                                                 </td>
@@ -210,6 +210,35 @@
                 });
                 if (result.isConfirmed) {
                     @this.call('closePeriod', periodId, companyId);
+                }
+            }
+
+            async function closePeriodx() {
+                console.log('tesaja');
+                const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
+                const companyIds = [];
+                checkboxes.forEach(checkbox => {
+                    companyIds.push(checkbox.value);
+                });
+                if (companyIds.length > 0) {
+                    const isConfirmed = await sweetPosting({
+                        id: 1,
+                        title: 'Close period all data selected ? ',
+                        textLoadong: '  loading'
+                    });
+                    if (isConfirmed) {
+                        @this.call('closePeriod', periodId, companyIds);
+                        const checkboxes = document.querySelectorAll('.detailCheckbox');
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = false;
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Not have data selected",
+                        icon: "error"
+                    });
                 }
             }
 
