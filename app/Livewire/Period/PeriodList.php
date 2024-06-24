@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Period;
 
+use App\Models\Adjustment\AdjustmentDetail;
 use App\Models\Company;
 use App\Models\Issue;
+use App\Models\Material\Material;
 use App\Models\Material\MaterialMovement;
 use App\Models\Material\MaterialStock;
 use App\Models\Period;
@@ -12,6 +14,7 @@ use App\Models\ReceiptTransfer;
 use App\Models\Sloc;
 use App\Models\StockClosure;
 use App\Models\Transfer;
+use App\Models\Uom;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -154,21 +157,24 @@ class PeriodList extends Component
                 ->first();
 
             if ($period) {
-                // Dapatkan semua companyId yang saat ini terkait dengan $period
-                $currentCompanyIds = $period->companies()->pluck('id')->toArray();
+                $currentCompanies = $period->companies()->whereIn('companies.id', $companyIds)->get();
 
-                // Siapkan array untuk sinkronisasi
+                foreach ($currentCompanies as $company) {
+                    if ($company->pivot->status === 'open') {
+                        throw new \Exception("Period for company {$company->id} is already open");
+                    }
+                }
+
                 $syncData = [];
                 foreach ($companyIds as $companyId) {
-                    if (!in_array($companyId, $currentCompanyIds)) {
+                    if (!in_array($companyId, $currentCompanies->pluck('id')->toArray())) {
                         $syncData[$companyId] = ['status' => 'open'];
                     } else {
                         $period->companies()->updateExistingPivot($companyId, ['status' => 'open']);
                     }
                 }
 
-                // Sinkronkan kembali hubungan dengan array baru yang telah diupdate
-                $period->companies()->sync($syncData, false); // false to not detach existing ones
+                $period->companies()->sync($syncData, false);
             } else {
                 $period = Period::create([
                     'period_name' => $this->selectedYear . getListBulan()[$this->selectedMonth],
@@ -186,26 +192,28 @@ class PeriodList extends Component
                 $prevPeriod = Period::where('year', $prevYearMonthPeriod[0])
                     ->where('month', $prevYearMonthPeriod[1])
                     ->first();
-                $prevStocks = StockClosure::where('period_id', $prevPeriod->id)
-                    ->where('company_id', $companyId)
-                    ->where('trans_type', 'closing')
-                    ->get();
-                foreach ($prevStocks as $prevStock) {
-                    StockClosure::create([
-                        'period_id' => $period->id,
-                        'company_id' => $companyId,
-                        'plant_id' => $prevStock->plant_id,
-                        'sloc_id' => $prevStock->sloc_id,
-                        'material_id' => $prevStock->material_id,
-                        'material_code' => $prevStock->material_code,
-                        'part_no' => $prevStock->part_no,
-                        'material_mnemonic' => $prevStock->material_mnemonic,
-                        'material_description' => $prevStock->material_description,
-                        'uom_id' => $prevStock->uom_id,
-                        'qty_soh' => $prevStock->qty_soh,
-                        'qty_intransit' => $prevStock->qty_intransit,
-                        'trans_type' => 'opening',
-                    ]);
+                if ($prevPeriod) {
+                    $prevStocks = StockClosure::where('period_id', $prevPeriod->id)
+                        ->where('company_id', $companyId)
+                        ->where('trans_type', 'closing')
+                        ->get();
+                    foreach ($prevStocks as $prevStock) {
+                        StockClosure::create([
+                            'period_id' => $period->id,
+                            'company_id' => $companyId,
+                            'plant_id' => $prevStock->plant_id,
+                            'sloc_id' => $prevStock->sloc_id,
+                            'material_id' => $prevStock->material_id,
+                            'material_code' => $prevStock->material_code,
+                            'part_no' => $prevStock->part_no,
+                            'material_mnemonic' => $prevStock->material_mnemonic,
+                            'material_description' => $prevStock->material_description,
+                            'uom_id' => $prevStock->uom_id,
+                            'qty_soh' => $prevStock->qty_soh,
+                            'qty_intransit' => $prevStock->qty_intransit,
+                            'trans_type' => 'opening',
+                        ]);
+                    }
                 }
             }
 
@@ -218,7 +226,6 @@ class PeriodList extends Component
         }
     }
 
-
     public function closePeriod($companyIds)
     {
         $permissions = [
@@ -230,7 +237,21 @@ class PeriodList extends Component
             $period = Period::where('year', $this->selectedYear)
                 ->where('month', $this->selectedMonth)
                 ->first();
-            $period->companies()->updateExistingPivot($companyIds, ['status' => 'close']);
+
+            if (!$period) {
+                throw new \Exception('Period not found');
+            }
+
+            // Pengecekan status period untuk masing-masing company
+            $companies = $period->companies()->whereIn('companies.id', $companyIds)->get();
+            foreach ($companies as $company) {
+                if ($company->pivot->status !== 'open') {
+                    throw new \Exception("Period for company {$company->id} is not open");
+                }
+            }
+
+            $material = Material::first();
+            $uom = Uom::first();
 
             foreach ($companyIds as $companyId) {
                 $slocs = Sloc::where('company_id', $companyId);
@@ -240,50 +261,56 @@ class PeriodList extends Component
                     $startDate = $parseMonth->startOfMonth();
                     $endDate = $parseMonth->endOfMonth();
 
-                    $qtyReceipt = MaterialMovement::where('sloc_id', $sloc->id)
-                        ->where('movement_type', 'RCV')
-                        ->whereBetween('movement_date', [$startDate, $endDate])
+                    $openingStock = StockClosure::where('sloc_id', $sloc->id)
+                        ->where('period_id', $period->id)
+                        ->where('trans_type', 'opening')
+                        ->value('qty_soh');
+
+                    $qtyReceipt = Receipt::where('warehouse', $sloc->sloc_code)
+                        ->whereBetween('trans_date', [$startDate, $endDate])
+                        ->whereNotNull('posting_no')
                         ->sum('qty');
 
-                    $qtyTransfer = MaterialMovement::where('sloc_id', $sloc->id);
-
-
-                    $qtyReceiptTransfer = MaterialMovement::where('sloc_id', $sloc->id)
-                        ->where('movement_type', 'ISS')
-                        ->whereBetween('movement_date', [$startDate, $endDate])
+                    $qtyTransfer = ReceiptTransfer::where('from_warehouse', $sloc->sloc_code)
+                        ->whereBetween('trans_date', [$startDate, $endDate])
+                        ->whereNotNull('posting_no')
                         ->sum('qty');
 
-                    $qtyIssue = MaterialMovement::where('sloc_id', $sloc->id)
-                        ->where('movement_type', 'ISS')
-                        ->whereBetween('movement_date', [$startDate, $endDate])
+                    $qtyReceiptTransfer = ReceiptTransfer::where('to_warehouse', $sloc->sloc_code)
+                        ->whereBetween('trans_date', [$startDate, $endDate])
+                        ->whereNotNull('posting_no')
                         ->sum('qty');
-                }
-                $prevYearMonthPeriod = getPrevPeriod($this->selectedYear, $this->selectedMonth);
-                $prevPeriod = Period::where('year', $prevYearMonthPeriod[0])
-                    ->where('month', $prevYearMonthPeriod[1])
-                    ->first();
-                $prevStocks = StockClosure::where('period_id', $prevPeriod->id)
-                    ->where('company_id', $companyId)
-                    ->where('trans_type', 'closing')
-                    ->get();
-                foreach ($prevStocks as $prevStock) {
+
+                    $qtyIssue = Issue::where('warehouse', $sloc->sloc_code)
+                        ->whereBetween('trans_date', [$startDate, $endDate])
+                        ->whereNotNull('posting_no')
+                        ->sum('qty');
+
+                    $qtyAdjust = AdjustmentDetail::where('sloc_id', $sloc->id)
+                        ->whereHas('header', function ($query) use ($startDate, $endDate) {
+                            $query->whereBetween('trans_date', [$startDate, $endDate]);
+                        })
+                        ->sum('adjust_qty');
+
+                    $closingStock = $openingStock + $qtyReceipt - $qtyTransfer + $qtyReceiptTransfer - $qtyIssue + $qtyAdjust;
                     StockClosure::create([
                         'period_id' => $period->id,
                         'company_id' => $companyId,
-                        'plant_id' => $prevStock->plant_id,
-                        'sloc_id' => $prevStock->sloc_id,
-                        'material_id' => $prevStock->material_id,
-                        'material_code' => $prevStock->material_code,
-                        'part_no' => $prevStock->part_no,
-                        'material_mnemonic' => $prevStock->material_mnemonic,
-                        'material_description' => $prevStock->material_description,
-                        'uom_id' => $prevStock->uom_id,
-                        'qty_soh' => $prevStock->qty_soh,
-                        'qty_intransit' => $prevStock->qty_intransit,
-                        'trans_type' => 'opening',
+                        'plant_id' => $sloc->plant_id,
+                        'sloc_id' => $sloc->id,
+                        'material_id' => $material->id,
+                        'material_code' => $material->material_code,
+                        'part_no' => $material->part_no,
+                        'material_mnemonic' => $material->material_mnemonic,
+                        'material_description' => $material->material_description,
+                        'uom_id' => $uom->id,
+                        'qty_soh' => $closingStock,
+                        'qty_intransit' => 0,
+                        'trans_type' => 'closing',
                     ]);
                 }
             }
+            $period->companies()->updateExistingPivot($companyIds, ['status' => 'close']);
 
             DB::commit();
             $this->dispatch('success', 'Data has been updated');
