@@ -139,3 +139,16 @@ if (!function_exists('getlistBulan')) {
         ];
     }
 }
+
+if (!function_exists('getPrevPeriod')) {
+    function getPrevPeriod($year, $month)
+    {
+        $prevYear = $year;
+        $prevMonth = $month - 1;
+        if ($month =  1) {
+            $prevMonth = 12;
+        }
+
+        return [$prevYear, $prevMonth];
+    }
+}

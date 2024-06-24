@@ -62,7 +62,7 @@
                                         </div>
                                         <div class="ms-2 d-inline-block">
                                             <button type="button" class="btn btn-danger"
-                                                onclick="closePeriodx('{{ data_get($periodCompanies, 'ƒ0.periods.0.period_id') }}')">
+                                                onclick="closePeriod('{{ data_get($periodCompanies, '0.periods.0.period_id') }}')">
                                                 &nbsp; Close &nbsp;
                                             </button>
                                         </div>
@@ -198,23 +198,22 @@
                 }
             }
 
-            async function closePeriod(periodId, companyId) {
-                const result = await Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'Close this period!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, close this period!'
-                });
-                if (result.isConfirmed) {
-                    @this.call('closePeriod', periodId, companyId);
-                }
-            }
+            // async function closePeriod(periodId, companyId) {
+            //     const result = await Swal.fire({
+            //         title: 'Are you sure?',
+            //         text: 'Close this period!',
+            //         icon: 'warning',
+            //         showCancelButton: true,
+            //         confirmButtonColor: '#3085d6',
+            //         cancelButtonColor: '#d33',
+            //         confirmButtonText: 'Yes, close this period!'
+            //     });
+            //     if (result.isConfirmed) {
+            //         @this.call('closePeriod', periodId, companyId);
+            //     }
+            // }
 
-            async function closePeriodx() {
-                console.log('tesaja');
+            async function closePeriod() {
                 const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
                 const companyIds = [];
                 checkboxes.forEach(checkbox => {
@@ -227,7 +226,7 @@
                         textLoadong: '  loading'
                     });
                     if (isConfirmed) {
-                        @this.call('closePeriod', periodId, companyIds);
+                        @this.call('closePeriod', companyIds);
                         const checkboxes = document.querySelectorAll('.detailCheckbox');
                         checkboxes.forEach(checkbox => {
                             checkbox.checked = false;
