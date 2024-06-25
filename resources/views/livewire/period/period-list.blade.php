@@ -56,7 +56,8 @@
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="d-inline-block">
-                                            <button type="button" class="btn btn-success" wire:click='tambahMenu'>
+                                            <button type="button" class="btn btn-success"
+                                                onclick="openPeriod('{{ data_get($periodCompanies, '0.periods.0.period_id') }}')">
                                                 &nbsp; Open &nbsp;
                                             </button>
                                         </div>
@@ -183,18 +184,31 @@
             //     el.classList.add('selected');
             // }
 
-            async function openPeriod(periodId, companyId) {
-                const result = await Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'Open this period!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, open this period!'
+            async function openPeriod() {
+                const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
+                const companyIds = [];
+                checkboxes.forEach(checkbox => {
+                    companyIds.push(checkbox.value);
                 });
-                if (result.isConfirmed) {
-                    @this.call('openPeriod', periodId, companyId);
+                if (companyIds.length > 0) {
+                    const isConfirmed = await sweetPosting({
+                        id: 1,
+                        title: 'Open period all data selected ? ',
+                        textLoadong: '  loading'
+                    });
+                    if (isConfirmed) {
+                        @this.call('openPeriod', companyIds);
+                        const checkboxes = document.querySelectorAll('.detailCheckbox');
+                        checkboxes.forEach(checkbox => {
+                            checkbox.checked = false;
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Not have data selected",
+                        icon: "error"
+                    });
                 }
             }
 

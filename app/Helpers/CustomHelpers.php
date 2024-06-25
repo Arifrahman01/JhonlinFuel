@@ -95,11 +95,18 @@ if (!function_exists('checkPeriod')) {
     {
         $dateToCheck = Carbon::parse($transDate);
 
+        // dd(Company::where('id', $companyId)
+        //     ->whereHas('periods', function ($query) use ($dateToCheck) {
+        //         $query->where('company_period.status', 'open')
+        //             ->where('year', $dateToCheck->year)
+        //             ->where('month', $dateToCheck->month);
+        //     })->get());
+
         return Company::where('id', $companyId)
             ->whereHas('periods', function ($query) use ($dateToCheck) {
                 $query->where('company_period.status', 'open')
-                    ->where('start_date', '<=', $dateToCheck)
-                    ->where('end_date', '>=', $dateToCheck);
+                    ->where('year', $dateToCheck->year)
+                    ->where('month', $dateToCheck->month);
             })
             ->exists();
     }
@@ -108,7 +115,7 @@ if (!function_exists('checkPeriod')) {
 if (!function_exists('getlistTahun')) {
     function getListTahun()
     {
-        $startYear = 2024;
+        $startYear = 2023;
         $nowYear = (int)date("Y");
         $listTahun = [];
 
