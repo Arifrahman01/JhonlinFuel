@@ -11,6 +11,11 @@ class AdjustmentDetail extends BaseModel
 {
     protected $table = 'adjustment_details';
 
+    public function header(): BelongsTo
+    {
+        return $this->belongsTo(AdjustmentHeader::class, 'header_id', 'id');
+    }
+
     public function plant(): BelongsTo
     {
         return $this->belongsTo(Plant::class, 'plant_id', 'id');
