@@ -198,21 +198,25 @@ class PeriodList extends Component
                         ->where('trans_type', 'closing')
                         ->get();
                     foreach ($prevStocks as $prevStock) {
-                        StockClosure::create([
-                            'period_id' => $period->id,
-                            'company_id' => $companyId,
-                            'plant_id' => $prevStock->plant_id,
-                            'sloc_id' => $prevStock->sloc_id,
-                            'material_id' => $prevStock->material_id,
-                            'material_code' => $prevStock->material_code,
-                            'part_no' => $prevStock->part_no,
-                            'material_mnemonic' => $prevStock->material_mnemonic,
-                            'material_description' => $prevStock->material_description,
-                            'uom_id' => $prevStock->uom_id,
-                            'qty_soh' => $prevStock->qty_soh,
-                            'qty_intransit' => $prevStock->qty_intransit,
-                            'trans_type' => 'opening',
-                        ]);
+                        StockClosure::updateOrCreate(
+                            [
+                                'period_id' => $period->id,
+                                'sloc_id' => $prevStock->sloc_id
+                            ],
+                            [
+                                'company_id' => $companyId,
+                                'plant_id' => $prevStock->plant_id,
+                                'material_id' => $prevStock->material_id,
+                                'material_code' => $prevStock->material_code,
+                                'part_no' => $prevStock->part_no,
+                                'material_mnemonic' => $prevStock->material_mnemonic,
+                                'material_description' => $prevStock->material_description,
+                                'uom_id' => $prevStock->uom_id,
+                                'qty_soh' => $prevStock->qty_soh,
+                                'qty_intransit' => $prevStock->qty_intransit,
+                                'trans_type' => 'opening'
+                            ]
+                        );
                     }
                 }
             }
@@ -246,7 +250,7 @@ class PeriodList extends Component
             $companies = $period->companies()->whereIn('companies.id', $companyIds)->get();
             foreach ($companies as $company) {
                 if ($company->pivot->status !== 'open') {
-                    throw new \Exception("Period for company {$company->id} is not open");
+                    throw new \Exception("Period for company {$company->company_name} is not open");
                 }
             }
 
@@ -293,21 +297,25 @@ class PeriodList extends Component
                         ->sum('adjust_qty');
 
                     $closingStock = $openingStock + $qtyReceipt - $qtyTransfer + $qtyReceiptTransfer - $qtyIssue + $qtyAdjust;
-                    StockClosure::create([
-                        'period_id' => $period->id,
-                        'company_id' => $companyId,
-                        'plant_id' => $sloc->plant_id,
-                        'sloc_id' => $sloc->id,
-                        'material_id' => $material->id,
-                        'material_code' => $material->material_code,
-                        'part_no' => $material->part_no,
-                        'material_mnemonic' => $material->material_mnemonic,
-                        'material_description' => $material->material_description,
-                        'uom_id' => $uom->id,
-                        'qty_soh' => $closingStock,
-                        'qty_intransit' => 0,
-                        'trans_type' => 'closing',
-                    ]);
+                    StockClosure::updateOrCreate(
+                        [
+                            'period_id' => $period->id,
+                            'sloc_id' => $sloc->id,
+                            'material_id' => $material->id
+                        ],
+                        [
+                            'company_id' => $companyId,
+                            'plant_id' => $sloc->plant_id,
+                            'material_code' => $material->material_code,
+                            'part_no' => $material->part_no,
+                            'material_mnemonic' => $material->material_mnemonic,
+                            'material_description' => $material->material_description,
+                            'uom_id' => $uom->id,
+                            'qty_soh' => $closingStock,
+                            'qty_intransit' => 0,
+                            'trans_type' => 'closing'
+                        ]
+                    );
                 }
             }
             $period->companies()->updateExistingPivot($companyIds, ['status' => 'close']);
