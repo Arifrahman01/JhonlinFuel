@@ -153,6 +153,7 @@ if (!function_exists('getPrevPeriod')) {
         $prevYear = $year;
         $prevMonth = $month - 1;
         if ($month =  1) {
+            $prevYear = $year - 1;
             $prevMonth = 12;
         }
 
