@@ -166,7 +166,7 @@ class TransferList extends Component
                 ];
                 MaterialMovement::create($paramMovementFrom);
 
-                $cekStokTo = MaterialStock::where('company_id', $toCompany->id)->where('sloc_id', $slocIdTo)->first();
+                $cekStokTo = MaterialStock::where('company_id', $toCompany->id)->where('sloc_id', $slocIdTo->id)->first();
                 // movement gudang tujuan
                 $paramMovementTo = [
                     'company_id'    => $toCompany->id,
