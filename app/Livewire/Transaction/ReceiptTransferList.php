@@ -187,7 +187,7 @@ class ReceiptTransferList extends Component
                 $stokTo->increment('qty_soh', $receiptTransfer->qty);
                 $stokTo->decrement('qty_intransit', $receiptTransfer->qty);
 
-                if (!checkOpenPeriod($fromCompany->company_id, $receiptTransfer->trans_date)) {
+                if (!checkOpenPeriod($fromCompany->id, $receiptTransfer->trans_date)) {
                     throw new \Exception('Periode tidak open untuk ' . $fromCompany->company_name . ' tanggal ' . $receiptTransfer->trans_date);
                 }
 
