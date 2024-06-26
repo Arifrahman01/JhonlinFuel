@@ -6,8 +6,6 @@ use App\Models\Adjustment\AdjustmentDetail;
 use App\Models\Company;
 use App\Models\Issue;
 use App\Models\Material\Material;
-use App\Models\Material\MaterialMovement;
-use App\Models\Material\MaterialStock;
 use App\Models\Period;
 use App\Models\Receipt;
 use App\Models\ReceiptTransfer;
@@ -36,22 +34,14 @@ class PeriodList extends Component
 
     public $periodCompanies;
 
-    public $periodId, $periodName, $startDate, $endDate;
+    // public $periodId, $periodName, $startDate, $endDate;
 
     public $q;
-
 
     public function mount()
     {
         $this->selectedYear = date('Y');
-        // $this->selectedYear = 2024;
         $this->selectedMonth = date('n');
-        // $this->selectedMonth = 1;
-
-        // dd($this->periodCompanies);
-
-        // $period = Period::latest()->first();
-        // $this->periodCompanies = data_get($period, 'companies');
     }
 
     public function render()
@@ -69,47 +59,15 @@ class PeriodList extends Component
             ->latest()
             ->paginate(10);
 
-        $periodQuery = Period::with(['companies']);
-        if ($this->periodId) {
-            $periodQuery->where('id', $this->periodId);
-        } else {
-            $periodQuery->latest();
-        }
-        $period = $periodQuery->first();
-        if ($period) {
-            $this->periodName = $period->period_name;
-            $this->startDate = $period->start_date;
-            $this->endDate = $period->end_date;
-            // $this->periodCompanies = data_get($period, 'companies');
-        } else {
-            $this->periodName = null;
-            $this->startDate = null;
-            $this->endDate = null;
-            // $this->periodCompanies = collect();
-        }
-
         $this->periodCompanies = Company::with(['periods' => function ($query) {
             $query->select('periods.id', 'periods.period_name', 'periods.year', 'periods.month', 'company_period.status')
                 ->where('periods.year', $this->selectedYear)
                 ->where('periods.month', $this->selectedMonth);
         }])->get(['companies.id', 'companies.company_code', 'companies.company_name']);
 
-        // dd(data_get($this->periodCompanies, '0.periods.0'));
-
-        // dd($this->periodCompanies[0]->periods->toArray());
-        // $periodCompanies = Company::whereHas('periods', function ($query) {
-        //     $query->where('year', $this->selectedYear)
-        //         ->where('month', $this->selectedMonth);
-        // })->with(['periods' => function ($query) {
-        //     $query->select('periods.id', 'periods.period_name', 'periods.year', 'periods.month', 'company_period.status')
-        //         ->where('year', $this->selectedYear)
-        //         ->where('month', $this->selectedMonth);
-        // }])->get(['companies.id', 'companies.company_code', 'companies.company_name']);
-        // dd(data_get($periodCompanies, '0.periods.0.id'));
         return view('livewire.period.period-list', [
             'years' => getListTahun(),
             'months' => getListBulan(),
-            // 'periodCompanies' => $periodCompanies,
             'periods' => $periods,
         ]);
     }
@@ -117,31 +75,6 @@ class PeriodList extends Component
     public function search()
     {
         $this->resetPage();
-    }
-
-    public function delete($id)
-    {
-        $permissions = [
-            'delete-master-period',
-        ];
-        abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        try {
-            $period = Period::find($id);
-            if ($period->hasDataById()) {
-                throw new \Exception("period has data. Can't be deleted");
-            }
-            $period->delete();
-            $this->periodId = null;
-            $this->dispatch('success', 'Data has been deleted');
-        } catch (\Throwable $th) {
-            $this->dispatch('error', $th->getMessage());
-        }
-    }
-
-    public function periodSelected($periodId)
-    {
-        $this->periodId = $periodId;
     }
 
     public function openPeriod($companyIds)
@@ -296,6 +229,11 @@ class PeriodList extends Component
                 if ($company->pivot->status !== 'open') {
                     throw new \Exception("Period for company {$company->company_name} is not open");
                 }
+
+                $transaksiGantung = $this->cekTransaksi($company->company_code);
+                if ($transaksiGantung) {
+                    throw new \Exception($transaksiGantung);
+                }
             }
 
             $material = Material::first();
@@ -305,11 +243,6 @@ class PeriodList extends Component
                 $slocs = Sloc::where('company_id', $companyId)
                     ->get();
                 foreach ($slocs as $sloc) {
-                    $parseMonth = Carbon::create($this->selectedYear, $this->selectedMonth, 1);
-
-                    $startDate = $parseMonth->startOfMonth();
-                    $endDate = $parseMonth->endOfMonth();
-
                     $openingStock = StockClosure::where('sloc_id', $sloc->id)
                         ->where('period_id', $period->id)
                         ->where('trans_type', 'opening')
@@ -318,7 +251,6 @@ class PeriodList extends Component
                     $qtyReceipt = Receipt::where('warehouse', $sloc->sloc_code)
                         ->whereYear('trans_date', $this->selectedYear)
                         ->whereMonth('trans_date', $this->selectedMonth)
-                        // ->whereBetween('trans_date', [$startDate, $endDate])
                         ->whereNotNull('posting_no')
                         ->sum('qty');
 
@@ -341,7 +273,7 @@ class PeriodList extends Component
                         ->sum('qty');
 
                     $qtyAdjust = AdjustmentDetail::where('sloc_id', $sloc->id)
-                        ->whereHas('header', function ($query) use ($startDate, $endDate) {
+                        ->whereHas('header', function ($query) {
                             $query->whereYear('adjustment_date', $this->selectedYear)
                                 ->whereMonth('adjustment_date', $this->selectedMonth);
                         })
@@ -380,31 +312,60 @@ class PeriodList extends Component
         }
     }
 
-    private function cekTransaksi($companyId)
+    private function cekTransaksi($companyCode)
     {
-
-        $receiptBelumPosting = Receipt::whereNull('posting_no')
+        $receiptBelumPosting = Receipt::where('company_code', $companyCode)
+            ->whereYear('trans_date', $this->selectedYear)
+            ->whereMonth('trans_date', $this->selectedMonth)
+            ->whereNull('posting_no')
             ->exists();
-        $transferBelumPosting = Transfer::whereNull('posting_no')
+        $transferBelumPostingFrom = Transfer::where('from_company_code', $companyCode)
+            ->whereYear('trans_date', $this->selectedYear)
+            ->whereMonth('trans_date', $this->selectedMonth)
+            ->whereNull('posting_no')
             ->exists();
-        $receiptTransferBelumPosting = ReceiptTransfer::whereNull('posting_no')
+        $transferBelumPostingTo = Transfer::where('to_company_code', $companyCode)
+            ->whereYear('trans_date', $this->selectedYear)
+            ->whereMonth('trans_date', $this->selectedMonth)
+            ->whereNull('posting_no')
             ->exists();
-        $issueBelumPosting = Issue::whereNull('posting_no')
+        $receiptTransferBelumPostingFrom = ReceiptTransfer::where('from_company_code', $companyCode)
+            ->whereYear('trans_date', $this->selectedYear)
+            ->whereMonth('trans_date', $this->selectedMonth)
+            ->whereNull('posting_no')
             ->exists();
-        $osTransfer = MaterialStock::where('company_id', $companyId)
-            ->whereNotNull('qty_intransit')
-            ->where('qty_intransit', '!=', 0)
+        $receiptTransferBelumPostingTo = ReceiptTransfer::where('to_company_code', $companyCode)
+            ->whereYear('trans_date', $this->selectedYear)
+            ->whereMonth('trans_date', $this->selectedMonth)
+            ->whereNull('posting_no')
             ->exists();
+        $issueBelumPosting = Issue::where('company_code', $companyCode)
+            ->whereYear('trans_date', $this->selectedYear)
+            ->whereMonth('trans_date', $this->selectedMonth)
+            ->whereNull('posting_no')
+            ->exists();
+        // $osTransfer = MaterialStock::where('company_id', $companyId)
+        //     ->whereNotNull('qty_intransit')
+        //     ->where('qty_intransit', '!=', 0)
+        //     ->exists();
 
         if ($receiptBelumPosting) {
             return 'Ada Receipt PO yang belum posting';
         }
 
-        if ($transferBelumPosting) {
+        if ($transferBelumPostingFrom) {
             return 'Ada Transfer yang belum posting';
         }
 
-        if ($receiptTransferBelumPosting) {
+        if ($transferBelumPostingTo) {
+            return 'Ada Transfer yang belum posting';
+        }
+
+        if ($receiptTransferBelumPostingFrom) {
+            return 'Ada Receipt Transfer yang belum posting';
+        }
+
+        if ($receiptTransferBelumPostingTo) {
             return 'Ada Receipt Transfer yang belum posting';
         }
 
@@ -412,9 +373,9 @@ class PeriodList extends Component
             return 'Ada Issue yang belum posting';
         }
 
-        if ($osTransfer) {
-            return 'Ada Transfer yang belum diReceipt Transfer';
-        }
+        // if ($osTransfer) {
+        //     return 'Ada Transfer yang belum diReceipt Transfer';
+        // }
 
         return false;
     }
