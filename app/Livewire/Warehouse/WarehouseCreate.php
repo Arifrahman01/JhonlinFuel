@@ -37,7 +37,7 @@ class WarehouseCreate extends Component
             'delete-master-warehouse',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $companies = Company::all();
+        $companies = Company::allowed('view-master-warehouse')->get();
         return view('livewire.warehouse.warehouse-create', compact('companies'));
     }
 
@@ -63,7 +63,7 @@ class WarehouseCreate extends Component
             $this->warehouseId = $id;
             $this->warehouseCode = $warehouse->sloc_code;
             $this->warehouseName = $warehouse->sloc_name;
-            $this->capacity = $warehouse->capacity;
+            $this->capacity = (int)$warehouse->capacity;
         } else {
             $this->statusModal = 'Create';
             $this->warehouseCodeReadOnly = false;

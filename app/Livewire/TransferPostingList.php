@@ -24,7 +24,7 @@ class TransferPostingList extends Component
     public function mount(){
         $this->start_date = $this->start_date ?? date('Y-m-d', strtotime("-30 days"));
         $this->end_date = $this->end_date ?? date('Y-m-d');
-        $this->companies = Company::all();
+        $this->companies = Company::allowed('view-transaksi-transfer')->get();
     }
 
     public function render()

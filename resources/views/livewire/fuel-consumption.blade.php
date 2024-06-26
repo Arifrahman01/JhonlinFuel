@@ -23,8 +23,8 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="start_date" onchange="setEndDateMax()" wire:model="start_date" aria-label="Start Date"
-                                                placeholder="Start Date" value="{{ $start_date }}">
+                                            <input type="date" class="form-control form-control-sm" id="startDate" onchange="setEndDateMax()" wire:model="startDate" aria-label="Start Date"
+                                                placeholder="Start Date" value="{{ $startDate }}">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -34,8 +34,8 @@
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="end_date" wire:model="end_date" aria-label="End Date" placeholder="End Date"
-                                                value="{{ $end_date }}">
+                                            <input type="date" class="form-control form-control-sm" id="endDate" wire:model="endDate" aria-label="End Date" placeholder="End Date"
+                                                value="{{ $endDate }}">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -82,7 +82,7 @@
                                     </table>
                                 </div>
                                 <div class="card-footer justify-content-between align-items-center">
-                                    {{-- {{ $transfers->links() }} --}}
+                                    {{ $consumptions->links() }}
                                 </div>
                             </div>
                         </div>

@@ -29,7 +29,7 @@ class PlantCreate extends Component
             'delete-master-plant',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $companies = Company::all();
+        $companies = Company::allowed('view-master-plant')->get();
         return view('livewire.plant.plant-create', compact('companies'));
     }
 

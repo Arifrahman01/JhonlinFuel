@@ -30,7 +30,7 @@ class DepartmentCreate extends Component
             'delete-master-department',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $companies = Company::all();
+        $companies = Company::allowed('view-master-department')->get();
         return view('livewire.department.department-create', compact('companies'));
     }
 

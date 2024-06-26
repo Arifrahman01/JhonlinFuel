@@ -32,7 +32,7 @@ class FuelmanCreate extends Component
             'delete-master-fuelman',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $companies = Company::all();
+        $companies = Company::allowed('view-master-fuelman')->get();
         return view('livewire.fuelman.fuelman-create', compact('companies'));
     }
 
