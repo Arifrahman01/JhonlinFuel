@@ -90,7 +90,7 @@
                             </div>
                         </div> --}}
                         <div class="table-responsive">
-                            <table class="table table-vcenter card-table table-bordered"ƒ>
+                            <table class="table table-vcenter card-table table-bordered">
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 6%;">
@@ -163,27 +163,6 @@
                 });
             }
 
-            // function check() {
-            //     const checkboxes = document.querySelectorAll('.detailCheckbox');
-
-            //     checkboxes.forEach(checkbox => {
-            //         checkbox.checked = mainCheckbox.checked;
-            //     });
-            // }
-
-            // async function changeSelected(id, el) {
-            //     @this.call('periodSelected', id);
-
-            //     const table = document.getElementById('period-table');
-            //     const rows = table.getElementsByTagName('tr');
-
-            //     for (let j = 1; j < rows.length; j++) {
-            //         rows[j].classList.remove('selected');
-            //     }
-
-            //     el.classList.add('selected');
-            // }
-
             async function openPeriod() {
                 const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
                 const companyIds = [];
@@ -212,21 +191,6 @@
                 }
             }
 
-            // async function closePeriod(periodId, companyId) {
-            //     const result = await Swal.fire({
-            //         title: 'Are you sure?',
-            //         text: 'Close this period!',
-            //         icon: 'warning',
-            //         showCancelButton: true,
-            //         confirmButtonColor: '#3085d6',
-            //         cancelButtonColor: '#d33',
-            //         confirmButtonText: 'Yes, close this period!'
-            //     });
-            //     if (result.isConfirmed) {
-            //         @this.call('closePeriod', periodId, companyId);
-            //     }
-            // }
-
             async function closePeriod() {
                 const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
                 const companyIds = [];
@@ -252,15 +216,6 @@
                         text: "Not have data selected",
                         icon: "error"
                     });
-                }
-            }
-
-            async function deleteItem(id) {
-                const isConfirmed = await sweetDeleted({
-                    id: id
-                });
-                if (isConfirmed) {
-                    @this.call('delete', id);
                 }
             }
         </script>
