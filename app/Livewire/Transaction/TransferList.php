@@ -128,7 +128,7 @@ class TransferList extends Component
                 $toCompany  = Company::where('company_code', $tmp->to_company_code)->first();
                 $fuelType = Material::where('material_code', $tmp->material_code)->first();
                 $slocIdFrom = Sloc::where('sloc_code',  $tmp->from_warehouse)->first();
-                $slocIdTo = Sloc::where('sloc_code', $tmp->to_warehouse)->value('id');
+                $slocIdTo = Sloc::where('sloc_code', $tmp->to_warehouse)->first();
 
                 Transfer::find($tmp->id)->update(['posting_no' => $newPostingNumber]);
 
