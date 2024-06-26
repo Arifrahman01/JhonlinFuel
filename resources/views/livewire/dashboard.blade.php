@@ -220,9 +220,9 @@
             <div class="row row-deck row-cards">
                 <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
+                    {{-- <div class="card-header">
                         <h2> Detail Report </h2>
-                    </div>
+                    </div> --}}
                     <div class="card-body">
                         <div class="col">
                             <div class="overflow-auto">
@@ -232,12 +232,12 @@
                                             <div class="col-12 mb-3">
                                                 <div class="card">
                                                     <div class="card-header" style="display: flex; justify-content: space-between;">
-                                                        <div>
+                                                        <div style="margin-top: 1rem">
                                                             <h4> {{ $company->company_name }} </h4>
                                                         </div>
-                                                        <div>
+                                                        <div style="margin-top: -100;margin-bottom:-100">
                                                             @if ($company->attachment)
-                                                            <img src="{{ asset('storage/attachments/' . $company->attachment) }}"  alt="" width="38px">
+                                                            <img src="{{ asset('storage/attachments/' . $company->attachment) }}" alt="" height="48px">
                                                             @endif
                                                         </div>
                                                     </div>
