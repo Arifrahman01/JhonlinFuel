@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('periods', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('period_name');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->year('year');
+            $table->tinyInteger('month');
             $table->integer('created_id')->nullable();
             $table->integer('updated_id')->nullable();
             $table->integer('deleted_id')->nullable();

@@ -95,12 +95,68 @@ if (!function_exists('checkPeriod')) {
     {
         $dateToCheck = Carbon::parse($transDate);
 
+        // dd(Company::where('id', $companyId)
+        //     ->whereHas('periods', function ($query) use ($dateToCheck) {
+        //         $query->where('company_period.status', 'open')
+        //             ->where('year', $dateToCheck->year)
+        //             ->where('month', $dateToCheck->month);
+        //     })->get());
+
         return Company::where('id', $companyId)
             ->whereHas('periods', function ($query) use ($dateToCheck) {
                 $query->where('company_period.status', 'open')
-                    ->where('start_date', '<=', $dateToCheck)
-                    ->where('end_date', '>=', $dateToCheck);
+                    ->where('year', $dateToCheck->year)
+                    ->where('month', $dateToCheck->month);
             })
             ->exists();
+    }
+}
+
+if (!function_exists('getlistTahun')) {
+    function getListTahun()
+    {
+        $startYear = 2023;
+        $nowYear = (int)date("Y");
+        $listTahun = [];
+
+        for ($tahun = $startYear; $tahun <= $nowYear; $tahun++) {
+            $listTahun[] = $tahun;
+        }
+
+        return $listTahun;
+    }
+}
+
+if (!function_exists('getlistBulan')) {
+    function getListBulan()
+    {
+        return [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+    }
+}
+
+if (!function_exists('getPrevPeriod')) {
+    function getPrevPeriod($year, $month)
+    {
+        $prevYear = $year;
+        $prevMonth = $month - 1;
+        if ($month =  1) {
+            $prevYear = $year - 1;
+            $prevMonth = 12;
+        }
+
+        return [$prevYear, $prevMonth];
     }
 }
