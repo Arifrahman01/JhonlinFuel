@@ -190,11 +190,12 @@ class PeriodList extends Component
             $material = Material::first();
             $uom = Uom::first();
 
+            $prevYearMonthPeriod = getPrevPeriod($this->selectedYear, $this->selectedMonth);
+            $prevPeriod = Period::where('year', $prevYearMonthPeriod[0])
+                ->where('month', $prevYearMonthPeriod[1])
+                ->first();
+
             foreach ($companyIds as $companyId) {
-                $prevYearMonthPeriod = getPrevPeriod($this->selectedYear, $this->selectedMonth);
-                $prevPeriod = Period::where('year', $prevYearMonthPeriod[0])
-                    ->where('month', $prevYearMonthPeriod[1])
-                    ->first();
                 if ($prevPeriod) {
                     $slocs = Sloc::leftJoin('stock_closures', function ($join) use ($prevPeriod) {
                         $join->on('stock_closures.sloc_id', '=', 'storage_locations.id')
@@ -209,9 +210,11 @@ class PeriodList extends Component
                             'storage_locations.sloc_code',
                             'storage_locations.sloc_name',
                             DB::raw('IFNULL(stock_closures.qty_soh, 0) as qty_soh'),
-                            DB::raw('IFNULL(stock_closures.qty_intransit, 0) as qty_intransit')
+                            DB::raw('IFNULL(stock_closures.qty_intransit, 0) as qty_intransit'),
+                            'stock_closures.period_id'
                         )
                         ->get();
+
                     foreach ($slocs as $sloc) {
                         StockClosure::updateOrCreate(
                             [
@@ -230,13 +233,13 @@ class PeriodList extends Component
                                 'uom_id' => $uom->id,
                                 'qty_soh' => $sloc->qty_soh,
                                 'qty_intransit' => $sloc->qty_intransit,
-
                             ]
                         );
                     }
                 } else {
                     $slocs = Sloc::where('company_id', $companyId)
                         ->get();
+
                     foreach ($slocs as $sloc) {
                         StockClosure::updateOrCreate(
                             [
@@ -260,6 +263,7 @@ class PeriodList extends Component
                     }
                 }
             }
+
 
             DB::commit();
             $this->dispatch('success', 'Data has been updated');

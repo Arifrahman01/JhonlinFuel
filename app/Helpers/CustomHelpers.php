@@ -150,11 +150,14 @@ if (!function_exists('getlistBulan')) {
 if (!function_exists('getPrevPeriod')) {
     function getPrevPeriod($year, $month)
     {
-        $prevYear = $year;
-        $prevMonth = $month - 1;
-        if ($month =  1) {
+        // Jika bulan adalah Januari (1), periode sebelumnya adalah Desember (12) tahun sebelumnya
+        if ($month == 1) {
             $prevYear = $year - 1;
             $prevMonth = 12;
+        } else {
+            // Jika bukan Januari, cukup kurangi bulan dengan 1
+            $prevYear = $year;
+            $prevMonth = $month - 1;
         }
 
         return [$prevYear, $prevMonth];
