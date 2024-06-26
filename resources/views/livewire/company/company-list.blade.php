@@ -52,9 +52,10 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center" style="width: 6%">Action</th>
-                                        {{-- <th class="text-center" style="width: 5%">Action</th> --}}
                                         <th class="text-center">Company Code</th>
                                         <th class="text-center">Company Name</th>
+                                        <th class="text-center">Attachment</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -82,6 +83,13 @@
                                                 </td>
                                                 <td>{{ $company->company_code }}</td>
                                                 <td>{{ $company->company_name }}</td>
+                                                <td>
+                                                    @if($company->attachment)
+                                                        <a href="{{ asset('storage/attachments/' . $company->attachment) }}" target="_blank">{{ $company->attachment }}</a>
+                                                    @else
+                                                        No Attachment
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @endif

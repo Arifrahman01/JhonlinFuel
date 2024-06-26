@@ -18,7 +18,7 @@
             position: relative;
             width: 250px;
             height: 250px;
-            border: 5px solid rgb(23, 139, 202);
+            border: 5px solid #5B3A24;
             border-radius: 50% !important;
 
             .fu-inner {
@@ -29,13 +29,13 @@
 
                 width: 240px;
                 height: 240px;
-                border: 5px solid #ffffff;
+                border: 0px solid #ffffff;
                 border-radius: 50% !important;
 
                 .water {
                     position: absolute;
                     z-index: 1;
-                    background: rgba(23, 139, 202, 0.5);
+                    background: rgba(211, 157, 48, 0.8);
                     width: 200%;
                     height: 200%;
 
@@ -125,20 +125,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="subheader">Percentage Filled </div>
-                            </div>
-                            <br>
-                            <div class="h1 mb-2">{{ $persentaseTerisi }} %</div>
-                            <div class="d-flex">
-                                <div>Stock On Hand</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="col-3">
                     <div class="card">
                         <div class="card-body">
@@ -154,6 +141,20 @@
                     </div>
                 </div>
 
+                <div class="col-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="subheader">Percentage Filled </div>
+                            </div>
+                            <br>
+                            <div class="h1 mb-2">{{ $persentaseTerisi }} %</div>
+                            <div class="d-flex">
+                                <div>Stock On Hand</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-3">
                     <div class="card">
                         <div class="card-body">
@@ -216,8 +217,107 @@
                     </div>
                 </div>
             </div>
-            {{--  --}}
-            <div class="row row-deck">
+            <div class="row row-deck row-cards">
+                <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h2> Detail Report </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="col">
+                            <div class="overflow-auto">
+                                <div class="d-flex flex-nowrap">
+                                    @foreach ($companyStock as $company)
+                                        <div class="card flex-shrink-0 me-2" style="width: calc(50% - 8px); min-width: 0;">
+                                            <div class="col-12 mb-3">
+                                                <div class="card">
+                                                    <div class="card-header" style="display: flex; justify-content: space-between;">
+                                                        <div>
+                                                            <h4> {{ $company->company_name }} </h4>
+                                                        </div>
+                                                        <div>
+                                                            @if ($company->attachment)
+                                                            <img src="{{ asset('storage/attachments/' . $company->attachment) }}"  alt="" width="38px">
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                    @php
+                                                        $maxCapacityUnit = 0;
+                                                        $sohUnit = 0;
+                                                        foreach ($company->slocs as $key => $sloc) {
+                                                            $maxCapacityUnit += (int) $sloc->capacity;
+                                                        }
+                                                        foreach ($company->plants as $key => $plant) {
+                                                            foreach ($plant->materialStock as $value) {
+                                                                $sohUnit += $value->qty_soh;
+                                                            }
+                                                        }
+        
+                                                        $sisaUnit = $maxCapacityUnit - $sohUnit;
+                                                        if ($sisaUnit != 0 && $maxCapacityUnit != 0) {
+                                                            $sisaPersenUnit = (($sisaUnit ?? 1) / ($maxCapacityUnit ?? 1)) * 100;
+                                                        } else {
+                                                            $sisaPersenUnit = 0;
+                                                        }
+                                                    @endphp
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-6">
+                                                                <div class="fu-progress  text-center" style="   width: 250px;">
+                                                                    <div class="fu-inner">
+                                                                        <div class="fu-percent percent">
+                                                                            <h1>{{ number_format($sohUnit, '0', ',', '.') }}</h1>
+                                                                            <h1>Liter</h1>
+                                                                        </div>
+                                                                        <div class="water" style="top: {{ (int) $sisaPersenUnit ?? 0 }}%"></div>
+                                                                        <div class="glare"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 text-center">
+                                                                    <h5 style="margin-top:20px">Maximum Capacity {{ number_format($maxCapacityUnit, '0', ',', '.') }} Liter</h5>
+        
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="card" style="height: 18rem">
+                                                                    <div class="card-table table-responsive">
+                                                                        <table class="table table-vcenter" style="font-size: 12px !important;">
+                                                                            <thead style="position: sticky; top: 0px; z-index: 10;">
+                                                                                <th class="text-center">Plant</th>
+                                                                                <th class="text-end">SOH</th>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach ($company->plants as $plant)
+                                                                                    @php
+                                                                                        $sohPlant = 0;
+                                                                                        foreach ($plant->materialStock as $value) {
+                                                                                            $sohPlant += $value->qty_soh;
+                                                                                        }
+                                                                                    @endphp
+                                                                                    <tr>
+                                                                                        <td class="text-center">{{ $plant->plant_code }}</td>
+                                                                                        <td class="text-end">{{ number_format($sohPlant ?? 0, '0', ',', '.') }}</td>
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+            </div>
+            {{-- <div class="row row-deck">
                 @foreach ($companyStock as $company)
                     <div class="col-6 mb-3">
                         <div class="card">
@@ -239,7 +339,7 @@
                                 $sisaUnit = $maxCapacityUnit - $sohUnit;
                                 if ($sisaUnit != 0 && $maxCapacityUnit != 0) {
                                     $sisaPersenUnit = (($sisaUnit ?? 1) / ($maxCapacityUnit ?? 1)) * 100;
-                                }else{
+                                } else {
                                     $sisaPersenUnit = 0;
                                 }
                             @endphp
@@ -252,7 +352,7 @@
                                                     <h1>{{ number_format($sohUnit, '0', ',', '.') }}</h1>
                                                     <h1>Liter</h1>
                                                 </div>
-                                                <div class="water" style="top: {{ (int) $sisaPersenUnit??0 }}%"></div>
+                                                <div class="water" style="top: {{ (int) $sisaPersenUnit ?? 0 }}%"></div>
                                                 <div class="glare"></div>
                                             </div>
                                         </div>
@@ -292,10 +392,7 @@
                         </div>
                     </div>
                 @endforeach
-
-            </div>
-            {{--  --}}
-
+            </div> --}}
 
         </div>
     </div>

@@ -5,18 +5,24 @@ namespace App\Livewire\Company;
 use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\Response;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
 
 class CompanyCreate extends Component
 {
+    use WithFileUploads;
+
     public $loading = false;
     public $statusModal = 'Create';
     public $companyId;
     public $companyCode;
     public $companyCodeReadOnly = false;
     public $companyName;
+    public $attachment;
     protected $listeners = ['openCreate'];
     public function render()
     {
@@ -60,7 +66,9 @@ class CompanyCreate extends Component
 
         $this->loading = false;
     }
-
+    /* 
+        php artisan storage:link
+    */
     public function store()
     {
         $permissions = [
@@ -79,24 +87,50 @@ class CompanyCreate extends Component
                         Rule::unique('companies', 'company_code')->ignore($this->companyId),
                     ],
                     'companyName' => 'required',
+                    'attachment'  => 'nullable|file|mimes:jpeg,png,pdf|max:2048',
                 ]);
                 $company = Company::find($this->companyId);
                 if ($company->company_code != $this->companyCode && $company->hasDataByCode()) {
                     throw new \Exception("Company Code has data. Can't be edited");
                 }
-                $company->update([
-                    'company_code' => $this->companyCode,
-                    'company_name' => $this->companyName,
-                ]);
+                if ($this->attachment) {
+                    $customFileName = Str::slug($this->companyName) .'.'. $this->attachment->getClientOriginalExtension();
+                    $filePath = $this->attachment->storeAs('attachments', $customFileName, 'public');
+                    if ($company->attachment) {
+                        Storage::disk('public')->delete($company->attachment);
+                    }
+                    // dd($filePath);
+                    $company->update([
+                        'company_code' => $this->companyCode,
+                        'company_name' => $this->companyName,
+                        'attachment'   => $customFileName,
+                    ]);
+                } else {
+                    $company->update([
+                        'company_code' => $this->companyCode,
+                        'company_name' => $this->companyName,
+                    ]);
+                }
             } else {
                 $this->validate([
                     'companyCode' => 'required|unique:companies,company_code',
                     'companyName' => 'required',
+                    'attachment'  => 'nullable|file|mimes:jpeg,png,pdf|max:2048',
                 ]);
-                Company::create([
-                    'company_code' => $this->companyCode,
-                    'company_name' => $this->companyName,
-                ]);
+                if ($this->attachment) {
+                    $customFileName = Str::slug($this->companyName) .'.'. $this->attachment->getClientOriginalExtension();
+                    $filePath = $this->attachment->storeAs('attachments', $customFileName, 'public');
+                    Company::create([
+                        'company_code' => $this->companyCode,
+                        'company_name' => $this->companyName,
+                        'attachment'   => $customFileName,
+                    ]);
+                } else {
+                    Company::create([
+                        'company_code' => $this->companyCode,
+                        'company_name' => $this->companyName,
+                    ]);
+                }
             }
             DB::commit();
             $this->dispatch('success', $this->companyId ? 'Data has been updated' : 'Data has been created');
