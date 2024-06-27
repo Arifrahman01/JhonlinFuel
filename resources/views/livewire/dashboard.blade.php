@@ -18,7 +18,7 @@
             position: relative;
             width: 250px;
             height: 250px;
-            border: 5px solid #5B3A24;
+            border: 5px solid rgb(0, 0, 0);
             border-radius: 50% !important;
 
             .fu-inner {
@@ -35,7 +35,7 @@
                 .water {
                     position: absolute;
                     z-index: 1;
-                    background: rgba(211, 157, 48, 0.8);
+                    background: rgba(23, 139, 202, 0.5);
                     width: 200%;
                     height: 200%;
 
@@ -113,7 +113,7 @@
             <div class="row row-deck row-cards">
                 <div class="col-3">
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body" >
                             <div class="d-flex align-items-center">
                                 <div class="subheader">Capacty</div>
                             </div>
@@ -173,11 +173,11 @@
 
             <div class="row row-deck row-cards mt-3 mb-3">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
+                    <div class="card" >
+                        <div class="card-body" style="background-color: orange">
                             <div class="row">
                                 <div class="col-3">
-                                    <div class="fu-progress text-center">
+                                    <div class="fu-progress text-center" style="border: 5px solid rgb(255, 255, 255);">
                                         <div class="fu-inner">
                                             <div class="fu-percent percent">
                                                 <h1>{{ number_format($totalFuel->oh_qty, '0', ',', '.') }}</h1>
@@ -197,9 +197,15 @@
                                                 <thead style="position: sticky; top: 0px; z-index: 10;">
                                                     <th>Unit</th>
                                                     <th class="text-end">SOH</th>
-                                                    <th class="text-end">Intransit</th>
+                                                    {{-- <th class="text-end">Intransit</th> --}}
                                                 </thead>
                                                 <tbody>
+                                                    {{-- @foreach ($quotaCompany as $quota)
+                                                        <tr class="text-nowrap">
+                                                            <td>{{ $quota->company->company_name ?? '' }}</td>
+                                                            <td class="text-end">{{ number_format($quota->qty ?? '0','0',',','.') }}</td>
+                                                        </tr>
+                                                    @endforeach --}}
                                                     @foreach ($materialStock as $material)
                                                         <tr class="text-nowrap">
                                                             <td class="text-secondary">{{ $material->company->company_name }}</td>
