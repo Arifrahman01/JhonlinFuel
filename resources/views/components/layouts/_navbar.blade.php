@@ -166,7 +166,7 @@
                     'delete-master-uom', 'view-master-period', 'create-master-period', 'edit-master-period',
                     'delete-master-period'])
                     <li
-                        class="nav-item dropdown {{ request()->is('company') || request()->is('plant') || request()->is('warehouse') || request()->is('fuelman') || request()->is('department') || request()->is('equipment') || request()->is('material') || request()->is('uom') || request()->is('period') ? 'active' : '' }}">
+                        class="nav-item dropdown {{ request()->is('company') || request()->is('plant') || request()->is('warehouse') || request()->is('fuelman') || request()->is('department') || request()->is('equipment') || request()->is('material') || request()->is('uom') || request()->is('period')  || request()->is('quota')? 'active' : '' }}">
                         <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
                             <span
@@ -256,6 +256,10 @@
                                             Period
                                         </a>
                                     @endcanany
+                                    <a class="dropdown-item {{ request()->is('quota') ? 'active' : '' }}"
+                                        href="{{ route('quota.index') }}">
+                                        Quota
+                                    </a>
                                 </div>
                             </div>
                     </li>
