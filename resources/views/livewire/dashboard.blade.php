@@ -50,7 +50,7 @@
                     border: 1px solid transparent;
                     border-radius: 40% !important;
 
-                    animation-duration: 10s;
+                    animation-duration: 8s;
                     animation-name: spin;
                     animation-iteration-count: infinite;
                     animation-timing-function: linear;

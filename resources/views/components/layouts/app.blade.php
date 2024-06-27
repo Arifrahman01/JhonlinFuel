@@ -18,7 +18,12 @@
         bottom: 0;
         width: 100%;
         z-index: 1000;
+        
     }
+    .editable {
+            border: 1px solid #ddd; /* Tambahkan border untuk menunjukkan bahwa sel bisa diedit */
+            padding: 5px; /* Tambahkan padding untuk memperbaiki tampilan */
+        }
 </style>
 @livewireStyles
 

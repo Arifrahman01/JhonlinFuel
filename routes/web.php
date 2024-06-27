@@ -16,6 +16,7 @@ use App\Livewire\Period\PeriodList;
 use App\Livewire\UOM\UOMList;
 use App\Livewire\Plant\PlantList;
 use App\Livewire\Profile;
+use App\Livewire\Quota\QuotaList;
 use App\Livewire\ReceiptPostingList;
 use App\Livewire\ReceiptTransferPostingList;
 use App\Livewire\Role\RoleList;
@@ -78,7 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/uom', UOMList::class)->name('uom.index');
     Route::get('/period', PeriodList::class)->name('period.index');
     Route::get('/warehouse-transfer', WarehouseTransferList::class)->name('warehouse-transfer.index');
-
+    Route::get('/quota', QuotaList::class)->name('quota.index');
 
     /* Manajement User */
     Route::get('/role', RoleList::class)->name('role.index');
