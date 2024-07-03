@@ -9,6 +9,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\Department\DepartmentList;
 use App\Livewire\Equipment\EquipmentList;
 use App\Livewire\FuelConsumption;
+use App\Livewire\FuelDistribution;
 use App\Livewire\Fuelman\FuelmanList;
 use App\Livewire\IssuePosting;
 use App\Livewire\Material\MaterialList;
@@ -66,6 +67,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/stock-overview', StockOverview::class)->name('stock.index');
     Route::get('/adjustment', AdjustmentList::class)->name('adjustment.index');
     Route::get('/consumption', FuelConsumption::class)->name('consumption.index');
+    Route::get('/distribution', FuelDistribution::class)->name('distribution.index');
 
     /* Master */
     Route::get('/equipment', EquipmentList::class)->name('equipment.index');

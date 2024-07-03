@@ -166,7 +166,7 @@
                     'delete-master-uom', 'view-master-period', 'create-master-period', 'edit-master-period',
                     'delete-master-period'])
                     <li
-                        class="nav-item dropdown {{ request()->is('company') || request()->is('plant') || request()->is('warehouse') || request()->is('fuelman') || request()->is('department') || request()->is('equipment') || request()->is('material') || request()->is('uom') || request()->is('period')  || request()->is('quota')? 'active' : '' }}">
+                        class="nav-item dropdown {{ request()->is('company') || request()->is('plant') || request()->is('warehouse') || request()->is('fuelman') || request()->is('department') || request()->is('equipment') || request()->is('material') || request()->is('uom') || request()->is('period') || request()->is('quota') ? 'active' : '' }}">
                         <a class="nav-link dropdown-toggle" href="#navbar-extra" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
                             <span
@@ -266,7 +266,7 @@
                 @endcanany
                 @canany(['view-report-stock-overview', 'view-report-fuel-consumption'])
                     <li
-                        class="nav-item {{ request()->is('stock-overview') || request()->is('consumption') ? 'active' : '' }} dropdown">
+                        class="nav-item {{ request()->is('stock-overview') || request()->is('consumption') || request()->is('distribution') ? 'active' : '' }} dropdown">
                         <a class="nav-link dropdown-toggle" href="#navbar-help" data-bs-toggle="dropdown"
                             data-bs-auto-close="outside" role="button" aria-expanded="false">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -298,6 +298,12 @@
                                 <a class="dropdown-item {{ request()->is('consumption') ? 'active' : '' }}"
                                     href="{{ route('consumption.index') }}" rel="noopener">
                                     Fuel Consumption
+                                </a>
+                            @endcan
+                            @can('view-report-fuel-consumption')
+                                <a class="dropdown-item {{ request()->is('distribution') ? 'active' : '' }}"
+                                    href="{{ route('distribution.index') }}" rel="noopener">
+                                    Fuel Distribution
                                 </a>
                             @endcan
                             {{-- <a class="dropdown-item" href="./changelog.html">
