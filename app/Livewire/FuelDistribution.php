@@ -19,7 +19,7 @@ class FuelDistribution extends Component
 {
     use WithPagination;
     public $periodId;
-    public $distributions = [];
+    public $distributions;
     public function mount()
     {
         $this->periodId = Period::latest()->first()->value('id');
@@ -84,8 +84,6 @@ class FuelDistribution extends Component
             ->leftJoinSub($closingQtySubquery, 'h', 'companies.id', '=', 'h.company_id')
             ->whereNull('companies.deleted_at')
             ->select(
-                'companies.id',
-                'companies.company_code',
                 'companies.company_name',
                 DB::raw('IFNULL(b.opening_qty, 0) as opening_qty'),
                 DB::raw('IFNULL(c.rcv_qty, 0) as rcv_qty'),
@@ -105,7 +103,7 @@ class FuelDistribution extends Component
             $period = Period::find($this->periodId);
             $fileName = 'Fuel Distribution ' . $period->period_name . '.xlsx';
 
-            return Excel::download(new FuelDistributionExport($this->distributions), $fileName, \Maatwebsite\Excel\Excel::XLSX);
+            return Excel::download(new FuelDistributionExport($this->periodId), $fileName, \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
         }
