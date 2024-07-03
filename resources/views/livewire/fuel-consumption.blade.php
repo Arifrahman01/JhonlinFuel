@@ -82,7 +82,7 @@
                                     </table>
                                 </div>
                                 <div class="card-footer justify-content-between align-items-center">
-                                    {{ $consumptions->links() }}
+                                    {{-- {{ $consumptions->links() }} --}}
                                 </div>
                             </div>
                         </div>
