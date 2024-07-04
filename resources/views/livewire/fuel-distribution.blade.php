@@ -90,7 +90,8 @@
                                                     {{ number_format($distribution->adjust_qty, '0', ',', '.') }}
                                                 </td>
                                                 <td class="text-end">
-                                                    {{ number_format($distribution->closing_qty, '0', ',', '.') }}
+                                                    {{ number_format(($distribution->rcv_qty - $distribution->issued_qty), '0', ',', '.') }}
+                                                    {{-- {{ number_format($distribution->closing_qty, '0', ',', '.') }} --}}
                                                 </td>
                                             </tr>
                                         @endforeach
