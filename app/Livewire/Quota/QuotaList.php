@@ -18,7 +18,7 @@ class QuotaList extends Component
     public function mount()
     {
         $latestPeriod = Period::latest('id')->first();
-        $this->selectedPeriod = $latestPeriod->id;
+        $this->selectedPeriod = $latestPeriod->id ?? '';
     }
 
     public function render()

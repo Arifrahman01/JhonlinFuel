@@ -89,7 +89,7 @@
                                                     <th>Quota</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody style="font-size: 12px">
                                                 @foreach ($companies as $company)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
