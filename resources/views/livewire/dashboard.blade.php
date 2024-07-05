@@ -210,7 +210,7 @@
                                                         <tr class="text-nowrap">
                                                             <td class="text-secondary">{{ $material->company->company_name }}</td>
                                                             <td class="text-end">{{ number_format($material->total_soh, '0', ',', '.') }}</td>
-                                                            <td class="text-end">{{ number_format($material->total_intransit, '0', ',', '.') }}</td>
+                                                            {{-- <td class="text-end">{{ number_format($material->total_intransit, '0', ',', '.') }}</td> --}}
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
