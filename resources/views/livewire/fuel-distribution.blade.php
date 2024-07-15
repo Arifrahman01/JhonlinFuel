@@ -72,8 +72,8 @@
                                                 <td class="text-center">{{ $loop->index + 1 }}</td>
                                                 <td>{{ $distribution->company_name }}</td>
                                                 <td class="text-end">
-                                                    {{-- {{ number_format($distribution->opening_qty, '0', ',', '.') }} --}}
-                                                    {{ number_format($distribution->closing_prev_qty, '0', ',', '.') }}
+                                                    {{ number_format($distribution->opening_qty, '0', ',', '.') }}
+                                                    {{-- {{ number_format($distribution->closing_prev_qty, '0', ',', '.') }} --}}
                                                 </td>
                                                 <td class="text-end">
                                                     {{ number_format($distribution->rcv_qty, '0', ',', '.') }}
@@ -91,8 +91,8 @@
                                                     {{ number_format($distribution->adjust_qty, '0', ',', '.') }}
                                                 </td>
                                                 <td class="text-end">
-                                                    {{ number_format(($distribution->rcv_qty  + $distribution->opening_qty - $distribution->issued_qty), '0', ',', '.') }}
-                                                    {{-- {{ number_format($distribution->closing_qty, '0', ',', '.') }} --}}
+                                                    {{-- {{ number_format($distribution->rcv_qty + $distribution->opening_qty - $distribution->issued_qty, '0', ',', '.') }} --}}
+                                                    {{ number_format($distribution->closing_qty, '0', ',', '.') }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -110,7 +110,6 @@
     @push('scripts')
         <script>
             async function downloadExcel() {
-                console.log("buhahaaaa");
                 const isConfirmed = await sweetPosting({
                     id: -1,
                     title: 'Download Report ? ',

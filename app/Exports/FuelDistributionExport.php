@@ -9,6 +9,7 @@ use App\Models\Period;
 use App\Models\Receipt;
 use App\Models\ReceiptTransfer;
 use App\Models\StockClosure;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -30,9 +31,22 @@ class FuelDistributionExport implements FromCollection, WithHeadings, WithEvents
     public function collection()
     {
         $period = Period::find($this->periodId);
+        $month = $period->month;
+        $year = $period->year;
+        $date = new DateTime("$year-$month-01");
+        $date->modify('-1 month');
+        $perodPrev = Period::where('month', $date->format('m'))->where('year', $date->format('Y'))->first();
+
+        // $closingQtyPrevSubquery = StockClosure::select('company_id', DB::raw('SUM(qty_soh) as closing_qty'))
+        //     ->where('trans_type', 'closing')
+        //     ->where('period_id', $perodPrev->id ?? 0)
+        //     ->whereNull('deleted_at')
+        //     ->groupBy('company_id');
+        /* end custom */
+
         $openingQtySubquery = StockClosure::select('company_id', DB::raw('SUM(qty_soh) as opening_qty'))
-            ->where('trans_type', 'opening')
-            ->where('period_id', $this->periodId)
+            ->where('trans_type', 'closing')
+            ->where('period_id', $perodPrev->id ?? 0)
             ->whereNull('deleted_at')
             ->groupBy('company_id');
 
@@ -83,6 +97,7 @@ class FuelDistributionExport implements FromCollection, WithHeadings, WithEvents
             ->leftJoinSub($issuedQtySubquery, 'f', 'companies.company_code', '=', 'f.company_code')
             ->leftJoinSub($adjustmentSubQuery, 'g', 'companies.id', '=', 'g.company_id')
             ->leftJoinSub($closingQtySubquery, 'h', 'companies.id', '=', 'h.company_id')
+            // ->leftJoinSub($closingQtyPrevSubquery, 'i', 'companies.id', '=', 'i.company_id')
             ->whereNull('companies.deleted_at')
             ->select(
                 'companies.company_name',
@@ -92,7 +107,8 @@ class FuelDistributionExport implements FromCollection, WithHeadings, WithEvents
                 DB::raw('IFNULL(e.rcvTrf_qty, 0) as rcvTrf_qty'),
                 DB::raw('IFNULL(f.issued_qty, 0) as issued_qty'),
                 DB::raw('IFNULL(g.adjust_qty, 0) as adjust_qty'),
-                DB::raw('IFNULL(h.closing_qty, 0) as closing_qty')
+                DB::raw('IFNULL(h.closing_qty, 0) as closing_qty'),
+                // DB::raw('IFNULL(i.closing_qty, 0) as closing_prev_qty')
             )
             ->get();
     }

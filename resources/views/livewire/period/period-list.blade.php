@@ -56,13 +56,13 @@
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="d-inline-block">
-                                            <button type="button" class="btn btn-success"
+                                            <button type="button" class="btn btn-success" id="btn-posting0"
                                                 onclick="openPeriod('{{ data_get($periodCompanies, '0.periods.0.period_id') }}')">
                                                 &nbsp; Open &nbsp;
                                             </button>
                                         </div>
                                         <div class="ms-2 d-inline-block">
-                                            <button type="button" class="btn btn-danger"
+                                            <button type="button" class="btn btn-danger" id="btn-posting1"
                                                 onclick="closePeriod('{{ data_get($periodCompanies, '0.periods.0.period_id') }}')">
                                                 &nbsp; Close &nbsp;
                                             </button>
@@ -171,9 +171,9 @@
                 });
                 if (companyIds.length > 0) {
                     const isConfirmed = await sweetPosting({
-                        id: 1,
+                        id: 0,
                         title: 'Open period all data selected ? ',
-                        textLoadong: '  loading'
+                        textLoadong: '  Loading'
                     });
                     if (isConfirmed) {
                         @this.call('openPeriod', companyIds);
@@ -201,7 +201,7 @@
                     const isConfirmed = await sweetPosting({
                         id: 1,
                         title: 'Close period all data selected ? ',
-                        textLoadong: '  loading'
+                        textLoadong: '  Loading'
                     });
                     if (isConfirmed) {
                         @this.call('closePeriod', companyIds);
