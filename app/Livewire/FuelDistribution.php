@@ -35,7 +35,7 @@ class FuelDistribution extends Component
         if ($this->periodId) {
             $period = Period::find($this->periodId);
             if ($period) {
-            /* Custom 
+                /* Custom 
                 request     =  stock awal = stock akhir bulan lalu;
                 stock akhir = Stock awal + RECEIPT - ISSUED
             */
@@ -43,18 +43,18 @@ class FuelDistribution extends Component
                 $year = $period->year;
                 $date = new DateTime("$year-$month-01");
                 $date->modify('-1 month');
-                $perodPrev = Period::where('month',$date->format('m'))->where('year',$date->format('Y'))->first();
+                $perodPrev = Period::where('month', $date->format('m'))->where('year', $date->format('Y'))->first();
 
-                $closingQtyPrevSubquery = StockClosure::select('company_id', DB::raw('SUM(qty_soh) as closing_qty'))
-                ->where('trans_type', 'closing')
-                ->where('period_id', $perodPrev->id ?? 0)
-                ->whereNull('deleted_at')
-                ->groupBy('company_id');
-            /* end custom */
-                
+                // $closingQtyPrevSubquery = StockClosure::select('company_id', DB::raw('SUM(qty_soh) as closing_qty'))
+                //     ->where('trans_type', 'closing')
+                //     ->where('period_id', $perodPrev->id ?? 0)
+                //     ->whereNull('deleted_at')
+                //     ->groupBy('company_id');
+                /* end custom */
+
                 $openingQtySubquery = StockClosure::select('company_id', DB::raw('SUM(qty_soh) as opening_qty'))
-                    ->where('trans_type', 'opening')
-                    ->where('period_id', $this->periodId)
+                    ->where('trans_type', 'closing')
+                    ->where('period_id', $perodPrev->id ?? 0)
                     ->whereNull('deleted_at')
                     ->groupBy('company_id');
 
@@ -105,7 +105,7 @@ class FuelDistribution extends Component
                     ->leftJoinSub($issuedQtySubquery, 'f', 'companies.company_code', '=', 'f.company_code')
                     ->leftJoinSub($adjustmentSubQuery, 'g', 'companies.id', '=', 'g.company_id')
                     ->leftJoinSub($closingQtySubquery, 'h', 'companies.id', '=', 'h.company_id')
-                    ->leftJoinSub($closingQtyPrevSubquery, 'i', 'companies.id', '=', 'i.company_id')
+                    // ->leftJoinSub($closingQtyPrevSubquery, 'i', 'companies.id', '=', 'i.company_id')
                     ->whereNull('companies.deleted_at')
                     ->select(
                         'companies.company_name',
@@ -116,7 +116,7 @@ class FuelDistribution extends Component
                         DB::raw('IFNULL(f.issued_qty, 0) as issued_qty'),
                         DB::raw('IFNULL(g.adjust_qty, 0) as adjust_qty'),
                         DB::raw('IFNULL(h.closing_qty, 0) as closing_qty'),
-                        DB::raw('IFNULL(i.closing_qty, 0) as closing_prev_qty')
+                        // DB::raw('IFNULL(i.closing_qty, 0) as closing_prev_qty')
                     )
                     ->get();
             }
