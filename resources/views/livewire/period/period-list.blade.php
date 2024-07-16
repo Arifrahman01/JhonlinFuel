@@ -95,7 +95,8 @@
                                     <tr>
                                         <th class="text-center" style="width: 6%;">
                                             <input class="form-check-input m-0 align-middle" type="checkbox"
-                                                onchange="checkAll(this)" aria-label="Select All Company">
+                                                onchange="checkAll(this)" aria-label="Select All Company"
+                                                id="main-checkbox">
                                         </th>
                                         <th class="text-center" style="width: 20%;">Period</th>
                                         <th class="text-center" style="width: 40%;">Company</th>
@@ -164,6 +165,7 @@
             }
 
             async function openPeriod() {
+                const mainCheckbox = document.getElementById('main-checkbox');
                 const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
                 const companyIds = [];
                 checkboxes.forEach(checkbox => {
@@ -181,6 +183,7 @@
                         checkboxes.forEach(checkbox => {
                             checkbox.checked = false;
                         });
+                        mainCheckbox.checked = false;
                     }
                 } else {
                     Swal.fire({
@@ -192,6 +195,7 @@
             }
 
             async function closePeriod() {
+                const mainCheckbox = document.getElementById('main-checkbox');
                 const checkboxes = document.querySelectorAll('.detailCheckbox:checked');
                 const companyIds = [];
                 checkboxes.forEach(checkbox => {
@@ -209,6 +213,7 @@
                         checkboxes.forEach(checkbox => {
                             checkbox.checked = false;
                         });
+                        mainCheckbox.checked = false;
                     }
                 } else {
                     Swal.fire({
