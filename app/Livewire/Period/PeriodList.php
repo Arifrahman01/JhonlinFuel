@@ -94,7 +94,7 @@ class PeriodList extends Component
 
                 foreach ($currentCompanies as $company) {
                     if ($company->pivot->status === 'open') {
-                        throw new \Exception("Period for company {$company->id} is already open");
+                        throw new \Exception("Period for company {$company->company_name} is already open");
                     }
                 }
 
