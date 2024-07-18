@@ -35,7 +35,7 @@ class EquipmentCreate extends Component
             'delete-master-equipment',
         ];
         abort_if(Gate::none($permissions), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        $companies = Company::allowed('view-master-equipmen')->get();
+        $companies = Company::allowed('view-master-equipment')->get();
         return view('livewire.equipment.equipment-create', ['companies' => $companies]);
     }
     public function closeModal()
