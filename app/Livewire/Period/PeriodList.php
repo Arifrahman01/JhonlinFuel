@@ -378,37 +378,37 @@ class PeriodList extends Component
         //     ->where('qty_intransit', '!=', 0)
         //     ->exists();
 
-        if ($receiptBelumPosting) {
+        if (!$receiptBelumPosting->isEmpty()) {
             $transDateArray = $receiptBelumPosting->pluck('trans_date')->toArray();
             $transDateString = implode(',', $transDateArray);
             return 'Ada Receipt PO yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
-        if ($transferBelumPostingFrom) {
+        if (!$transferBelumPostingFrom->isEmpty()) {
             $transDateArray = $transferBelumPostingFrom->pluck('trans_date')->toArray();
             $transDateString = implode(',', $transDateArray);
             return 'Ada Transfer yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
-        if ($transferBelumPostingTo) {
+        if (!$transferBelumPostingTo->isEmpty()) {
             $transDateArray = $transferBelumPostingTo->pluck('trans_date')->toArray();
             $transDateString = implode(',', $transDateArray);
             return 'Ada Transfer yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
-        if ($receiptTransferBelumPostingFrom) {
+        if (!$receiptTransferBelumPostingFrom->isEmpty()) {
             $transDateArray = $receiptTransferBelumPostingFrom->pluck('trans_date')->toArray();
             $transDateString = implode(',', $transDateArray);
             return 'Ada Receipt Transfer yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
-        if ($receiptTransferBelumPostingTo) {
+        if (!$receiptTransferBelumPostingTo->isEmpty()) {
             $transDateArray = $receiptTransferBelumPostingTo->pluck('trans_date')->toArray();
             $transDateString = implode(',', $transDateArray);
             return 'Ada Receipt Transfer yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
-        if ($issueBelumPosting) {
+        if (!$issueBelumPosting->isEmpty()) {
             $transDateArray = $issueBelumPosting->pluck('trans_date')->toArray();
             $transDateString = implode(',', $transDateArray);
             return 'Ada Issue yang belum posting yaitu di tanggal : ' . $transDateString;
