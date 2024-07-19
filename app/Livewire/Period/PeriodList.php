@@ -347,59 +347,71 @@ class PeriodList extends Component
             ->whereYear('trans_date', $this->selectedYear)
             ->whereMonth('trans_date', $this->selectedMonth)
             ->whereNull('posting_no')
-            ->exists();
+            ->get();
         $transferBelumPostingFrom = Transfer::where('from_company_code', $companyCode)
             ->whereYear('trans_date', $this->selectedYear)
             ->whereMonth('trans_date', $this->selectedMonth)
             ->whereNull('posting_no')
-            ->exists();
+            ->get();
         $transferBelumPostingTo = Transfer::where('to_company_code', $companyCode)
             ->whereYear('trans_date', $this->selectedYear)
             ->whereMonth('trans_date', $this->selectedMonth)
             ->whereNull('posting_no')
-            ->exists();
+            ->get();
         $receiptTransferBelumPostingFrom = ReceiptTransfer::where('from_company_code', $companyCode)
             ->whereYear('trans_date', $this->selectedYear)
             ->whereMonth('trans_date', $this->selectedMonth)
             ->whereNull('posting_no')
-            ->exists();
+            ->get();
         $receiptTransferBelumPostingTo = ReceiptTransfer::where('to_company_code', $companyCode)
             ->whereYear('trans_date', $this->selectedYear)
             ->whereMonth('trans_date', $this->selectedMonth)
             ->whereNull('posting_no')
-            ->exists();
+            ->get();
         $issueBelumPosting = Issue::where('company_code', $companyCode)
             ->whereYear('trans_date', $this->selectedYear)
             ->whereMonth('trans_date', $this->selectedMonth)
             ->whereNull('posting_no')
-            ->exists();
+            ->get();
         // $osTransfer = MaterialStock::where('company_id', $companyId)
         //     ->whereNotNull('qty_intransit')
         //     ->where('qty_intransit', '!=', 0)
         //     ->exists();
 
         if ($receiptBelumPosting) {
-            return 'Ada Receipt PO yang belum posting';
+            $transDateArray = $receiptBelumPosting->pluck('trans_date')->toArray();
+            $transDateString = implode(',', $transDateArray);
+            return 'Ada Receipt PO yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
         if ($transferBelumPostingFrom) {
-            return 'Ada Transfer yang belum posting';
+            $transDateArray = $transferBelumPostingFrom->pluck('trans_date')->toArray();
+            $transDateString = implode(',', $transDateArray);
+            return 'Ada Transfer yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
         if ($transferBelumPostingTo) {
-            return 'Ada Transfer yang belum posting';
+            $transDateArray = $transferBelumPostingTo->pluck('trans_date')->toArray();
+            $transDateString = implode(',', $transDateArray);
+            return 'Ada Transfer yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
         if ($receiptTransferBelumPostingFrom) {
-            return 'Ada Receipt Transfer yang belum posting';
+            $transDateArray = $receiptTransferBelumPostingFrom->pluck('trans_date')->toArray();
+            $transDateString = implode(',', $transDateArray);
+            return 'Ada Receipt Transfer yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
         if ($receiptTransferBelumPostingTo) {
-            return 'Ada Receipt Transfer yang belum posting';
+            $transDateArray = $receiptTransferBelumPostingTo->pluck('trans_date')->toArray();
+            $transDateString = implode(',', $transDateArray);
+            return 'Ada Receipt Transfer yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
         if ($issueBelumPosting) {
-            return 'Ada Issue yang belum posting';
+            $transDateArray = $issueBelumPosting->pluck('trans_date')->toArray();
+            $transDateString = implode(',', $transDateArray);
+            return 'Ada Issue yang belum posting yaitu di tanggal : ' . $transDateString;
         }
 
         // if ($osTransfer) {
