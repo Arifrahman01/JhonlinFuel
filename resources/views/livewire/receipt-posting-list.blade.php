@@ -23,12 +23,14 @@
                                 <div class="d-flex">
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="text" id="search" class="form-control form-control-sm" wire:model.live="q" placeholder="Posting">
+                                            <input type="text" id="search" class="form-control form-control-sm"
+                                                wire:model.live="q" placeholder="Posting">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <select wire:model.live="c" id="company" class="form-select form-select-sm">
+                                            <select wire:model.live="c" id="company"
+                                                class="form-select form-select-sm">
                                                 <option value="">-Select Company-</option>
                                                 @foreach ($companies as $company)
                                                     <option value="{{ $company->id }}">
@@ -39,8 +41,10 @@
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="start_date" onchange="setEndDateMax()" wire:model="start_date" aria-label="Start Date"
-                                                placeholder="Start Date" value="{{ $start_date }}">
+                                            <input type="date" class="form-control form-control-sm" id="start_date"
+                                                onchange="setEndDateMax()" wire:model="start_date"
+                                                aria-label="Start Date" placeholder="Start Date"
+                                                value="{{ $start_date }}">
                                         </div>
                                     </div>
                                     <div class="ms-auto text-muted">
@@ -50,7 +54,8 @@
                                     </div>
                                     <div class="ms-auto text-muted">
                                         <div class="ms-2 d-inline-block">
-                                            <input type="date" class="form-control form-control-sm" id="end_date" wire:model="end_date" aria-label="End Date" placeholder="End Date"
+                                            <input type="date" class="form-control form-control-sm" id="end_date"
+                                                wire:model="end_date" aria-label="End Date" placeholder="End Date"
                                                 value="{{ $end_date }}">
                                         </div>
                                     </div>
@@ -64,14 +69,16 @@
                                 </div>
                             </form>
                             <div class="ms-2 d-inline-block">
-                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm" onclick="downloadExcel({{ -1 }})">
+                                <button id="btn-posting{{ -1 }}" class="btn btn-warning btn-sm"
+                                    onclick="downloadExcel({{ -1 }})">
                                     <i class="fas fa-file-excel"></i> &nbsp; Excel
                                 </button>
                             </div>
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-vcenter card-table table-striped table-bordered" style="table-layout: auto; min-width:100%;">
+                            <table class="table table-vcenter card-table table-striped table-bordered"
+                                style="table-layout: auto; min-width:100%;">
                                 <thead>
                                     <tr class="text-nowrap">
                                         <th class="text-center">#</th>
@@ -107,7 +114,7 @@
                                                 <td>{{ $rcv->plants->plant_name ?? '' }}</td>
                                                 <td>{{ $rcv->slocs->sloc_name ?? '' }}</td>
                                                 <td>{{ $rcv->equipments->equipment_description ?? '' }}</td>
-                                                <td>{{ $rcv->materials->material_description  ?? ''}}</td>
+                                                <td>{{ $rcv->materials->material_description ?? '' }}</td>
                                                 <td class="text-center">{{ $rcv->uom }}</td>
                                                 <td class="text-end">{{ number_format($rcv->qty) }}</td>
                                             </tr>
