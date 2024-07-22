@@ -114,7 +114,12 @@ class IssueList extends Component
                 $fuelType = Material::where('material_code', $tmp->material_code)->first();
                 $slocId = Sloc::where('sloc_code',  $tmp->warehouse)->value('id');
 
-                Issue::find($tmp->id)->update(['posting_no' => $newPostingNumber]);
+                $issue = Issue::find($tmp->id);
+                if (!$issue) {
+                    throw new \Exception('Issue not found with ID: ' . $tmp->id);
+                }
+
+                $issue->update(['posting_no' => $newPostingNumber]);
 
                 if (!checkOpenPeriod($company->id, $tmp->trans_date)) {
                     throw new \Exception('Periode tidak open untuk ' . $company->company_name . ' tanggal ' . $tmp->trans_date);
