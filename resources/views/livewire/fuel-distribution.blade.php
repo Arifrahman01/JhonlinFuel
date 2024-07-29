@@ -67,6 +67,15 @@
                                     @if (empty($distributions))
                                         {!! dataNotFond(8) !!}
                                     @else
+                                        @php
+                                            $totOpening = 0;
+                                            $totRcv = 0;
+                                            $totTrf = 0;
+                                            $totRcvTrf = 0;
+                                            $totIssue = 0;
+                                            $totAdjust = 0;
+                                            $totClosing = 0;
+                                        @endphp
                                         @foreach ($distributions as $distribution)
                                             <tr class="text-nowrap">
                                                 <td class="text-center">{{ $loop->index + 1 }}</td>
@@ -95,7 +104,43 @@
                                                     {{ number_format($distribution->closing_qty, '0', ',', '.') }}
                                                 </td>
                                             </tr>
+                                            @php
+                                                $totOpening += $distribution->opening_qty;
+                                                $totRcv += $distribution->rcv_qty;
+                                                $totTrf += $distribution->trf_qty;
+                                                $totRcvTrf += $distribution->rcvTrf_qty;
+                                                $totIssue += $distribution->issued_qty;
+                                                $totAdjust += $distribution->adjust_qty;
+                                                $totClosing += $distribution->closing_qty;
+                                            @endphp
                                         @endforeach
+                                        <tr class="text-nowrap">
+                                            <td class="text-center"></td>
+                                            <td class="text-center fw-bold">TOTAL</td>
+                                            <td class="text-end fw-bold">
+                                                {{ number_format($totOpening, '0', ',', '.') }}
+                                                {{-- {{ number_format($distribution->closing_prev_qty, '0', ',', '.') }} --}}
+                                            </td>
+                                            <td class="text-end fw-bold">
+                                                {{ number_format($totRcv, '0', ',', '.') }}
+                                            </td>
+                                            <td class="text-end fw-bold">
+                                                {{ number_format($totTrf, '0', ',', '.') }}
+                                            </td>
+                                            <td class="text-end fw-bold">
+                                                {{ number_format($totRcvTrf, '0', ',', '.') }}
+                                            </td>
+                                            <td class="text-end fw-bold">
+                                                {{ number_format($totIssue, '0', ',', '.') }}
+                                            </td>
+                                            <td class="text-end fw-bold">
+                                                {{ number_format($totAdjust, '0', ',', '.') }}
+                                            </td>
+                                            <td class="text-end fw-bold">
+                                                {{-- {{ number_format($distribution->rcv_qty + $distribution->opening_qty - $distribution->issued_qty, '0', ',', '.') }} --}}
+                                                {{ number_format($totClosing, '0', ',', '.') }}
+                                            </td>
+                                        </tr>
                                     @endif
                                 </tbody>
                             </table>
