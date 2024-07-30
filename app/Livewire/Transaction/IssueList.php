@@ -70,7 +70,7 @@ class IssueList extends Component
     public function posting($id, $warehouse, $date)
     {
         $message = false;
-        $tmpDatas = Issue::where('trans_date', $date)->where('warehouse', $warehouse)->get();
+        $tmpDatas = Issue::where('trans_date', $date)->where('warehouse', $warehouse)->whereNull('posting_no')->get();
         if ($tmpDatas->isNotEmpty()) {
             foreach ($tmpDatas as $value) {
                 $message = $this->cekData($value);
