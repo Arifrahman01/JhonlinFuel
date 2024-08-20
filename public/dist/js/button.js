@@ -83,6 +83,7 @@ const sweetPosting = async ({ head = 'Are you sure?', title = 'Posting this tran
                 if (btnPosting) {
                     btnPosting.innerHTML = "<i class='fa fa-spinner fa-spin'></i> "+ textLoadong;
                     btnPosting.disabled = true;
+                    btnPosting.classList.add('disabled');
                 } else {
                     console.warn(`Button with id 'btn-posting${id}' not found`);
                 }
