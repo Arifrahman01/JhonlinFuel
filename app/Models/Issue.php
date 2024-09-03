@@ -55,23 +55,27 @@ class Issue extends BaseModel
 
     public static function sumQty($date, $perPage = 10)
     {
-        $summary = self::select('warehouse', 'trans_date', DB::raw('SUM(qty) as total_qty'))
-            ->groupBy('warehouse', 'trans_date')
+        $summary = self::select('company_code', 'warehouse', 'trans_date', DB::raw('SUM(qty) as total_qty'), DB::raw('GROUP_CONCAT(id) as detail_ids'))
+            ->groupBy(['warehouse', 'trans_date', 'company_code'])
             ->where('trans_date', $date)
             ->whereNull('posting_no')
             ->paginate($perPage);
         $details = self::where('trans_date', $date)
             ->whereNull('posting_no')
             ->get()
-            ->groupBy('warehouse');
+            ->groupBy(function($item) {
+                return $item->warehouse . '|' . $item->trans_date . '|' . $item->company_code;
+            });
+
         $result = collect();
         foreach ($summary as $item) {
+            $key = $item->warehouse . '|' . $item->trans_date . '|' . $item->company_code;
             $result->push([
                 'summary' => $item,
-                'details' => $details[$item->warehouse] ?? [],
+                'details' => $details[$key] ?? [],
             ]);
         }
-    
+
         return $result;
     }
 }

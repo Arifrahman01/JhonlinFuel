@@ -57,32 +57,34 @@ class IssueList extends Component
         }
     }
 
-    public function deleteSumary($warehouse, $date)
+    public function deleteSumary($ids)
     {
         try {
-            Issue::where('trans_date', $date)->whereNull('posting_no')->where('warehouse', $warehouse)->delete();
+            $idArray = explode(',', $ids);
+            Issue::whereIn($idArray)->whereNull('posting_no')->delete();
             $this->dispatch('success', 'Data has been deleted');
         } catch (\Throwable $th) {
             $this->dispatch('error', $th->getMessage());
         }
     }
 
-    public function posting($id, $warehouse, $date)
+    public function posting($id, $ids)
     {
-        $message = false;
-        $tmpDatas = Issue::where('trans_date', $date)->where('warehouse', $warehouse)->whereNull('posting_no')->get();
+        $message = [];
+        $idArray = explode(',', $ids);
+        $tmpDatas = Issue::whereIn('id',$idArray)->whereNull('posting_no')->get();
         if ($tmpDatas->isNotEmpty()) {
             foreach ($tmpDatas as $value) {
-                $message = $this->cekData($value);
-                // $message = false; //hapus untuk kondisi asli
-                if ($message) {
+                $errorMessage  = $this->cekData($value);
+                if ($errorMessage) {
+                    $message[] = $errorMessage;
                     $value->update([
-                        'error_status' => $message
+                        'error_status' => $errorMessage
                     ]);
                 }
             }
-            if ($message) {
-                $this->dispatch('error', $message);
+            if (count($message) >= 1) {
+                $this->dispatch('error', $message[0]);
             } else {
                 /* Save nya langsung per batch jika tidak ada error di validasi cekData() */
                 $this->storeData($tmpDatas);
@@ -113,7 +115,6 @@ class IssueList extends Component
                 $location = Plant::where('plant_code', $tmp->location)->first();
                 $fuelType = Material::where('material_code', $tmp->material_code)->first();
                 $slocId = Sloc::where('sloc_code',  $tmp->warehouse)->value('id');
-
                 $issue = Issue::find($tmp->id);
                 if (!$issue) {
                     throw new \Exception('Issue not found with ID: ' . $tmp->id);
@@ -128,6 +129,9 @@ class IssueList extends Component
                 $cekStok = MaterialStock::where('company_id', $company->id)
                     ->where('plant_id', $location->id)->where('sloc_id', $slocId)
                     ->first();
+                if (!$cekStok) {
+                    throw new \Exception('Data material stock tidak terdaftar di <br> company : ' . $tmp->company_code . '<br>Location : ' .$tmp->location. '<br> Warehouse : '. $tmp->warehouse);
+                }
                 $paramMovement = [
                     'company_id'    => $company->id,
                     'doc_header_id' => $tmp->id,
@@ -174,48 +178,50 @@ class IssueList extends Component
     private function cekData($val)
     {
         $message = false;
-        $companyAllowed = Company::allowed('create-loader-issue')
+        $company = Company::allowed('create-loader-issue')
             ->where('company_code', $val->company_code)
             ->first();
-        $companyExists = Company::where('company_code', $val->company_code)->exists();
-        $fuelWarehouseExist = Sloc::where('sloc_code', $val->warehouse)->exists();
+        $companyExists = Company::where('company_code', $val->company_code)->first();
+        $locationExist = Plant::where('plant_code', $val->location)->where('company_id',$company->id)->exists();
+        $fuelWarehouseExist = Sloc::where('sloc_code', $val->warehouse)->where('company_id',$companyExists->id)->first();
         $transTypeInvalid = in_array($val->trans_type, ['ISS']); /* Hanya untuk ISS/issued */
         $fuelmanExist = Fuelman::where('nik', $val->fuelman)->exists();
         $equipmentExist = Equipment::where('equipment_no', $val->equipment_no)->exists();
-        $locationExist = Plant::where('plant_code', $val->location)->exists();
+     
         $departmentExist = Department::where('department_code', $val->department)->exists();
         $activityExist = Activity::where('activity_code', $val->activity)->exists();
         $fuelTypeExist = Material::where('material_code', $val->material_code)->exists();
 
-        if (!$companyAllowed) {
+        if (!$company) {
             $message = 'Anda tidak punya akses Company code ' . $val->company_code;
         }
         if (!$companyExists) {
-            $message = 'Company code ' . $val->company_code . ' not registered in master';
-        }
-        if (!$fuelWarehouseExist) {
-            $message = 'Fuel warehouse ' . $val->fuel_warehouse . ' not registered in master';
-        }
-        if (!$transTypeInvalid) {
-            $message = 'Trans type ' . $val->trans_type . ' unknown';
-        }
-        if (!$fuelmanExist) {
-            $message = 'Fuelman ' . $val->fuelman . ' not registered in master';
-        }
-        if (!$equipmentExist) {
-            $message = 'Equipment ' . $val->equipment_no . ' not registered in master';
+            $message = 'Company code ' . $val->company_code . 'tidak terdaftar di master';
         }
         if (!$locationExist) {
-            $message = 'Location ' . $val->location . ' not registered in master';
+            $message = 'Location tidak terdaftar di master <br> Location : ' . $val->location . '<br> Company : '.$val->company_code;
         }
+        if (!$fuelWarehouseExist) {
+            $message = 'Warehouse tidak terdaftar di master <br> Company : ' . $val->company_code . ' <br> Location : '. $val->location .' <br> Warehouse : '.$val->warehouse;
+        }
+        if (!$transTypeInvalid) {
+            $message = 'Trans type ' . $val->trans_type . ' tidak dikenal';
+        }
+        if (!$fuelmanExist) {
+            $message = 'Fuelman ' . $val->fuelman . ' tidak terdaftar di master';
+        }
+        if (!$equipmentExist) {
+            $message = 'Equipment ' . $val->equipment_no . ' tidak terdaftar di master';
+        }
+        
         if (!$departmentExist) {
-            $message = 'Department ' . $val->department . ' not registered in master';
+            $message = 'Department ' . $val->department . 'tidak terdaftar di master';
         }
         if (!$activityExist) {
-            $message = 'Activity ' . $val->activity . ' not registered in master';
+            $message = 'Activity ' . $val->activity . 'tidak terdaftar di master';
         }
         if (!$fuelTypeExist) {
-            $message = 'Fuel type ' . $val->fuel_type . ' not registered in master';
+            $message = 'Fuel type ' . $val->fuel_type . 'tidak terdaftar di master';
         }
         return $message;
     }
