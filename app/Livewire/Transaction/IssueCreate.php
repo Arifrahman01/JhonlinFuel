@@ -113,13 +113,19 @@ class IssueCreate extends Component
         $this->statusModal = 'edit';
         $this->loading = false;
     }
+
     public function store()
     {
         try {
             if ($this->fileLoader) {
                 $file = $this->fileLoader;
-                $filePath = $this->fileLoader->store('temp');
-                Excel::import(new IssueImport, $filePath);
+                // $filePath = $this->fileLoader->store('temp');
+                $year = date('Y');
+                $month = date('m');
+                $fileName = time().'-'.$this->fileLoader->getClientOriginalName();
+                $filePath = $this->fileLoader->storeAs('uploads/'.$year.'/'.$month , $fileName);
+                // Excel::import(new IssueImport, $filePath);
+                Excel::import(new IssueImport($fileName), $filePath);
                 $this->dispatch('success', 'Loader is successfull');
                 $this->closeModal();
                 $this->dispatch('closeModal');

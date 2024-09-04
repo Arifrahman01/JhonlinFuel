@@ -10,6 +10,11 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 
 class IssueImport implements ToCollection
 {
+    public function __construct($fileName)
+    {
+        $this->fileName = $fileName;
+    }
+
     /**
      * @param Collection $collection
      */
@@ -33,6 +38,7 @@ class IssueImport implements ToCollection
                 $transaction->qty = $row[10];
                 $transaction->statistic_type = $row[11];
                 $transaction->meter_value = $row[12];
+                $transaction->patch = $this->fileName;
                 $transaction->save();
             }
         }
