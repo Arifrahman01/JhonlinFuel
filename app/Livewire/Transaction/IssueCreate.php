@@ -63,11 +63,16 @@ class IssueCreate extends Component
         $this->plants = Plant::where('company_id', Company::where('company_code', $value)->value('id'))->get();
         $this->departments = Department::where('company_id', Company::where('company_code', $value)->value('id'))->get();
         $this->activitys = Activity::where('company_id', Company::where('company_code', $value)->value('id'))->get();
+        // $this->fuelmans = [];
+        $this->reset(['selectedlocation','warehouse','department','fuelman','activity']);
+        $this->reset(['fuelmans']);
     }
+
     public function updatedSelectedlocation($value)
     {
         $this->slocs = Sloc::where('plant_id', Plant::where('plant_code', $value)->value('id'))->get();
         $this->fuelmans = Fuelman::where('plant_id', Plant::where('plant_code', $value)->value('id'))->get();
+        $this->reset(['fuelman','warehouse']);
     }
 
     public function openEdit($id = null)
